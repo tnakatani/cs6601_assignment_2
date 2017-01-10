@@ -12,7 +12,14 @@ class OpenMoveEvalFn():
     for your computer player on the board."""
     def score(self, game, maximizing_player_turn=True):
         # TODO: finish this function!
-        return len(game.get_legal_moves())
+        if maximizing_player_turn:
+            moves=game.get_legal_moves()
+            eval_func =len(moves)
+            return eval_func
+        else:
+            moves=game.get_opponent_moves() #here opponent chan choose any queen.. thus its addition of both
+            eval_func =len(moves)            
+            return eval_func
         
 
 # Submission Class 2
@@ -42,13 +49,33 @@ class CustomPlayer():
         self.eval_fn = eval_fn
         self.search_depth = search_depth
         
+    def choose_queen(self, game, queen1, queen2):
+        #n=randint(queen1,queen2)  
+        #return n
+        game.set_active_queen(queen1)
+        queen1_moves=game.get_legal_moves()
+        num_queen1_moves=len(queen1_moves)
+        
+        game.set_active_queen(queen2)
+        queen2_moves=game.get_legal_moves()
+        num_queen2_moves=len(queen2_moves)
+        
+        if num_queen1_moves >= num_queen2_moves:
+            return queen1
+        else:
+            return queen2
+
     
     def move(self, game, legal_moves, time_left):
-        best_move, utility = self.alphabeta(game,time_left, depth=self.search_depth)
-        return best_move
+        best_move, utility, queen = self.minimax(game,time_left, depth=self.search_depth)
+        return best_move, queen
 
 
     def utility(self, game, maximizing):
+        #queen1, queen2 = game.get_active_players_queen()
+        #queen=self.choose_queen(game, queen1, queen2)
+        #game.set_active_queen(queen)
+        
         if maximizing:
             if not game.get_opponent_moves():
                 return float("inf")
@@ -66,46 +93,58 @@ class CustomPlayer():
             return self.eval_fn.score(game)
 
 
-    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):
+    def minimax(self, game,time_left, depth=float("inf"), maximizing_player=True):
+        # TODO: finish this function!
+        queen1, queen2 =game.get_active_players_queen()
+        queen=self.choose_queen(game, queen1, queen2)
+        game.set_active_queen(queen)
         legal_moves = game.get_legal_moves()
         
-        if not depth or not legal_moves:
-            return None, self.utility(game, maximizing_player)
+        if not depth or not legal_moves:              
+            return None, self.utility(game, maximizing_player), queen
 
         if maximizing_player:
             best_move = None
             best_val =  float("-inf")
-
+            
+            
             for move in legal_moves:
-                _, val = self.minimax(game.forecast_move(move), time_left, depth -1, False )
+                _, val, q = self.minimax(game.forecast_move(move), time_left, depth -1, False ) #forecast move has a problem
                 if val > best_val:
                     best_val = val
                     best_move = move
 
         else:
             best_move = None
-            best_val = float("inf")
+            best_val = float("inf")            
 
             for move in legal_moves:
-                _, val = self.minimax(game.forecast_move(move), time_left, depth -1, True)
+                _, val,q = self.minimax(game.forecast_move(move), time_left, depth -1, True)
                 if val < best_val:
                     best_val = val
                     best_move = move
 
-        return best_move, best_val
-
-    def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"), maximizing_player=True):
+        return best_move, best_val, queen
+    
+    
+    def alphabeta(self, game,time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"), maximizing_player=True):
+        # TODO: finish this function!
+        queen1, queen2 =game.get_active_players_queen()
+        queen=self.choose_queen(game, queen1, queen2)
+        game.set_active_queen(queen)
         legal_moves = game.get_legal_moves()
-
-        if not depth or not legal_moves:
-            return None, self.utility(game, maximizing_player)
-
+        
+        if not depth or not legal_moves :            
+            return None, self.utility(game, maximizing_player), queen
+        
         if maximizing_player:
             val = float("-inf")
             best_move = None
+            
             for move in legal_moves:
                 node = game.forecast_move(move)
-                _, new_val = self.alphabeta(node, time_left, depth-1, alpha, beta, False)
+
+                _, new_val,q = self.alphabeta(node, time_left, depth-1, alpha, beta, False)
 
                 if new_val > val:
                     val = new_val
@@ -114,15 +153,16 @@ class CustomPlayer():
                 alpha = max( alpha, val)
 
                 if beta <= alpha:
-                    return best_move, beta
-            return best_move, val
+                    return best_move, beta, q
+            return best_move, val, queen
 
         else:
             val = float("inf")
             best_move = None
+            
             for move in legal_moves:
                 node = game.forecast_move(move)
-                _, new_val = self.alphabeta(node, time_left, depth -1 , alpha, beta, True)
+                _, new_val,q = self.alphabeta(node, time_left, depth -1 , alpha, beta, True)
 
                 if new_val < val:
                     val = new_val
@@ -131,6 +171,6 @@ class CustomPlayer():
                 beta = min(beta, val)
 
                 if beta <= alpha:
-                    return best_move, alpha
+                    return best_move, alpha,q
 
-            return best_move, val
+            return best_move, val, queen

@@ -72,15 +72,8 @@ class Board:
     def get_state(self):
         return deepcopy(self.__board_state__)
 
-    def set_active_queen_from_move(self, move):
-        if move in self.get_legal_moves_of_queen1():
-            self.set_active_queen(self.__active_players_queen1__)
-        if move in self.get_legal_moves_of_queen2():
-            self.set_active_queen(self.__active_players_queen2__)    
-        
     def __apply_move__(self, move):
         row,col = move
-        self.set_active_queen_from_move(move)
         self.__last_queen_move__[self.__active_queen__] = move     
         self.__board_state__[row][col] = self.__queen_symbols__[self.__active_queen__]   
         
@@ -184,18 +177,17 @@ class Board:
         return not self.get_legal_moves() and player== self.__active_player__
 
     def get_opponent_moves(self):                     ####################################trouble can make it better
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen1__)]) + self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen2__)])
+        queen1, queen2 = self.get_inactive_players_queen()
+        if self.__get_moves__(self.__last_queen_move__[self.get_queen_name(queen1)]) >= self.__get_moves__(self.__last_queen_move__[self.get_queen_name(queen2)]) :
+            return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(queen1)]) 
+        else :
+            return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(queen2)]) 
+        
+        #return self.__get_moves__(self.__last_queen_move__[self.__active_queen__])  
 
     def get_legal_moves(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen1__)]) + self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen2__)])
-        
-            
-    def get_legal_moves_of_queen1(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen1__)])
+        return self.__get_moves__(self.__last_queen_move__[self.__active_queen__])    
 
-    def get_legal_moves_of_queen2(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen2__)])
-    
     def __get_moves__(self, move):
         if move == Board.NOT_MOVED:
             #print("first move")
@@ -289,9 +281,6 @@ class Board:
         queen_history =[]
         mi=1
         curr_time_millis = lambda : 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
-        
-       
-
 
         while True:
 
@@ -306,37 +295,31 @@ class Board:
             time_left = lambda : time_limit - (curr_time_millis() - move_start)
             curr_move = Board.NOT_MOVED
             try:
+                queen_num = self.__active_player__.choose_queen(self, self.__active_players_queen1__ , self.__active_players_queen2__)
+                if self.__active_player__==self.__player_2__ and (queen_num==11 or queen_num==12):
+                    return self.__inactive_player__, move_history,queen_history, "illegal move"
+                if self.__active_player__==self.__player_1__ and (queen_num==21 or queen_num==22):
+                    return self.__inactive_player__, move_history,queen_history, "illegal move"                    
                 
-                legal_moves_of_queen1 =  self.get_legal_moves_of_queen1()
-                legal_moves_of_queen2 =  self.get_legal_moves_of_queen2()
-                legal_player_moves=legal_moves_of_queen1+legal_moves_of_queen2                
-                curr_move = self.__active_player__.move(game_copy,legal_player_moves , time_left)
-                
+                self.__active_queen__=self.get_queen_name(queen_num)        ################################PROBLEM of inactive
+                #if (queen_num==11):
+                #    self.__inactive_queen__=self.get_queen_name(21)  # now waht to do???????
+                #else:
+                #    self.__inactive_queen__=self.get_queen_name(11)   # now waht to do???????
+                    
+                    
+                legal_player_moves =  self.get_legal_moves()
+                curr_move , queen= self.__active_player__.move(game_copy, legal_player_moves, time_left)
+                self.set_active_queen(queen)
             except AttributeError as e:
                 raise e
             except Exception as e:
-                print("exception")
                 print(e)
                 pass
-            
-            
-            #else:
-            #    return self.__inactive_player__, move_history,queen_history, "choosen wrong players queen"
-                
 
             if curr_move is None:
                 curr_move = Board.NOT_MOVED
-                
-            elif curr_move in legal_moves_of_queen1:
-                self.set_active_queen(self.__active_players_queen1__)
-            elif curr_move in legal_moves_of_queen2:
-                self.set_active_queen(self.__active_players_queen2__)
-            else:
-                print("other than all")
-                print(curr_move)
-                self.__active_queen__="No queen"
-                
-                
+
             if self.__active_player__ == self.__player_1__:
                 move_history.append([curr_move])
                 queen_history.append([self.__active_queen__])
@@ -347,19 +330,15 @@ class Board:
             if time_limit and time_left() <= 0:
                 return  self.__inactive_player__, move_history,queen_history, "timeout"
             if curr_move not in legal_player_moves:
-                print("out")
                 return self.__inactive_player__, move_history,queen_history, "illegal move"
             
             self.__apply_move__(curr_move)
 
 
 def game_as_text(winner, move_history,queen_history, termination="", board=Board(1,2)):
-    print(winner)
     ans = io.StringIO()
     k=0
-    for i, move1 in enumerate(move_history): 
-        print (move1)
-        print(queen_history[k][0])
+    for i, move1 in enumerate(move_history):        
         p1_move = move1[0]
         ans.write(queen_history[k][0]+"  player1 "+"%d." % i + " (%d,%d)\r\n" % p1_move)
         if p1_move != Board.NOT_MOVED:
