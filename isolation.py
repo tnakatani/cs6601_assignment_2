@@ -198,21 +198,14 @@ class Board:
     
     def __get_moves__(self, move):
         if move == Board.NOT_MOVED:
-            #print("first move")
             return self.get_first_moves()
 
         r, c = move
-        #print("r= %d" %r+ "c=%d" %c)
         directions = [ (-1, -1), (-1, 0), (-1, 1),
                         (0, -1),          (0,  1),
                         (1, -1), (1,  0), (1,  1)]
         
         
-        #directions = [ (-2, -1), (-2, 1),
-        #               (-1, -2), (-1, 2),
-        #                (1, -2),  (1, 2),
-        #                (2, -1),  (2, 1) ]
-
         valid_moves = [(r+dr,c+dc) for dr, dc in directions
                 if self.move_is_legal(r+dr, c+dc)]
 
@@ -226,14 +219,9 @@ class Board:
                0 <= col < self.width  and \
                 self.__board_state__[row][col] == Board.BLANK
 
-    #def get_blank_spaces(self):
-    #    return self.get_player_locations(Board.BLANK)
-
     def get_player_locations(self, player):                            ############check please!!!!
         return [ (i,j) for j in range(0, self.width) for i in range(0,self.height) if self.__board_state__[i][j] == self.__queen_symbols__[player]]
 
-    #def get_last_move_for_player(self, player): #############################
-    #    return self.__last_player_move__[player]
 
     def print_board(self):
 
@@ -332,8 +320,6 @@ class Board:
             elif curr_move in legal_moves_of_queen2:
                 self.set_active_queen(self.__active_players_queen2__)
             else:
-                print("other than all")
-                print(curr_move)
                 self.__active_queen__="No queen"
                 
                 
@@ -347,7 +333,6 @@ class Board:
             if time_limit and time_left() <= 0:
                 return  self.__inactive_player__, move_history,queen_history, "timeout"
             if curr_move not in legal_player_moves:
-                print("out")
                 return self.__inactive_player__, move_history,queen_history, "illegal move"
             
             self.__apply_move__(curr_move)
@@ -357,9 +342,7 @@ def game_as_text(winner, move_history,queen_history, termination="", board=Board
     print(winner)
     ans = io.StringIO()
     k=0
-    for i, move1 in enumerate(move_history): 
-        print (move1)
-        print(queen_history[k][0])
+    for i, move1 in enumerate(move_history):
         p1_move = move1[0]
         ans.write(queen_history[k][0]+"  player1 "+"%d." % i + " (%d,%d)\r\n" % p1_move)
         if p1_move != Board.NOT_MOVED:

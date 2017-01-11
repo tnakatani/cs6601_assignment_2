@@ -12,7 +12,7 @@ class OpenMoveEvalFn():
     for your computer player on the board."""
     def score(self, game, maximizing_player_turn=True):
         # TODO: finish this function!
-        return len(game.get_legal_moves())
+        return eval_func
         
 
 # Submission Class 2
@@ -49,88 +49,14 @@ class CustomPlayer():
 
 
     def utility(self, game, maximizing):
-        if maximizing:
-            if not game.get_opponent_moves():
-                return float("inf")
-            if not game.get_legal_moves():
-                return float("-inf")
-
-            return self.eval_fn.score(game)
-
-        else:
-            if not game.get_legal_moves():
-                return float("inf")
-            if not game.get_opponent_moves():
-                return float("-inf")
-
-            return self.eval_fn.score(game)
+        # TODO: finish this function!        
+        return self.eval_fn.score(game)
 
 
-    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):
-        legal_moves = game.get_legal_moves()
-        
-        if not depth or not legal_moves:
-            return None, self.utility(game, maximizing_player)
-
-        if maximizing_player:
-            best_move = None
-            best_val =  float("-inf")
-
-            for move in legal_moves:
-                _, val = self.minimax(game.forecast_move(move), time_left, depth -1, False )
-                if val > best_val:
-                    best_val = val
-                    best_move = move
-
-        else:
-            best_move = None
-            best_val = float("inf")
-
-            for move in legal_moves:
-                _, val = self.minimax(game.forecast_move(move), time_left, depth -1, True)
-                if val < best_val:
-                    best_val = val
-                    best_move = move
-
+    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):        
+        # TODO: finish this function!
         return best_move, best_val
 
     def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"), maximizing_player=True):
-        legal_moves = game.get_legal_moves()
-
-        if not depth or not legal_moves:
-            return None, self.utility(game, maximizing_player)
-
-        if maximizing_player:
-            val = float("-inf")
-            best_move = None
-            for move in legal_moves:
-                node = game.forecast_move(move)
-                _, new_val = self.alphabeta(node, time_left, depth-1, alpha, beta, False)
-
-                if new_val > val:
-                    val = new_val
-                    best_move = move
-
-                alpha = max( alpha, val)
-
-                if beta <= alpha:
-                    return best_move, beta
-            return best_move, val
-
-        else:
-            val = float("inf")
-            best_move = None
-            for move in legal_moves:
-                node = game.forecast_move(move)
-                _, new_val = self.alphabeta(node, time_left, depth -1 , alpha, beta, True)
-
-                if new_val < val:
-                    val = new_val
-                    best_move = move
-
-                beta = min(beta, val)
-
-                if beta <= alpha:
-                    return best_move, alpha
-
-            return best_move, val
+        # TODO: finish this function!
+        return best_move, val
