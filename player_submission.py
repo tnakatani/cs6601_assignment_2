@@ -9,12 +9,12 @@
 class OpenMoveEvalFn():
     """Evaluation function that outputs a 
     score equal to how many moves are open
-    for your computer player on the board."""
+    for your computer player on the board 
+    minus the moves open for opponent player."""
     def score(self, game, maximizing_player_turn=True):
         # TODO: finish this function!
         return eval_func
         
-
 # Submission Class 2
 class CustomEvalFn():
     """Custom evaluation function that acts
@@ -25,7 +25,6 @@ class CustomEvalFn():
         # TODO: finish this function!
         return eval_func
 
-# Submission Class 3
 class CustomPlayer():
     # TODO: finish this class!
     """Player that chooses a move using 
@@ -35,28 +34,36 @@ class CustomPlayer():
     You must finish and test this player
     to make sure it properly uses minimax
     and alpha-beta to return a good move
-    in less than 1000 milliseconds."""
+    in less than 1500 milliseconds."""
     def __init__(self,  search_depth=3, eval_fn=OpenMoveEvalFn()):
         # if you find yourself with a superior eval function, update the
         # default value of `eval_fn` to `CustomEvalFn()`
         self.eval_fn = eval_fn
         self.search_depth = search_depth
-        
+
     
     def move(self, game, legal_moves, time_left):
-        best_move, utility = self.alphabeta(game,time_left, depth=self.search_depth)
-        return best_move
+        best_move,best_queen, utility = self.minimax(game,time_left, depth=self.search_depth)   
+        #change minimax to alphabeta after completing alphabeta part of assignment 
+        return best_move, best_queen 
 
 
-    def utility(self, game, maximizing):
-        # TODO: finish this function!        
+    def utility(self, game):
+        """TODO: Update this function to calculate the utility of a game state"""
+        
+        if game.is_winner(self):
+            return float("inf")
+
+        if game.is_opponent_winner(self):
+            return float("-inf")
+
         return self.eval_fn.score(game)
 
 
-    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):        
+    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):
         # TODO: finish this function!
-        return best_move, best_val
+        return best_move,best_queen, best_val
 
     def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"), maximizing_player=True):
         # TODO: finish this function!
-        return best_move, val
+        return best_move, best_queen, val

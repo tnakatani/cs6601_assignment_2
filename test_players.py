@@ -1,27 +1,39 @@
 from random import randint
 
 class RandomPlayer():
-    """Player that chooses a move randomly."""
+    """Player that chooses a move randomly."""    
+  
     def move(self, game, legal_moves, time_left):
-        if not legal_moves: return (-1,-1)
-        return legal_moves[randint(0,len(legal_moves)-1)]
+        if not legal_moves: return (-1,-1)        
+        num=randint(game.__active_players_queen1__,game.__active_players_queen2__)
+        if not len(legal_moves[num]):
+            return (-1,-1),num
+        moves=legal_moves[num][randint(0,len(legal_moves[num])-1)]
+        return moves,num
 
 class HumanPlayer():
-    """Player that chooses a move according to user's input."""
+    """Player that chooses a move according to
+    user's input."""
     def move(self, game, legal_moves, time_left):
-        print game.print_board()
-
-        print('\t'.join(['[%d] %s'%(i,str(move)) for i,move in enumerate(legal_moves)] ))
-
+        i=0
+        choice = {}
+        for queen in legal_moves:
+                for move in legal_moves[queen]:        
+                    choice.update({i:(queen,move)})
+                    print('\t'.join(['[%d] q%d: (%d,%d)'%(i,queen,move[0],move[1])] ))
+                    i=i+1
+        i=i-1
+        
         valid_choice = False
         while not valid_choice:
             try:
-                index = int(raw_input('Select move index:'))
-                valid_choice = 0 <= index < len(legal_moves)
+                index = int(input('Select move index:'))
+                valid_choice = 0 <= index < i
 
                 if not valid_choice:
                     print('Illegal move! Try again.')
-
+            
             except ValueError:
                 print('Invalid index! Try again.')
-        return legal_moves[index]
+        
+        return choice[index][1],choice[index][0]
