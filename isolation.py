@@ -243,7 +243,7 @@ class Board:
     def play_isolation(self, time_limit = 1000):
         move_history = []
         queen_history =[]
-        mi=1
+        
         curr_time_millis = lambda : 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
         
         while True:
