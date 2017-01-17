@@ -9,8 +9,8 @@
 class OpenMoveEvalFn():
     """Evaluation function that outputs a 
     score equal to how many moves are open
-    for your computer player on the board 
-    minus the moves open for opponent player."""
+    for AI player on the board minus
+    the moves open for opponent player."""
     def score(self, game, maximizing_player_turn=True):
         # TODO: finish this function!
         return eval_func
@@ -34,7 +34,7 @@ class CustomPlayer():
     You must finish and test this player
     to make sure it properly uses minimax
     and alpha-beta to return a good move
-    in less than 1500 milliseconds."""
+    in less than 5 seconds."""
     def __init__(self,  search_depth=3, eval_fn=OpenMoveEvalFn()):
         # if you find yourself with a superior eval function, update the
         # default value of `eval_fn` to `CustomEvalFn()`

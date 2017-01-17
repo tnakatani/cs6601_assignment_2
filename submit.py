@@ -68,7 +68,6 @@ def display_game(submission):
 
 def main():
   parser = argparse.ArgumentParser(description='Submits code to the Udacity site.')
-  #parser.add_argument('part', choices = ['assignment_1'])
   parser.add_argument('part', choices = ['assignment_1', 'play_isolation'])
   parser.add_argument('--provider', choices = ['gt', 'udacity'], default = 'gt')
   parser.add_argument('--environment', choices = ['local', 'development', 'staging', 'production'], default = 'production')
@@ -83,13 +82,6 @@ def main():
     
   if args.enable_face_off:
     filenames.append("AI.txt")
-    # Add AI.txt if face off is enabled
-    #if parser.enable_face_off:
-    #  filenames.append("AI.txt")
-
-  #else: # args.part == 'play_isolation'
-  #  quiz = 'play_isolation'
-  #  filenames = ["player_submission.py", "challenge_config.json"]
 
   print ("Submission processing...\n")
   submission = Submission('cs6601', quiz,
