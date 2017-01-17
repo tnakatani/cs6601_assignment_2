@@ -158,11 +158,6 @@ class Board:
     def get_active_queen(self):
         return self.__active_queen__
 
-    def is_winner(self, player): 
-        return not self.get_legal_moves() and player== self.__inactive_player__
-
-    def is_opponent_winner(self, player): 
-        return not self.get_legal_moves() and player== self.__active_player__
 
     def get_opponent_moves(self):                  
         #chnaged so that you get access to even the inactive players queens.
@@ -283,8 +278,6 @@ class Board:
         mi=1
         
         curr_time_millis = lambda : 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
-        
-       
 
 
         while True:

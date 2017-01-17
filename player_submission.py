@@ -50,13 +50,6 @@ class CustomPlayer():
 
     def utility(self, game):
         """TODO: Update this function to calculate the utility of a game state"""
-        
-        if game.is_winner(self):
-            return float("inf")
-
-        if game.is_opponent_winner(self):
-            return float("-inf")
-
         return self.eval_fn.score(game)
 
 
