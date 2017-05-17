@@ -1,10 +1,14 @@
 from copy import deepcopy
 from time import time, sleep
-import resource
+import platform
 #import io
 import StringIO
 
 import sys,os
+
+if platform.system() != 'Windows':
+    import resource
+    
 sys.path[0] = os.getcwd()
 
 class Board:
@@ -293,7 +297,10 @@ class Board:
         queen_history =[]
         mi=1
         
-        curr_time_millis = lambda : 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
+        if platform.system() == 'Windows':
+            curr_time_millis = lambda: int(round(time() * 1000))
+        else:
+            curr_time_millis = lambda : 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
         
        
 
