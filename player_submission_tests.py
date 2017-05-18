@@ -2,7 +2,7 @@
 import traceback
 from player_submission import OpenMoveEvalFn, CustomEvalFn, CustomPlayer
 from isolation import Board, game_as_text
-from test_players import RandomPlayer
+from test_players import RandomPlayer, HumanPlayer
 
 def main():
 
@@ -21,13 +21,14 @@ def main():
         ]
         sample_board.__last_queen_move__ = {sample_board.queen_11: (0, 0), sample_board.queen_12: (4, 5),
                                             sample_board.queen_21: (0, 4), sample_board.queen_22: (2, 2)}
+        test = sample_board.get_legal_moves()
         h = OpenMoveEvalFn()
         print 'OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board))
     except NotImplementedError:
         print 'OpenMoveEvalFn Test: Not implemented'
     except:
         print 'OpenMoveEvalFn Test: ERROR OCCURRED'
-        traceback.print_exc()
+        print traceback.format_exc()
 
     try:
         """Example test to make sure
@@ -36,9 +37,8 @@ def main():
         # create dummy 3x3 board
 
         p1 = RandomPlayer()
-        p2 = RandomPlayer()
-        # p2 = CustomPlayer2( search_depth=3)
-        # p2 = HumanPlayer()
+        p2 = CustomPlayer(search_depth=3)
+        #p2 = HumanPlayer()
         b = Board(p1, p2, 5, 5)
         b.__board_state__ = [
             [0, 21, 0, 0, 0],
@@ -58,12 +58,13 @@ def main():
         winner, move_history, queen_history, termination = b.play_isolation()
         print 'Minimax Test: Runs Successfully'
         # Uncomment to see example game
-        # print game_as_text(winner, move_history, queen_history, termination, output_b)
+        print game_as_text(winner, move_history, queen_history, termination, output_b)
     except NotImplementedError:
         print 'Minimax Test: Not Implemented'
     except:
         print 'Minimax Test: ERROR OCCURRED'
-        traceback.print_exc()
+        print traceback.format_exc()
+
         
 
     """Example test you can run
@@ -85,7 +86,7 @@ def main():
         print 'CustomPlayer Test: Not Implemented'
     except:
         print 'CustomPlayer Test: ERROR OCCURRED'
-        traceback.print_exc()
+        print traceback.format_exc()
 
 if __name__ == "__main__":
     main()

@@ -10,10 +10,10 @@ class RandomPlayer():
         if not len(legal_moves[num]):
             num = game.__active_players_queen1__ if num == game.__active_players_queen2__ else game.__active_players_queen2__
             if not len(legal_moves[num]):
-                return (-1,-1),num
+                return (-1,-1), num
         
-        moves=legal_moves[num][randint(0,len(legal_moves[num])-1)]
-        return moves,num
+        moves = legal_moves[num].keys()[randint(0,len(legal_moves[num])-1)]
+        return moves, num
     
 
 
@@ -26,7 +26,7 @@ class HumanPlayer():
         if not len(legal_moves[game.__active_players_queen1__]) and not len(legal_moves[game.__active_players_queen2__]):
             return None, None
         for queen in legal_moves:
-                for move in legal_moves[queen]:        
+                for move in legal_moves[queen].keys():
                     choice.update({i:(queen,move)})
                     print('\t'.join(['[%d] q%d: (%d,%d)'%(i,queen,move[0],move[1])] ))
                     i=i+1
