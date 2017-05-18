@@ -17,7 +17,7 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 
 ### The Game
 
- The rules of Team Isolation are simple. In our version, two players take turn placing their own game pieces on different squares of a 7-by-7 grid. Each player has 2 game pieces which they can move on the board. At the beginning of the game, the players, in turn, place each of their two pieces on any unoccupied square.  The players must use their first two turns to place their two pieces.  From that point on, the pieces move like a Queen in chess (any number of squares vertically, horizontally, or diagonally but not past an occupied or blocked square). Each time a player moves their piece, the square that they were previously occupying is blocked and cannot be moved for remainder of the game. The queens can’t move through each other or through the blocked portion of the board. The first player who is unable to move loses.
+ The rules of Team Isolation are simple. In our version, two players take turn placing their own game pieces on different squares of a 7-by-7 grid. Each player has 2 game pieces which they can move on the board. At the beginning of the game, the players, in turn, place each of their two pieces on any unoccupied square. The players must use their first two turns to place their two pieces. From that point on, the pieces move like a Queen in chess (any number of squares vertically, horizontally, or diagonally but not past an occupied or blocked square). Each time a player moves their piece, there is a twist. There is a chance, based on non-uniform probability that increases with distance moved, the piece will fail to reach the intended square. Essentially, the farther away you move, the greater chance you will land on an adjacent valid square to the intended target. Anything less than 2 squares is certain and all other moves have a fixed maximum chance of failure. The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queens can’t move through each other or through the blocked portion of the board. The first player who is unable to move loses.
 
 ### The Files
 
@@ -25,12 +25,13 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 
 1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text.
 2. `player_submission.py`: Where you'll implement required methods for your agents.
-3. `test_players.py`: Example agents for you to test against.
+3. `player_submission_tests.py`: Sample tests to validate your agents locally.
+3. `test_players.py`: Example agents used to play isolation locally.
 4. `submit.py`: A script to submit your work.
 
 ### The Assignment
 
-Your task is to create an AI that can play and win a game of Team Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python, using our provided code as a starting point.
+Your task is to create an AI that can play and win a game of Team Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
 
 In this repository, we provide:
 
@@ -66,8 +67,8 @@ The grade you receive for the assignment will be determined as follows:
 | 30 points | Your AI defeats a random player >= 60% of the time. |
 | 30 points | Your AI defeats an agent using OpenMoveEvalFn that is depth limited to level 3  >= 60% of the time. Due to the high branching factor of Team Isolation, we reserve the ability to have our test player move randomly in the beginning of the game. |
 | 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
-| 5 points  | Your AI defeats an AI that uses Thad’s secret evaluation function, iterative deepening, and alpha-beta pruning (a.k.a. Thad 2.0) >= 60% of the time. |
-| 5 points  | Your AI defeats Thad 2.0 >= 90% of the time. |
+| 5 points  | Your AI defeats an agent using expectiminimax >= 60% of the time. |
+| 5 points  | Your AI defeats an agent using expectiminimax >= 90% of the time. |
 
 Submission policy: 1 submission per hour and last submission score.
 
@@ -187,7 +188,7 @@ class CustomPlayer():
 
 ### Built-in Tests
 
-In `player_submission.py` several built-in tests can be found in the **`main()`** function. We've included these to help you test your player and evaluation function as well as to give you an idea of how the classes are used. Feel free to play around with the code and add more tests, <u>as long as it is not outside the `main()` function</u>.
+In `player_submission_tests.py` several built-in tests can be found in the **`main()`** function. We've included these to help you test your player and evaluation function as well as to give you an idea of how the classes are used. Feel free to play around with the code and add more tests, <u>as long as it is not outside the `main()` function</u>.
 
 ## Helper Player classes (`test_players.py`)
 
