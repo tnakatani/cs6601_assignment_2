@@ -144,11 +144,11 @@ class Board:
         return b
 
     def set_active_queen(self, queen):
-        if (queen == 11):
+        if queen == 11:
             self.__active_queen__ = self.queen_11
-        elif (queen == 12):
+        elif queen == 12:
             self.__active_queen__ = self.queen_12
-        elif (queen == 21):
+        elif queen == 21:
             self.__active_queen__ = self.queen_21
         else:
             self.__active_queen__ = self.queen_22
@@ -367,7 +367,8 @@ class Board:
         while True:
             game_copy = self.copy()
             move_start = curr_time_millis()
-            time_left = lambda: time_limit - (curr_time_millis() - move_start)
+
+            def time_left(): return time_limit - (curr_time_millis() - move_start)
             curr_move = Board.NOT_MOVED
 
             legal_player_moves = self.get_legal_moves()
@@ -431,7 +432,7 @@ class Board:
                 print self.print_board()
 
 
-def game_as_text(winner, output_history, termination="", board=Board(1, 2)):
+def game_as_text(winner, move_history, queen_history, output_history, termination="", board=Board(1, 2)):
     print(winner)
     # ans = io.StringIO()
     ans = StringIO.StringIO()
@@ -463,7 +464,7 @@ def game_as_text(winner, output_history, termination="", board=Board(1, 2)):
         k = k + 1
 
 
-if __name__ == '__main__':
+def main():
     print("Starting game:")
 
     from test_players import RandomPlayer
@@ -471,5 +472,8 @@ if __name__ == '__main__':
 
     board = Board(RandomPlayer(), HumanPlayer())
     board_copy = board.copy()
-    winner, move_history, queen_history, termination = board.play_isolation(time_limit=5000, print_moves=True)
-    print game_as_text(winner, board.output_history, termination, board_copy)
+    winner, move_history, queen_history, termination = board.play_isolation(time_limit=30000, print_moves=True)
+    print game_as_text(winner, move_history, queen_history, board.output_history, termination, board_copy)
+
+if __name__ == '__main__':
+    main()

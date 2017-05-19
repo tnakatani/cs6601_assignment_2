@@ -8,7 +8,7 @@ If you run across certificate authentication issues during the clone, set the gi
 
 The submission scripts depend on the presence of 3 python packages - `requests`, `future`, and `nelson`. If you are missing any of these packages, install them from the online Python registries. The easiest way to do this is through pip:
 
-`pip install requests future nelson`
+`pip install -r requirements.txt`
 
 # Keeping your code upto date
 After the clone, we recommend creating a branch and developing your agents on that branch:

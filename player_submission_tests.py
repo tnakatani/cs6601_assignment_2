@@ -4,6 +4,7 @@ from player_submission import OpenMoveEvalFn, CustomEvalFn, CustomPlayer
 from isolation import Board, game_as_text
 from test_players import RandomPlayer, HumanPlayer
 
+
 def main():
 
     try:
@@ -58,7 +59,7 @@ def main():
         winner, move_history, queen_history, termination = b.play_isolation()
         print 'Minimax Test: Runs Successfully'
         # Uncomment to see example game
-        print game_as_text(winner, move_history, queen_history, termination, output_b)
+        # print game_as_text(winner, move_history, queen_history, b.output_history, termination, output_b)
     except NotImplementedError:
         print 'Minimax Test: Not Implemented'
     except:
@@ -81,7 +82,7 @@ def main():
         else:
             print 'CustomPlayer Test: CustomPlayer Lost'
         # Uncomment to see game
-        # print game_as_text(winner, move_history, queen_history, termination, output_b)
+        # print game_as_text(winner, move_history, queen_history, game.output_history, termination, output_b)
     except NotImplementedError:
         print 'CustomPlayer Test: Not Implemented'
     except:

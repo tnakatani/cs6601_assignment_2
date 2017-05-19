@@ -7,7 +7,7 @@ Clone this repository:
 
 The submission scripts depend on the presence of 3 python packages - `requests`, `future`, and `nelson`. Install them using the command below:
 
-`pip install requests future nelson`
+`pip install -r requirements.txt`
 
 Read [setup.md](./setup.md) for more information on how to effectively manage your git repository and troubleshooting information.
 
