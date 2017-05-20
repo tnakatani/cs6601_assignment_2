@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from isolation import Board, game_as_text
-from test_players import RandomPlayer
 
 
 # This file is your main submission that will be graded against. Do not
