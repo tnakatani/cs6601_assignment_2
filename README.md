@@ -88,9 +88,9 @@ If you compete in the AI tournament and earn 1st, 2nd or 3rd place, you will rec
 
 A friendly reminder: please ensure that your submission is in `player_submission.py`. The script described in the following section automatically sends that file to the servers for processing.
 
-To submit your code and have it evaluated for a grade, use `python submit.py assignment_1`. We are going to limit you to 1 submissions in one hour (Subject to change depending on load on servers) and the last submission before the deadline will be used to determine your grade.
+To submit your code and have it evaluated for a grade, use `python submit.py`. We are going to limit you to 1 submissions in one hour (Subject to change depending on load on servers) and the last submission before the deadline will be used to determine your grade.
 
-To enter yourself into the playoffs against your classmates, run `python submit.py --enable-face-off assignment_1`. Ensure that you have created the required AI.txt to enter the tournament.
+To enter yourself into the playoffs against your classmates, run `python submit.py --enable-face-off`. Ensure that you have created the required AI.txt to enter the tournament.
 
 ## Your Classes (`player_submission.py`)
 
