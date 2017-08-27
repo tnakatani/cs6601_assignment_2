@@ -13,19 +13,19 @@ class OpenMoveEvalFn:
         """Score the current game state
         
         Evaluation function that outputs a score equal to how many 
-        moves are open for AI player on the board minus the moves open 
-        for opponent player.
+        moves are open for AI player on the board.
             
         Args
             param1 (Board): The board and game state.
             param2 (bool): True if maximizing player is active.
 
         Returns:
-            float: The current state's score. Your agent's moves minus the opponent's moves.
+            float: The current state's score. Number of your agent's moves.
             
         """
+	
         # TODO: finish this function!
-        raise NotImplementedError
+        #raise NotImplementedError
 
 
 # Submission Class 2
@@ -61,8 +61,7 @@ class CustomPlayer:
     with alpha-beta pruning.
     You must finish and test this player
     to make sure it properly uses minimax
-    and alpha-beta to return a good move
-    in less than 5 seconds."""
+    and alpha-beta to return a good move."""
 
     def __init__(self, search_depth=3, eval_fn=OpenMoveEvalFn()):
         """Initializes your player.
@@ -86,11 +85,11 @@ class CustomPlayer:
             time_left (function): Used to determine time left before timeout
             
         Returns:
-            (tuple, int): best_move, best_queen
+            (tuple): best_move
         """
-        best_move, best_queen, utility = self.minimax(game, time_left, depth=self.search_depth)
+        best_move, utility = self.minimax(game, time_left, depth=self.search_depth)
         # change minimax to alphabeta after completing alphabeta part of assignment
-        return best_move, best_queen
+        return best_move
 
     def utility(self, game):
         """Can be updated if desired"""
@@ -106,11 +105,11 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple, int, int): best_move, best_queen, best_val
+            (tuple, int): best_move, best_val
         """
         # TODO: finish this function!
         raise NotImplementedError
-        return best_move, best_queen, best_val
+        return best_move, best_val
 
     def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"),
                   maximizing_player=True):
@@ -125,8 +124,8 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple, int, int): best_move, best_queen, best_val
+            (tuple, int): best_move, best_val
         """
         # TODO: finish this function!
         raise NotImplementedError
-        return best_move, best_queen, val
+        return best_move, val

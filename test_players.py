@@ -5,15 +5,9 @@ class RandomPlayer():
     """Player that chooses a move randomly."""    
 
     def move(self, game, legal_moves, time_left):
-        if not legal_moves: return (-1,-1)        
-        num=randint(game.__active_players_queen1__,game.__active_players_queen2__)
-        if not len(legal_moves[num]):
-            num = game.__active_players_queen1__ if num == game.__active_players_queen2__ else game.__active_players_queen2__
-            if not len(legal_moves[num]):
-                return (-1,-1), num
-        
-        moves = legal_moves[num].keys()[randint(0,len(legal_moves[num])-1)]
-        return moves, num
+        if not legal_moves: return (-1,-1)            
+        moves = legal_moves[randint(0,len(legal_moves)-1)]
+        return moves
     
 
 
@@ -23,16 +17,16 @@ class HumanPlayer():
     def move(self, game, legal_moves, time_left):
         i=0
         choice = {}
-        if not len(legal_moves[game.__active_players_queen1__]) and not len(legal_moves[game.__active_players_queen2__]):
-            return None, None
-        for queen in legal_moves:
-            for move in sorted(legal_moves[queen].keys()):
-                    choice.update({i:(queen,move)})
-                    if (i + 1) % 6 == 0:
-                        print '\t'.join(['[%d] q%d: (%d,%d)' % (i,queen,move[0],move[1])])
-                    else:
-                        print '\t'.join(['[%d] q%d: (%d,%d)' % (i, queen, move[0], move[1])]),
-                    i += 1
+        if not len(legal_moves)
+            return None
+       
+        for move in legal_moves:
+	    choice.update({i:move})
+	    if (i + 1) % 6 == 0:
+	        print '\t'.join(['[%d] : (%d,%d)' % (i,move[0],move[1])])
+	    else:
+	        print '\t'.join(['[%d] : (%d,%d)' % (i, move[0], move[1])]),
+	    i += 1
         
         valid_choice = False
         while not valid_choice:

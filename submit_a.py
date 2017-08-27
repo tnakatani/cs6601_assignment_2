@@ -86,7 +86,7 @@ def main():
   else:
     filenames.append('AI.txt')
 
-  submit('cs6601', 'assignment_1', filenames)
+  submit('cs6601', 'assignment_1a', filenames)
 
 if __name__ == '__main__':
   main()
