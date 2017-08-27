@@ -73,7 +73,7 @@ The grade you receive for the assignment will be determined as follows:
 | 5 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 90% of the time. |
 
 We have divided the tests into two parts. First section contains first four tests. And second subsection has last 2 tests. 
-Submission policy: 1 submission per hour for each section seperately and last submission score per section.
+Submission policy: One submission per hour for each section seperately and last submission score per section.
 
 ### Botfight! (Extra Credit)
 
