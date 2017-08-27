@@ -81,7 +81,7 @@ def main():
         else:
             print 'CustomPlayer Test: CustomPlayer Lost'
         # Uncomment to see game
-        # print game_as_text(winner, move_history, queen_history, game.output_history, termination, output_b)
+        # print game_as_text(winner, move_history, termination, output_b)
     except NotImplementedError:
         print 'CustomPlayer Test: Not Implemented'
     except:
