@@ -17,7 +17,7 @@ class HumanPlayer():
     def move(self, game, legal_moves, time_left):
         i=0
         choice = {}
-        if not len(legal_moves)
+        if not len(legal_moves):
             return None
        
         for move in legal_moves:
