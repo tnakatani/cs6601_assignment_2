@@ -67,8 +67,8 @@ The grade you receive for the assignment will be determined as follows:
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 60% of the time. |
-| 20 points | Your AI defeats an agent using OpenMoveEvalFn that is depth limited to level 3  >= 60% of the time. |
-| 20 points | Your AI defeats an agent using OpenMoveEvalFn that is depth limited to level 5  >= 60% of the time. |
+| 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses minimax to level 3  >= 60% of the time. |
+| 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses minimax to level 5  >= 60% of the time. |
 | 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
 | 5 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 90% of the time. |
 
