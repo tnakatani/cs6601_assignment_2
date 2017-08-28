@@ -95,7 +95,7 @@ class CustomPlayer:
         """Can be updated if desired"""
         return self.eval_fn.score(game)
 
-    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):
+    def minimax(self, game, time_left, depth=3, maximizing_player=True):
         """Implementation of the minimax algorithm
         
         Args:
@@ -111,7 +111,7 @@ class CustomPlayer:
         raise NotImplementedError
         return best_move, best_val
 
-    def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"),
+    def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),
                   maximizing_player=True):
         """Implementation of the alphabeta algorithm
         

@@ -38,7 +38,7 @@ def main():
         #computer_player_moves."""
         # create dummy 3x3 board
 
-        p1 = RandomPlayer()
+        p1 = CustomPlayer()
         p2 = CustomPlayer(search_depth=3)
         #p2 = HumanPlayer()
         b = Board(p1, p2, 5, 5)
