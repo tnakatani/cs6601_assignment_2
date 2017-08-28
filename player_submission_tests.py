@@ -36,7 +36,7 @@ def main():
         """Example test to make sure
         your minimax works, using the
         #computer_player_moves."""
-        # create dummy 3x3 board
+        # create dummy 5x5 board
 
         p1 = CustomPlayer()
         p2 = CustomPlayer(search_depth=3)

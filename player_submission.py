@@ -57,7 +57,7 @@ class CustomPlayer:
     # TODO: finish this class!
     """Player that chooses a move using 
     your evaluation function and 
-    a depth-limited minimax algorithm 
+    a minimax algorithm 
     with alpha-beta pruning.
     You must finish and test this player
     to make sure it properly uses minimax

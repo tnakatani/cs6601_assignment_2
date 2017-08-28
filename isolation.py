@@ -163,9 +163,8 @@ class Board:
 
         return out
 
-    def play_isolation_name_changed(self, time_limit=5000, print_moves=False):
+    def play_isolation_name_changed(self, time_limit=1000, print_moves=False):
         move_history = []
-        mi = 1
 
         if platform.system() == 'Windows':
             def curr_time_millis():

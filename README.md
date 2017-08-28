@@ -17,7 +17,7 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 
 ### The Game
 
- The rules of Isolation game are simple.In our version, there are two players and one game piece. Two players take turn placing the game piece on different squares of a 7-by-7 grid. At the beginning of the game, first player places the piece on any unoccupied square. From that point on, the piece move like a Queen in chess (any number of squares vertically, horizontally, or diagonally). The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queen can’t move through the blocked portion of the board. The first player who is unable to move loses.
+ The rules of Isolation game are simple.In our version, there are two players and one game piece. Two players take turns placing the game piece on different squares of a 7-by-7 grid. At the beginning of the game, first player places the piece on any unoccupied square. From that point on, the piece move like a Queen in chess (any number of squares vertically, horizontally, or diagonally). The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queen can’t move through the blocked portion of the board. The first player who is unable to move loses.
 
 ### The Files
 
@@ -48,7 +48,7 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 2. The minimax algorithm (`minimax()`)
 3. Alpha-beta pruning (`alphabeta()`)
 
-Your agent will have a limited amount of time to act each turn (5 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
+Your agent will have a limited amount of time to act each turn (1 second). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
 In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time. For example, if you attempt to load the entire set of possible board states from memory. In total, your submission will be allowed to run for a maximum of <u>75 minutes</u> before being interrupted.
 
@@ -67,10 +67,10 @@ The grade you receive for the assignment will be determined as follows:
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 60% of the time. |
-| 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses minimax to level 3  >= 60% of the time. |
-| 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses minimax to level 5  >= 60% of the time. |
-| 20 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
-| 5 points | Your AI defeats an agent using OpenMoveEvalFn that uses iterative deepening and alpha-beta pruning >= 90% of the time. |
+| 20 points | Your AI defeats an agent using our secret evaluation function that uses minimax to level 3  >= 60% of the times. |
+| 20 points | Your AI defeats an agent using our secret evaluation function that uses minimax to level 5  >= 60% of the times. |
+| 20 points | Your AI defeats an agent using our secret evaluation function that uses iterative deepening and minimax >= 60% of the time. |
+| 5 points | Your AI defeats an agent using our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 6 0% of the time. |
 
 We have divided the tests into two parts. First section contains first four tests. And second subsection has last 2 tests. 
 Submission policy: One submission per hour for each section seperately and last submission score per section.
@@ -155,7 +155,7 @@ class CustomPlayer:
     # TODO: finish this class!
     """Player that chooses a move using 
     your evaluation function and 
-    a depth-limited minimax algorithm 
+    a minimax algorithm 
     with alpha-beta pruning.
     You must finish and test this player
     to make sure it properly uses minimax
