@@ -27,7 +27,8 @@ class HumanPlayer():
 	    else:
 	        print '\t'.join(['[%d] : (%d,%d)' % (i, move[0], move[1])]),
 	    i += 1
-        
+	print
+        print game.print_board()
         valid_choice = False
         while not valid_choice:
             try:
@@ -39,5 +40,5 @@ class HumanPlayer():
             
             except ValueError:
                 print('Invalid index! Try again.')
-        
-        return choice[index][1],choice[index][0]
+        game.__board_state__
+        return choice[index]
