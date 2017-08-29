@@ -43,9 +43,3 @@ Finally, commit the new updates to your branch and continue developing:
 
 `git commit -am "<funny message vilifying TAs for the update>"`
 
-# Submit your code
-A friendly reminder: please ensure that your submission is in `player_submission.py`. The script described in the following section automatically sends that file to the servers for processing.
-
-To submit your code and have it evaluated for a grade, use `python submit.py assignment_1`. We are going to limit you to 1 submissions in one hour(Subjected to change depending on load on servers) and the last submission before the deadline will be used to determine your grade.
-
-To enter yourself into the playoffs against your classmates, run `python submit.py --enable-face-off assignment_1`. Ensure that you have created the required AI.txt to enter the tournament.
