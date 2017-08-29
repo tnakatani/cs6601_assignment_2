@@ -17,7 +17,11 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 
 ### The Game
 
+<<<<<<< HEAD
  The rules of Isolation game are simple.In our version, there are two players and one game piece. Two players take turns placing the game piece on different squares of a 7-by-7 grid. At the beginning of the game, first player places the piece on any unoccupied square. From that point on, the piece move like a Queen in chess (any number of squares vertically, horizontally, or diagonally). The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queen can’t move through the blocked portion of the board. The first player who is unable to move loses.
+=======
+The rules of Isolation are simple. In our version, there are two players and just one game piece. The two players take turns moving the game piece on a 7-by-7 grid. At the beginning of the game, the first player places the piece on any unoccupied square. From that point on, the piece moves like a Queen in chess (i.e., any number of squares vertically, horizontally, or diagonally). The square that the queen previously occupied is blocked and cannot be moved to for the remainder of the game. The queen also cannot move through the blocked portions of the board. The first player who is unable to move loses.
+>>>>>>> 7fc1cd8c8b9011c7511fe58e8ba0bc8ff97f3b46
 
 ### The Files
 
@@ -27,8 +31,8 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 2. `player_submission.py`: Where you'll implement required methods for your agents.
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
-4. `submit_a.py`: Script to submit your work to evaluate against first 4 tests (mentioned in next section).
-5. `submit_a.py`: Script to submit your work to evaluate against later 2 tests (mentioned in next section).
+4. `submit_a.py`: Script to submit your work to evaluate against the first 4 tests (mentioned in the next section).
+5. `submit_a.py`: Script to submit your work to evaluate against the last 2 tests (mentioned in the next section).
 
 ### The Assignment
 
@@ -55,9 +59,9 @@ In addition to checking time each turn, you will be penalized if your agent take
 These are the bare minimum requirements for your AI, and the rest is up to you. You will be scored according to how well your AI performs against some baseline AIs that we provide (see “Grading”). If you want to improve over the base performance, here are a few suggestions:
 
 - Use partition techniques.
-- Storing the evaluation scores for past moves.
-- Modifying your evaluation function to account for “killer moves”.
-- Ordering nodes to maximize pruning.
+- Store the evaluation scores for past moves.
+- Modify your evaluation function to account for “killer moves”.
+- Order nodes to maximize pruning.
 
 ### Grading
 
@@ -72,14 +76,14 @@ The grade you receive for the assignment will be determined as follows:
 | 20 points | Your AI defeats an agent using our secret evaluation function that uses iterative deepening and minimax >= 60% of the time. |
 | 5 points | Your AI defeats an agent using our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 6 0% of the time. |
 
-We have divided the tests into two parts. First section contains first four tests. And second subsection has last 2 tests. 
+We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
 Submission policy: One submission per hour for each section seperately and last submission score per section.
 
 ### Botfight! (Extra Credit)
 
-In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Summer 2017 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be giving out prizes for the top players. May the odds be ever in your favor.
+In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Fall 2017 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
 
-If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’,while submitting for second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
+If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
 If you compete in the AI tournament and your agent finishes in the top 10%, you will receive a bonus:
 
