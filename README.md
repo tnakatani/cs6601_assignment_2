@@ -75,7 +75,7 @@ The grade you receive for the assignment will be determined as follows:
 | 5 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
-Submission policy: One submission per hour for each section seperately and last submission score per section.
+Submission policy: One submission per hour for each section seperately and last submission score per section (This can change depending upon load on the servers).
 
 ### Botfight! (Extra Credit)
 
