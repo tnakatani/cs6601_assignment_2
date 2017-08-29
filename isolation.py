@@ -195,7 +195,7 @@ class Board:
             if time_limit and time_left() <= 0:
                 if print_moves:
                     print 'Winner: ' + str(self.__inactive_player__)
-                return self.__inactive_player__, move_history, queen_history, "timeout"
+                return self.__inactive_player__, move_history, "timeout"
 
             legal_moves_of_queen = self.get_legal_moves()
 
