@@ -93,7 +93,7 @@ If you compete in the AI tournament and your agent finishes in the top 10%, you 
 
 A friendly reminder: please ensure that your submission is in `player_submission.py`. The scripts described in the following section automatically send that file to the servers for processing.
 
-To submit your code and have it evaluated for a grade, use `python submit.py`.  Ensure that you have created the required AI.txt to enter the tournament.
+To submit your code and have it evaluated for a grade for section-a, use `python submit_a.py` and for section-b use `python submit_b.py`.  Ensure that you have created the required AI.txt to enter the tournament.
 
 ## Your Classes (`player_submission.py`)
 
