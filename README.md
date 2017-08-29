@@ -18,7 +18,7 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 ### The Game
 
 
- The rules of Isolation game are simple.In our version, there are two players and one game piece. Two players take turns placing the game piece on different squares of a 7-by-7 grid. At the beginning of the game, first player places the piece on any unoccupied square. From that point on, the piece move like a Queen in chess (any number of squares vertically, horizontally, or diagonally). The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queen can’t move through the blocked portion of the board. The first player who is unable to move loses.
+ The rules of Dead-end Isolation are simple. There are two players, one game piece and a 7-by-7 grid of squares.  At the beginning of the game, the first player places the piece on any square. From that point on, the players altenate turns moving the piece like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game.  The piece can not move through blocked squares. The first player who is unable to move loses.
 
 
 ### The Files
@@ -30,11 +30,11 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
 4. `submit_a.py`: Script to submit your work to evaluate against the first 4 tests (mentioned in the next section).
-5. `submit_a.py`: Script to submit your work to evaluate against the last 2 tests (mentioned in the next section).
+5. `submit_b.py`: Script to submit your work to evaluate against the last 2 tests (mentioned in the next section).
 
 ### The Assignment
 
-Your task is to create an AI that can play and win a game of Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
+Your task is to create an AI that can play and win a game of Dead-end Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
 
 In this repository, we provide:
 
@@ -69,13 +69,13 @@ The grade you receive for the assignment will be determined as follows:
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 60% of the time. |
-| 20 points | Your AI defeats an agent with our secret evaluation function that uses minimax to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with our secret evaluation function that uses minimax to level 5  >= 60% of the times. |
+| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses minimax to level 3  >= 60% of the times. |
+| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses minimax to level 5  >= 60% of the times. |
 | 20 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and minimax >= 60% of the time. |
 | 5 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
-Submission policy: One submission per hour for each section seperately and last submission score per section (This can change depending upon load on the servers).
+Submission policy: One submission per 75 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to doate, so we reserve the right to modify these rules depending upon the load on the servers).
 
 ### Botfight! (Extra Credit)
 
@@ -85,17 +85,15 @@ If you wish to compete in the tournament, simply include a plaintext file with a
 
 If you compete in the AI tournament and your agent finishes in the top 10%, you will receive a bonus:
 
-- Best Overall:  5 bonus points.
+- Best Overall:  5 bonus points added to the assignment score.
 - Top 5%: 2 bonus points.
 - Top 10%: 1 bonus point.
 
 ## How to Submit Your Code
 
-A friendly reminder: please ensure that your submission is in `player_submission.py`. The scripts described in the following section automatically sends that file to the servers for processing.
+A friendly reminder: please ensure that your submission is in `player_submission.py`. The scripts described in the following section automatically send that file to the servers for processing.
 
-To submit your code and have it evaluated for a grade, use `python submit.py`. We are going to limit you to 1 submissions in one hour (Subject to change depending on load on servers) and the last submission in each section before the deadline will be used to determine your grade.
-
-To enter yourself into the playoffs against your classmates, run `python submit.py --enable-face-off`. Ensure that you have created the required AI.txt to enter the tournament.
+To submit your code and have it evaluated for a grade, use `python submit.py`.  Ensure that you have created the required AI.txt to enter the tournament.
 
 ## Your Classes (`player_submission.py`)
 
@@ -119,7 +117,7 @@ These functions will inform the value judgements your AI will make when choosing
 #### Tips
 
 1. You may write additional code within each class. However, we will only be invoking the `score()` function. You may not change the signature of this function.
-2. When writing additional code to test, try to do so in separate cells. It allows for independent test execution and you can be sure that *all* the code within the EvalFn cells belong only to the EvalFn classes
+2. When writing additional code to test, try to do so in separate classes (do not use ours). It allows for independent test execution and you can be sure that *all* the code within the EvalFn cells belong only to the EvalFn classes
 
 ```python
 class OpenMoveEvalFn():
@@ -242,5 +240,5 @@ We include 2 player types for you to test against locally:
 - `RandomPlayer` - chooses a legal move randomly from among the available legal moves
 - `HumanPlayer` - allows *YOU* to play against the AI
 
-**DO NOT** submit. You are however free to change these classes as you see fit. Know that any changes you make will be solely for the benefit of your own tests.
+**DO NOT** submit these two players. You are however free to change these classes as you see fit. Know that any changes you make will be solely for the benefit of your own tests.
 
