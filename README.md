@@ -17,11 +17,10 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 
 ### The Game
 
-<<<<<<< HEAD
+
  The rules of Isolation game are simple.In our version, there are two players and one game piece. Two players take turns placing the game piece on different squares of a 7-by-7 grid. At the beginning of the game, first player places the piece on any unoccupied square. From that point on, the piece move like a Queen in chess (any number of squares vertically, horizontally, or diagonally). The square that was previously occupying is blocked and cannot be moved for remainder of the game.  The queen can’t move through the blocked portion of the board. The first player who is unable to move loses.
-=======
+
 The rules of Isolation are simple. In our version, there are two players and just one game piece. The two players take turns moving the game piece on a 7-by-7 grid. At the beginning of the game, the first player places the piece on any unoccupied square. From that point on, the piece moves like a Queen in chess (i.e., any number of squares vertically, horizontally, or diagonally). The square that the queen previously occupied is blocked and cannot be moved to for the remainder of the game. The queen also cannot move through the blocked portions of the board. The first player who is unable to move loses.
->>>>>>> 7fc1cd8c8b9011c7511fe58e8ba0bc8ff97f3b46
 
 ### The Files
 
