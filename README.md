@@ -18,14 +18,14 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 ### The Game
 
 
- The rules of Dead-end Isolation are simple. There are two players, one game piece and a 7-by-7 grid of squares.  At the beginning of the game, the first player places the piece on any square. From that point on, the players altenate turns moving the piece like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game.  The piece can not move through blocked squares. The first player who is unable to move loses.
+ The rules of 2 Queen's Isolation are simple. There are two players, four game pieces and a 7-by-7 grid of squares.  At the beginning of the game, the first player places both the piece on any two different squares. From that point on, the players altenate turns moving both the piece like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game.  The piece can not move through blocked squares. The first player who is unable to move any one of the queen loses.
 
 
 ### The Files
 
 While you'll only have to edit and submit `player_submission.py`, there are a number of notable files:
 
-1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text.
+1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text. Avoid changing contents of this file. We have same file on server's side.
 2. `player_submission.py`: Where you'll implement required methods for your agents.
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
@@ -34,7 +34,7 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 
 ### The Assignment
 
-Your task is to create an AI that can play and win a game of Dead-end Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
+Your task is to create an AI that can play and win a game of 2 Queen's Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
 
 In this repository, we provide:
 
@@ -50,9 +50,9 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 2. The minimax algorithm (`minimax()`)
 3. Alpha-beta pruning (`alphabeta()`)
 
-Your agent will have a limited amount of time to act each turn (1 second). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
+Your agent will have a limited amount of time to act each turn (5 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
-In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time. For example, if you attempt to load the entire set of possible board states from memory. In total, your submission will be allowed to run for a maximum of <u>75 minutes</u> before being interrupted.
+In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time. For example, if you attempt to load the entire set of possible board states from memory. In total, your submission will be allowed to run for a maximum of <u>60 minutes</u> before being interrupted.
 
 These are the bare minimum requirements for your AI, and the rest is up to you. You will be scored according to how well your AI performs against some baseline AIs that we provide (see “Grading”). If you want to improve over the base performance, here are a few suggestions:
 
@@ -68,18 +68,18 @@ The grade you receive for the assignment will be determined as follows:
 | Points    | Condition                                |
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
-| 30 points | Your AI defeats a random player >= 60% of the time. |
+| 30 points | Your AI defeats a random player >= 90% of the time. |
 | 20 points | Your AI defeats an agent with our OpenMoveEval function that uses minimax to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses minimax to level 5  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and minimax >= 60% of the time. |
-| 5 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
+| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses alphabeta to level 3  >= 60% of the times. |
+| 20 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
+| 5 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 90% of the time. |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
-Submission policy: One submission per 75 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to doate, so we reserve the right to modify these rules depending upon the load on the servers).
+Submission policy: One submission per 60 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
 
 ### Botfight! (Extra Credit)
 
-In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Fall 2017 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
+In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Spring 2018 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
 
 If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
@@ -120,22 +120,29 @@ These functions will inform the value judgements your AI will make when choosing
 2. When writing additional code to test, try to do so in separate classes (do not use ours). It allows for independent test execution and you can be sure that *all* the code within the EvalFn cells belong only to the EvalFn classes
 
 ```python
-class OpenMoveEvalFn():
-    """Evaluation function that outputs a
-    score equal to how many moves are open
-    for AI player on the board."""
-    def score(self, game, maximizing_player_turn=True):
-        # TODO: finish this function!
-        return eval_func
 
-class CustomEvalFn():
-    """Custom evaluation function that acts
-    however you think it should. This is not
-    required but highly encouraged if you
-    want to build the best AI possible."""
+class OpenMoveEvalFn:
     def score(self, game, maximizing_player_turn=True):
+        """Score the current game state        
+        Evaluation function that outputs a score equal to how many 
+        moves are open for AI player on the board minus how many moves 
+	are open for Opponent's player on the board.
+        """
+	# TODO: finish this function!
+        raise NotImplementedError
+
+
+
+class CustomEvalFn:
+    def score(self, game, maximizing_player_turn=True):
+        """Score the current game state        
+        Custom evaluation function that acts however you think it should. This 
+        is not required but highly encouraged if you want to build the best 
+        AI possible.
+        """
         # TODO: finish this function!
-        return eval_func
+        raise NotImplementedError
+
 ```
 
 ### `CustomPlayer`
@@ -175,25 +182,32 @@ class CustomPlayer:
         self.search_depth = search_depth
 
     def move(self, game, legal_moves, time_left):
-        """Called to determine one move by your agent
+	"""Called to determine one move by your agent
         
+	Note:
+		1. Do NOT change the name of this 'move' function. We are going to call 
+		the this function directly. 
+		2. Change the name of minimax function to alphabeta function when 
+		required. Here we are talking about 'minimax' function call,
+		NOT 'move' function name.
+
         Args:
             game (Board): The board and game state.
             legal_moves (dict): Dictionary of legal moves and their outcomes
             time_left (function): Used to determine time left before timeout
             
         Returns:
-            (tuple): best_move
+            (tuple, tuple): best_move_queen1, best_move_queen2
         """
-        best_move, utility = self.minimax(game, time_left, depth=self.search_depth)
-        # change minimax to alphabeta after completing alphabeta part of assignment
-        return best_move
 
-    def utility(self, game):
-        """Can be updated if desired"""
+        best_move_queen1,best_move_queen2, utility = self.minimax(game, time_left, depth=self.search_depth)	
+        return best_move_queen1,best_move_queen2
+
+    def utility(self, game, maximizing_player):
+        """Can be updated if desired. Not compulsory. """
         return self.eval_fn.score(game)
 
-    def minimax(self, game, time_left, depth=float("inf"), maximizing_player=True):
+    def minimax(self, game, time_left, depth=3, maximizing_player=True):
         """Implementation of the minimax algorithm
         
         Args:
@@ -205,12 +219,11 @@ class CustomPlayer:
         Returns:
             (tuple, int): best_move, best_val
         """
-        # TODO: finish this function!
+	# TODO: finish this function!
         raise NotImplementedError
-        return best_move, best_val
+        return best_move_queen1,best_move_queen2, best_val
 
-    def alphabeta(self, game, time_left, depth=float("inf"), alpha=float("-inf"), beta=float("inf"),
-                  maximizing_player=True):
+    def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
         """Implementation of the alphabeta algorithm
         
         Args:
@@ -226,7 +239,8 @@ class CustomPlayer:
         """
         # TODO: finish this function!
         raise NotImplementedError
-        return best_move, val
+	return best_move_queen1,best_move_queen2, val
+
 ```
 
 ### Built-in Tests

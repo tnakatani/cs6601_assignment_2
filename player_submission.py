@@ -1,34 +1,43 @@
 #!/usr/bin/env python
 from isolation import Board, game_as_text
-
+from random import randint
 
 # This file is your main submission that will be graded against. Do not
 # add any classes or functions to this file that are not part of the classes
 # that we want.
 
-# Submission Class 1
+
 class OpenMoveEvalFn:
 
     def score(self, game, maximizing_player_turn=True):
         """Score the current game state
         
         Evaluation function that outputs a score equal to how many 
-        moves are open for AI player on the board.
+        moves are open for AI player on the board minus how many moves 
+	are open for Opponent's player on the board.
+
+	Note:
+		1. Be very careful while doing opponent's moves. You might end up 
+		   reducing your own moves.
+		2. Here if you substract both the moves, you will not count overlapping 
+		   moves. Count only once. 
+		3. This function is just given to give you hint. If you think of better
+		   evaluation function, do it in CustomEvalFn below. 
             
         Args
             param1 (Board): The board and game state.
             param2 (bool): True if maximizing player is active.
 
         Returns:
-            float: The current state's score. Number of your agent's moves.
+            float: The current state's score. MyMoves-OppMoves.
             
         """
-	
-        # TODO: finish this function!
-        #raise NotImplementedError
+
+	# TODO: finish this function!
+        raise NotImplementedError
 
 
-# Submission Class 2
+
 class CustomEvalFn:
 
     def __init__(self):
@@ -49,6 +58,7 @@ class CustomEvalFn:
             float: The current state's score, based on your own heuristic.
             
         """
+
         # TODO: finish this function!
         raise NotImplementedError
 
@@ -77,22 +87,29 @@ class CustomPlayer:
         self.search_depth = search_depth
 
     def move(self, game, legal_moves, time_left):
-        """Called to determine one move by your agent
+	"""Called to determine one move by your agent
         
+	Note:
+		1. Do NOT change the name of this 'move' function. We are going to call 
+		the this function directly. 
+		2. Change the name of minimax function to alphabeta function when 
+		required. Here we are talking about 'minimax' function call,
+		NOT 'move' function name.
+
         Args:
             game (Board): The board and game state.
             legal_moves (dict): Dictionary of legal moves and their outcomes
             time_left (function): Used to determine time left before timeout
             
         Returns:
-            (tuple): best_move
+            (tuple, tuple): best_move_queen1, best_move_queen2
         """
-        best_move, utility = self.minimax(game, time_left, depth=self.search_depth)
-        # change minimax to alphabeta after completing alphabeta part of assignment
-        return best_move
 
-    def utility(self, game):
-        """Can be updated if desired"""
+        best_move_queen1,best_move_queen2, utility = self.minimax(game, time_left, depth=self.search_depth)	
+        return best_move_queen1,best_move_queen2
+
+    def utility(self, game, maximizing_player):
+        """Can be updated if desired. Not compulsory. """
         return self.eval_fn.score(game)
 
     def minimax(self, game, time_left, depth=3, maximizing_player=True):
@@ -107,12 +124,11 @@ class CustomPlayer:
         Returns:
             (tuple, int): best_move, best_val
         """
-        # TODO: finish this function!
+	# TODO: finish this function!
         raise NotImplementedError
-        return best_move, best_val
+        return best_move_queen1,best_move_queen2, best_val
 
-    def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),
-                  maximizing_player=True):
+    def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
         """Implementation of the alphabeta algorithm
         
         Args:
@@ -128,4 +144,5 @@ class CustomPlayer:
         """
         # TODO: finish this function!
         raise NotImplementedError
-        return best_move, val
+	return best_move_queen1,best_move_queen2, val
+
