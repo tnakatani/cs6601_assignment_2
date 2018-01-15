@@ -19,10 +19,9 @@ class OpenMoveEvalFn:
 	Note:
 		1. Be very careful while doing opponent's moves. You might end up 
 		   reducing your own moves.
-		2. Here if you substract both the moves, you will not count overlapping 
-		   moves. Count only once. 
-		3. This function is just given to give you hint. If you think of better
-		   evaluation function, do it in CustomEvalFn below. 
+		2. Here if you add overlapping moves of both queens, you are considering one available square twice.
+		   Consider overlapping square only once. In both cases- myMoves and in OppMoves. 
+		3. If you think of better evaluation function, do it in CustomEvalFn below. 
             
         Args
             param1 (Board): The board and game state.

@@ -69,10 +69,10 @@ The grade you receive for the assignment will be determined as follows:
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 90% of the time. |
-| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses minimax to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with our OpenMoveEval function that uses alphabeta to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
-| 5 points | Your AI defeats an agent with our secret evaluation function that uses iterative deepening and alpha-beta pruning >= 90% of the time. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 3  >= 60% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 3  >= 60% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
+| 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
 Submission policy: One submission per 60 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
@@ -83,11 +83,12 @@ In addition to the basic assignment, you will have the option to compete against
 
 If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
-If you compete in the AI tournament and your agent finishes in the top 10%, you will receive a bonus:
+If you compete in the AI tournament and your agent finishes in the top 10%, you will receive a bonus points for this assignment (bonus points are added on this grade):
 
-- Best Overall:  5 bonus points added to the assignment score.
-- Top 5%: 2 bonus points.
-- Top 10%: 1 bonus point.
+- Best Overall:  12 bonus points added to the assignment score.
+- Second Best: 10 bonus points.
+- Third Best: 7 bonus points.
+- Fourth to Tenth Best: 5 bonus point.
 
 ## How to Submit Your Code
 
