@@ -85,7 +85,7 @@ In addition to the basic assignment, you will have the option to compete against
 
 If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
-If you compete in the AI tournament and your agent finishes in the top 10%, you will receive a bonus points for this assignment (bonus points are added on this grade):
+If you compete in the AI tournament and your agent finishes in the top 10, you will receive a bonus points for this assignment (bonus points are added to the grades of each assignment. Not to final score. ):
 
 - Best Overall:  12 bonus points added to the assignment score.
 - Second Best: 10 bonus points.
