@@ -72,7 +72,7 @@ class CustomPlayer:
     to make sure it properly uses minimax
     and alpha-beta to return a good move."""
 
-    def __init__(self, search_depth=3, eval_fn=OpenMoveEvalFn()):
+    def __init__(self, search_depth, eval_fn=OpenMoveEvalFn()):
         """Initializes your player.
         
         if you find yourself with a superior eval function, update the default 
@@ -111,7 +111,7 @@ class CustomPlayer:
         """Can be updated if desired. Not compulsory. """
         return self.eval_fn.score(game)
 
-    def minimax(self, game, time_left, depth=3, maximizing_player=True):
+    def minimax(self, game, time_left, depth, maximizing_player=True):
         """Implementation of the minimax algorithm
         
         Args:
@@ -127,7 +127,7 @@ class CustomPlayer:
         raise NotImplementedError
         return best_move_queen1,best_move_queen2, best_val
 
-    def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
+    def alphabeta(self, game, time_left, depth, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
         """Implementation of the alphabeta algorithm
         
         Args:
