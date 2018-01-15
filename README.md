@@ -18,15 +18,16 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 ### The Game
 
 
- The rules of 2 Queen's Isolation are simple. There are two players, four game pieces and a 7-by-7 grid of squares.  At the beginning of the game, the first player places both the piece on any two different squares. From that point on, the players altenate turns moving both the piece like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game.  The piece can not move through blocked squares. The first player who is unable to move any one of the queen loses.
+The rules of 2 Queen's Isolation are simple. There are two players, four game pieces and a 7-by-7 grid of squares. At the beginning of the game, the first player places both the pieces on any two different squares. From that point on, the players alternate turns moving both the pieces like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game. The piece can not move through blocked squares. The first player who is unable to move any one of the queens loses.
+
 
 
 ### The Files
 
 While you'll only have to edit and submit `player_submission.py`, there are a number of notable files:
 
-1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text. Avoid changing contents of this file. We have same file on server's side.
-2. `player_submission.py`: Where you'll implement required methods for your agents.
+1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text. Avoid changing contents of this file. We have same file on the server's side.
+2. `player_submission.py`: Where you'll implement the required methods for your agents.
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
 4. `submit_a.py`: Script to submit your work to evaluate against the first 4 tests (mentioned in the next section).
@@ -52,13 +53,14 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 
 Your agent will have a limited amount of time to act each turn (5 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
-In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time. For example, if you attempt to load the entire set of possible board states from memory. In total, your submission will be allowed to run for a maximum of <u>60 minutes</u> before being interrupted.
+In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). In total, your submission will be allowed to run for a maximum of <u>60 minutes</u> before being interrupted.
 
 These are the bare minimum requirements for your AI, and the rest is up to you. You will be scored according to how well your AI performs against some baseline AIs that we provide (see “Grading”). If you want to improve over the base performance, here are a few suggestions:
 
 - Use partition techniques.
 - Store the evaluation scores for past moves.
 - Modify your evaluation function to account for “killer moves”.
+- Optimize functions that are called often.
 - Order nodes to maximize pruning.
 
 ### Grading
@@ -67,12 +69,12 @@ The grade you receive for the assignment will be determined as follows:
 
 | Points    | Condition                                |
 | --------- | ---------------------------------------- |
-| 5 points | You write an evaluation function that scores based on the maximum number of moves that the AI can make, and your evaluation function performs correctly on some sample boards we provide. |
+| 5 points | You write an evaluation function, OpenMoveEval, which returns the number of moves that the AI minus the number of moves opponent can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 90% of the time. |
-| 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 3  >= 60% of the times. |
-| 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
-| 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning >= 60% of the time. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 3  >= 65% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 4  >= 65% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
+| 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 65% of the time  |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
 Submission policy: One submission per 60 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
@@ -110,7 +112,7 @@ Aside from those 3 classes, any added code (such as additional tests) **MUST** b
 
 These functions will inform the value judgements your AI will make when choosing moves. There are 2 classes:
 
-- `OpenMoveEvalFn` - Scores the maximum number of available moves open for computer player. All baseline tests will use this function. **This is mandatory**
+- `OpenMoveEvalFn` -Returns the number of available moves open for the your player minus the number of moves available for opponent player(consider overlapping moves of your own queens only once). All baseline tests will use this function. **This is mandatory**
 - `CustomEvalFn` - You are encouraged to create your own evaluation function here.
 
 **DO** submit the code within this class (and only the code within this class).
