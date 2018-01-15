@@ -6,7 +6,7 @@ class RandomPlayer():
     def move(self, game, legal_moves, time_left):	
 	flag=True
 	while flag:
-		if not legal_moves: return None,None  
+		if not len(legal_moves[game.__active_players_queen1__]) and not len(legal_moves[game.__active_players_queen1__]): return None,None
 		if len(legal_moves[game.__active_players_queen1__]):
 			move1=legal_moves[game.__active_players_queen1__][randint(0,len(legal_moves[game.__active_players_queen1__])-1)]
 		else:	
