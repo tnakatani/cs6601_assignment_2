@@ -74,7 +74,7 @@ The grade you receive for the assignment will be determined as follows:
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 2  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 3  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
-| 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 65% of the time  |
+| 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
 
 We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
 Submission policy: One submission per 60 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
