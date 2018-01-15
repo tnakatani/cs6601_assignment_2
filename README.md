@@ -71,8 +71,8 @@ The grade you receive for the assignment will be determined as follows:
 | --------- | ---------------------------------------- |
 | 5 points | You write an evaluation function, OpenMoveEval, which returns the number of moves that the AI minus the number of moves opponent can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 90% of the time. |
-| 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 3  >= 65% of the times. |
-| 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 4  >= 65% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 2  >= 65% of the times. |
+| 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 3  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
 | 5 points | Your AI defeats an agent with Thad's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 65% of the time  |
 
