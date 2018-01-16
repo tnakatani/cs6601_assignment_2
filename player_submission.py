@@ -121,7 +121,7 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple, int): best_move, best_val
+            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
         """
 	# TODO: finish this function!
         raise NotImplementedError
@@ -139,7 +139,7 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple, int): best_move, best_val
+            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
         """
         # TODO: finish this function!
         raise NotImplementedError
