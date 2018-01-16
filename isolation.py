@@ -229,7 +229,7 @@ class Board:
         return out
 
 
-    def play_isolation(self, time_limit = 5000, print_moves=False):
+    def play_isolation(self, time_limit = 10000, print_moves=False):
 
         move_history = []
         mi=1

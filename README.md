@@ -51,9 +51,9 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 2. The minimax algorithm (`minimax()`)
 3. Alpha-beta pruning (`alphabeta()`)
 
-Your agent will have a limited amount of time to act each turn (5 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
+Your agent will have a limited amount of time to act each turn (10 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
-In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). In total, your submission will be allowed to run for a maximum of <u>60 minutes</u> before being interrupted.
+In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). We have divided the tests into three(mentioned in details in next grading section below).  In total, your submission will be allowed to run for a maximum of <u>120 minutes</u> before being interrupted <u> for second and third section. Your submission will be allowed to run for a maximum of <u>30 minutes</u> for first section. 
 
 These are the bare minimum requirements for your AI, and the rest is up to you. You will be scored according to how well your AI performs against some baseline AIs that we provide (see “Grading”). If you want to improve over the base performance, here are a few suggestions:
 
@@ -76,14 +76,14 @@ The grade you receive for the assignment will be determined as follows:
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
 | 5 points | Your AI defeats an agent with Kshitish's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
 
-We have divided the tests into two. The first section contains tests for the first four parts, and the second section has tests for the last two parts.
-Submission policy: One submission per 60 minutes for each section separately.  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
+We have divided the tests into three. The first section contains tests for the first two parts, the second section has tests for the middle two parts and the third section has tests for last two parts.
+Submission policy: One submission per 120 minutes for second and third section separately. One submission per 30 minutes for first section (OpenMoveEvalFn and RandomPlayer).  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
 
 ### Botfight! (Extra Credit)
 
 In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Spring 2018 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
 
-If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the second section of tests (submit_b) and your CustomPlayer instance will be enlisted.
+If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the third section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
 If you compete in the AI tournament and your agent finishes in the top 10, you will receive a bonus points for this assignment (bonus points are added to the grades of each assignment. Not to final score. ):
 
@@ -96,7 +96,7 @@ If you compete in the AI tournament and your agent finishes in the top 10, you w
 
 A friendly reminder: please ensure that your submission is in `player_submission.py`. The scripts described in the following section automatically send that file to the servers for processing.
 
-To submit your code and have it evaluated for a grade for section-a, use `python submit_a.py` and for section-b use `python submit_b.py`.  Ensure that you have created the required AI.txt to enter the tournament.
+To submit your code and have it evaluated for a grade for first section, use `python submit.py`, for evaluation of second section use `python submit_a.py` and for third section use `python submit_b.py`.  Ensure that you have created the required AI.txt to enter the tournament.
 
 ## Your Classes (`player_submission.py`)
 
@@ -210,7 +210,7 @@ class CustomPlayer:
         """Can be updated if desired. Not compulsory. """
         return self.eval_fn.score(game)
 
-    def minimax(self, game, time_left, depth=3, maximizing_player=True):
+    def minimax(self, game, time_left, depth=2, maximizing_player=True):
         """Implementation of the minimax algorithm
         
         Args:
