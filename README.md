@@ -30,8 +30,9 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 2. `player_submission.py`: Where you'll implement the required methods for your agents.
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
-4. `submit_a.py`: Script to submit your work to evaluate against the first 4 tests (mentioned in the next section).
-5. `submit_b.py`: Script to submit your work to evaluate against the last 2 tests (mentioned in the next section).
+4. `submit.py`: Script to submit your work to evaluate against the first 2 tests (mentioned in the next section).
+5. `submit_a.py`: Script to submit your work to evaluate against the middle 2 tests (mentioned in the next section).
+6. `submit_b.py`: Script to submit your work to evaluate against the last 2 tests (mentioned in the next section).
 
 ### The Assignment
 
