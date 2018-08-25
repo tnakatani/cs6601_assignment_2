@@ -18,7 +18,9 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 ### The Game
 
 
-The rules of 2 Queen's Isolation are simple. There are two players, four game pieces and a 7-by-7 grid of squares. At the beginning of the game, the first player places both the pieces on any two different squares. From that point on, the players alternate turns moving both the pieces like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked. That square can not be used for the remainder of the game. The piece can not move through blocked squares. The first player who is unable to move any one of the queens loses.
+The rules of Sumo Isolation are simple. There are two players, each with his own game piece, and a 7-by-7 grid of squares. At the beginning of the game, the first player places his piece on any square. The second player follows suit, and places his piece on any one of the available squares. From that point on, the players alternate turns moving their piece like a Queen in chess (any number of open squares vertically, horizontally, or diagonally). When the piece is moved, the square that was previously occupied is blocked, and can not be used for the remainder of the game. 
+A queen can not move through blocked squares. She can, however, move into a position occupied by another queen, in which case the other queen is pushed one cell back (into the direction of movement). This is called a 'push' and when your queen is pushed out of the 7x7 grid, you lose. You cannot push a queen if the cell behind her is blocked.
+The first player who is unable to move his queen loses.
 
 
 
@@ -26,7 +28,7 @@ The rules of 2 Queen's Isolation are simple. There are two players, four game pi
 
 While you'll only have to edit and submit `player_submission.py`, there are a number of notable files:
 
-1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text. Avoid changing contents of this file. We have same file on the server's side.
+1. `isolation.py`: Includes the `Board` class and a function for printing out a game as text. Do NOT change contents of this file. We have the same file on the server's side, so any changes will not be accounted for.
 2. `player_submission.py`: Where you'll implement the required methods for your agents.
 3. `player_submission_tests.py`: Sample tests to validate your agents locally.
 3. `test_players.py`: Example agents used to play isolation locally.
@@ -54,13 +56,13 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 
 Your agent will have a limited amount of time to act each turn (10 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
-In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). We have divided the tests into three(mentioned in details in next grading section below).  In total, your submission will be allowed to run for a maximum of <u>120 minutes</u> before being interrupted <u> for second and third section. Your submission will be allowed to run for a maximum of <u>30 minutes</u> for first section. 
+In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). We have divided the tests into three(mentioned in details in next grading section below).  In total, your submission will be allowed to run for a maximum of <u>30 minutes</u> before being interrupted for the first section. This is increased to <u>120 minutes</u> for the second and third section.
 
 These are the bare minimum requirements for your AI, and the rest is up to you. You will be scored according to how well your AI performs against some baseline AIs that we provide (see “Grading”). If you want to improve over the base performance, here are a few suggestions:
 
 - Use partition techniques.
 - Store the evaluation scores for past moves.
-- Modify your evaluation function to account for “killer moves”.
+- Modify your evaluation function to account for “killer moves” and "pushes".
 - Optimize functions that are called often.
 - Order nodes to maximize pruning.
 
@@ -75,14 +77,14 @@ The grade you receive for the assignment will be determined as follows:
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 2  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 3  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
-| 5 points | Your AI defeats an agent with Kshitish's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
+| 5 points | Your AI defeats an agent with Noah's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
 
 We have divided the tests into three. The first section contains tests for the first two parts, the second section has tests for the middle two parts and the third section has tests for last two parts.
 Submission policy: One submission per 120 minutes for second and third section separately. One submission per 30 minutes for first section (OpenMoveEvalFn and RandomPlayer).  Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
 
 ### Botfight! (Extra Credit)
 
-In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Spring 2018 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
+In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Fall 2018 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
 
 If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the third section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
@@ -113,7 +115,7 @@ Aside from those 3 classes, any added code (such as additional tests) **MUST** b
 
 These functions will inform the value judgements your AI will make when choosing moves. There are 2 classes:
 
-- `OpenMoveEvalFn` -Returns the number of available moves open for the your player minus the number of moves available for opponent player(consider overlapping moves of your own queens only once). All baseline tests will use this function. **This is mandatory**
+- `OpenMoveEvalFn` -Returns the number of available moves open for your player minus the number of moves available for opponent player. All baseline tests will use this function. **This is mandatory**
 - `CustomEvalFn` - You are encouraged to create your own evaluation function here.
 
 **DO** submit the code within this class (and only the code within this class).
@@ -201,11 +203,11 @@ class CustomPlayer:
             time_left (function): Used to determine time left before timeout
             
         Returns:
-            (tuple, tuple): best_move_queen1, best_move_queen2
+            tuple: best_move
         """
 
-        best_move_queen1,best_move_queen2, utility = self.minimax(game, time_left, depth=self.search_depth)	
-        return best_move_queen1,best_move_queen2
+        best_move, utility = self.minimax(game, time_left, depth=self.search_depth)	
+        return best_move
 
     def utility(self, game, maximizing_player):
         """Can be updated if desired. Not compulsory. """
@@ -221,11 +223,11 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
+            (tuple, int): best_move, val
         """
 	# TODO: finish this function!
         raise NotImplementedError
-        return best_move_queen1,best_move_queen2, best_val
+        return best_move, best_val
 
     def alphabeta(self, game, time_left, depth=3, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
         """Implementation of the alphabeta algorithm
@@ -239,11 +241,11 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
+            (tuple, int): best_move, val
         """
         # TODO: finish this function!
         raise NotImplementedError
-	return best_move_queen1,best_move_queen2, val
+	return best_move, val
 
 ```
 

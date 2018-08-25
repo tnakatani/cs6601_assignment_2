@@ -14,25 +14,23 @@ class OpenMoveEvalFn:
         
         Evaluation function that outputs a score equal to how many 
         moves are open for AI player on the board minus how many moves 
-	are open for Opponent's player on the board.
+    	are open for Opponent's player on the board.
 
-	Note:
-		1. Be very careful while doing opponent's moves. You might end up 
-		   reducing your own moves.
-		2. Here if you add overlapping moves of both queens, you are considering one available square twice.
-		   Consider overlapping square only once. In both cases- myMoves and in OppMoves. 
-		3. If you think of better evaluation function, do it in CustomEvalFn below. 
-            
-        Args
-            param1 (Board): The board and game state.
-            param2 (bool): True if maximizing player is active.
+    	Note:
+    		1. Be very careful while doing opponent's moves. You might end up 
+    		   reducing your own moves.
+    		3. If you think of better evaluation function, do it in CustomEvalFn below. 
+                
+            Args
+                param1 (Board): The board and game state.
+                param2 (bool): True if maximizing player is active.
 
-        Returns:
-            float: The current state's score. MyMoves-OppMoves.
-            
-        """
+            Returns:
+                float: The current state's score. MyMoves-OppMoves.
+                
+            """
 
-	# TODO: finish this function!
+    	# TODO: finish this function!
         raise NotImplementedError
 
 
@@ -64,13 +62,10 @@ class CustomEvalFn:
 
 class CustomPlayer:
     # TODO: finish this class!
-    """Player that chooses a move using 
-    your evaluation function and 
-    a minimax algorithm 
-    with alpha-beta pruning.
-    You must finish and test this player
-    to make sure it properly uses minimax
-    and alpha-beta to return a good move."""
+    """Player that chooses a move using your evaluation function
+    and a minimax algorithm with alpha-beta pruning.
+    You must finish and test this player to make sure it properly
+    uses minimax and alpha-beta to return a good move."""
 
     def __init__(self, search_depth, eval_fn=OpenMoveEvalFn()):
         """Initializes your player.
@@ -88,24 +83,24 @@ class CustomPlayer:
     def move(self, game, legal_moves, time_left):
 	"""Called to determine one move by your agent
         
-	Note:
-		1. Do NOT change the name of this 'move' function. We are going to call 
-		the this function directly. 
-		2. Change the name of minimax function to alphabeta function when 
-		required. Here we are talking about 'minimax' function call,
-		NOT 'move' function name.
+        Note:
+            1. Do NOT change the name of this 'move' function. We are going to call
+            the this function directly.
+            2. Change the name of minimax function to alphabeta function when
+            required. Here we are talking about 'minimax' function call,
+            NOT 'move' function name.
 
-        Args:
+            Args:
             game (Board): The board and game state.
             legal_moves (dict): Dictionary of legal moves and their outcomes
             time_left (function): Used to determine time left before timeout
             
         Returns:
-            (tuple, tuple): best_move_queen1, best_move_queen2
+            tuple: best_move
         """
 
-        best_move_queen1,best_move_queen2, utility = self.minimax(game, time_left, depth=self.search_depth)	
-        return best_move_queen1,best_move_queen2
+        best_move, utility = self.minimax(game, time_left, depth=self.search_depth)	
+        return best_move
 
     def utility(self, game, maximizing_player):
         """Can be updated if desired. Not compulsory. """
@@ -121,11 +116,11 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
+            (tuple, int): best_move, val
         """
-	# TODO: finish this function!
+	    # TODO: finish this function!
         raise NotImplementedError
-        return best_move_queen1,best_move_queen2, best_val
+        return best_move, best_val
 
     def alphabeta(self, game, time_left, depth, alpha=float("-inf"), beta=float("inf"),maximizing_player=True):
         """Implementation of the alphabeta algorithm
@@ -139,9 +134,9 @@ class CustomPlayer:
             maximizing_player (bool): True if maximizing player is active.
 
         Returns:
-            (tuple,tuple, int): best_move_queen1,best_move_queen2, val
+            (tuple, int): best_move, val
         """
         # TODO: finish this function!
         raise NotImplementedError
-	return best_move_queen1,best_move_queen2, val
+	return best_move, val
 

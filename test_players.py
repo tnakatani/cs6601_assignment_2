@@ -1,78 +1,65 @@
 from random import randint
+import random
 
 class RandomPlayer():
+
+    def __init__(self, name="RandomPlayer"):
+        self.name = name
+
     """Player that chooses a move randomly."""    
 
-    def move(self, game, legal_moves, time_left):	
-	flag=True
-	while flag:
-		if not len(legal_moves[game.__active_players_queen1__]) and not len(legal_moves[game.__active_players_queen1__]): return None,None
-		if len(legal_moves[game.__active_players_queen1__]):
-			move1=legal_moves[game.__active_players_queen1__][randint(0,len(legal_moves[game.__active_players_queen1__])-1)]
-		else:	
-			move1=None
-	
-		if len(legal_moves[game.__active_players_queen2__]):
-			move2=legal_moves[game.__active_players_queen2__][randint(0,len(legal_moves[game.__active_players_queen2__])-1)]
-		else:	
-			move2=None
-	
-		if move1!=move2:
-			flag=False
-			return move1,move2
-		elif move1==move2 and len(legal_moves[game.__active_players_queen1__])==1 and len(legal_moves[game.__active_players_queen2__])==1:
-			return None,None
-		else:
-			flag=True
-
-    
-
-
-class HumanPlayer(): 
-    """Player that chooses a move according to
-    user's input."""
     def move(self, game, legal_moves, time_left):
-        print "here in "
+        if not legal_moves:
+            return None, None, False
+        else:
+            return random.choice(legal_moves)
+
+    def get_name(self):
+        return self.name
+
+
+
+class HumanPlayer():
+
+    def __init__(self, name="HumanPlayer"):
+        self.name = name
+
+    """Player that chooses a move according to user's input."""
+    def move(self, game, legal_moves, time_left):
         choice = {}
-	print len(legal_moves[game.__active_players_queen1__])
-	
-        if not len(legal_moves[game.__active_players_queen1__]) and not len(legal_moves[game.__active_players_queen2__]):
-	    print "error"
+
+        if not len(legal_moves):
+            print "No more moves left."
             return None, None
-       	i=0
-	queen=game.__active_players_queen1__
-        for move in legal_moves[game.__active_players_queen1__]:        
-            choice.update({i:(queen,move)})
-	    print choice
-            print('\t'.join(['[%d] q%d: (%d,%d)'%(i,queen,move[0],move[1])] ))
-            i=i+1
 
-        j=i
-	queen=game.__active_players_queen2__
-        for move in legal_moves[game.__active_players_queen2__]:        
-            choice.update({j:(queen,move)})
-            print('\t'.join(['[%d] q%d: (%d,%d)'%(j,queen,move[0],move[1])] ))
-            j=j+1
+        counter = 1
+        for move in legal_moves:
+            choice.update({counter: move})
+            if not move[2]:
+                print('\t'.join(['[%d] (%d,%d)'%(counter, move[0], move[1])]))
+            else:
+                print('\t'.join(['[%d] (%d,%d) - push' % (counter, move[0], move[1])]))
+            counter += 1
 
+        print "-------------------------"
+        print game.print_board(legal_moves)
+        print "-------------------------"
+        print ">< - impassable, o - valid move"
+        print "-------------------------"
 
-        valid_choice1 = False
-	valid_choice2 = False
+        valid_choice = False
 
-        while not valid_choice1 or not valid_choice2:
+        while not valid_choice:
             try:
-                index_queen1 = int(input('Select move index for queen1:'))
-                valid_choice1 = 0 <= index_queen1 < i
+                index = int(input('Select move index [1-'+str(len(legal_moves))+']:'))
+                valid_choice = 1 <= index <= len(legal_moves)
 
-                if not valid_choice1:
-                    print('Illegal move of queen1! Try again.')
+                if not valid_choice:
+                    print('Illegal move of queen! Try again.')
+            except Exception:
+                print('Invalid entry! Try again.')
 
-		index_queen2 = int(input('Select move index for queen2:'))
-                valid_choice2 = i <= index_queen2 < j
+        return choice[index]
 
-                if not valid_choice2:
-                    print('Illegal move of queen2! Try again.')
-            
-            except ValueError:
-                print('Invalid index! Try again.')
-        
-        return choice[index_queen1][1],choice[index_queen2][1]
+    def get_name(self):
+        return self.name
