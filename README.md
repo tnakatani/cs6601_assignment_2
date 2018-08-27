@@ -38,7 +38,7 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 
 ### The Assignment
 
-Your task is to create an AI that can play and win a game of 2 Queen's Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
+Your task is to create an AI that can play and win a game of Sumo Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 2.7, using our provided code as a starting point.
 
 In this repository, we provide:
 
@@ -88,12 +88,12 @@ In addition to the basic assignment, you will have the option to compete against
 
 If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the third section of tests (submit_b) and your CustomPlayer instance will be enlisted.
 
-If you compete in the AI tournament and your agent finishes in the top 10, you will receive a bonus points for this assignment (bonus points are added to the grades of each assignment. Not to final score. ):
+If you compete in the AI tournament and your agent finishes in the top 10, you will receive bonus points for this assignment (bonus points are added to the grades of each assignment. Not to final score. ):
 
 - Best Overall:  12 bonus points added to the assignment score.
 - Second Best: 10 bonus points.
 - Third Best: 7 bonus points.
-- Fourth to Tenth Best: 5 bonus point.
+- Fourth to Tenth Best: 5 bonus points.
 
 ## How to Submit Your Code
 
@@ -125,7 +125,9 @@ These functions will inform the value judgements your AI will make when choosing
 1. You may write additional code within each class. However, we will only be invoking the `score()` function. You may not change the signature of this function.
 2. When writing additional code to test, try to do so in separate classes (do not use ours). It allows for independent test execution and you can be sure that *all* the code within the EvalFn cells belong only to the EvalFn classes
 
-```python
+```
+
+
 
 class OpenMoveEvalFn:
     def score(self, game, maximizing_player_turn=True):
