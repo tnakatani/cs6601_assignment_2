@@ -3,7 +3,8 @@ import traceback
 from player_submission import OpenMoveEvalFn, CustomEvalFn, CustomPlayer
 from isolation import Board, game_as_text
 from test_players import RandomPlayer, HumanPlayer
-import resource
+if platform.system() != 'Windows':
+   import resource
 from time import time, sleep
 
 def main():
