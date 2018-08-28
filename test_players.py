@@ -10,7 +10,7 @@ class RandomPlayer():
 
     def move(self, game, legal_moves, time_left):
         if not legal_moves:
-            return None, None, False
+            return None
         else:
             return random.choice(legal_moves)
 
