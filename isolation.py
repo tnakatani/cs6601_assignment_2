@@ -75,15 +75,7 @@ class Board:
 
         # IF pushing
         if push:
-            push_direction_x = opponent_pos[0] - my_pos[0]
-            if push_direction_x != 0:
-                push_direction_x /= abs(opponent_pos[0] - my_pos[0])
-            push_direction_y = opponent_pos[1] - my_pos[1]
-            if push_direction_y != 0:
-                push_direction_y /= abs(opponent_pos[1] - my_pos[1])
-            #print "Pushing in direction:", push_direction_x, push_direction_y
-            opponent_new_pos = (opponent_pos[0] + push_direction_x,
-                                     opponent_pos[1] + push_direction_y, False)
+            opponent_new_pos = (calculate_enemy_push_location(my_pos[0], my_pos[1], opponent_pos[0], opponent_pos[1]), False)
 
             # If opponent was pushed off the board
             if not self.move_is_in_board(opponent_new_pos[0], opponent_new_pos[1]):
@@ -343,6 +335,8 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
 
     print "Printing the game as text."
 
+    last_move = (9,9,False)
+    
     for i, move in enumerate(move_history):
         if move is None or len(move) == 0:
             continue
@@ -352,12 +346,42 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
             board.__apply_move_write__(move[0])
             ans.write("\n\n" + board.__queen_1__ + " moves to (" + str(move[0][0]) + "," + str(move[0][1]) + ")\r\n")
 
+            if len(move) > 1 and move[0][2] is True:
+                my_x, my_y = last_move[0][0], last_move[0][1]
+                enemy_x, enemy_y = move[0][0], move[0][1]
+
+                new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y)
+
+                if board.move_is_in_board(new_enemy_x, new_enemy_y):
+                    board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
+                ans.write("\n\n" + board.__queen_2__ + " pushed to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
+
+
         if len(move) > 1 and move[1] != Board.NOT_MOVED and move[0] is not None:
             ans.write(board.print_board())
             board.__apply_move_write__(move[1])
             ans.write("\n\n" + board.__queen_2__ + " moves to (" + str(move[1][0]) + "," + str(move[1][1]) + ")\r\n")
 
+            if move[1] is not None and move[1][2] is True:
+                my_x, my_y = last_move[1][0], last_move[1][1]
+                enemy_x, enemy_y = move[1][0], move[1][1]
+
+                new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y)
+
+                if board.move_is_in_board(new_enemy_x, new_enemy_y):
+                    board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
+                ans.write("\n\n" + board.__queen_1__ + " pushed to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
+
+        last_move = move
+
     ans.write("\n"+str(winner)+" has won. Reason: "+ str(termination))
     return ans.getvalue()
 
-
+def calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y):
+    push_direction_x = enemy_x - my_x
+    if push_direction_x != 0:
+        push_direction_x /= abs(push_direction_x)
+    push_direction_y = enemy_y - my_y
+    if push_direction_y != 0:
+        push_direction_y /= abs(push_direction_y)
+    return enemy_x + push_direction_x, enemy_y + push_direction_y
