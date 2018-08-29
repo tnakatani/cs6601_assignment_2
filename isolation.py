@@ -75,7 +75,9 @@ class Board:
 
         # IF pushing
         if push:
-            opponent_new_pos = (calculate_enemy_push_location(my_pos[0], my_pos[1], opponent_pos[0], opponent_pos[1]), False)
+            new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_pos[0], my_pos[1], opponent_pos[0], opponent_pos[1])
+
+            opponent_new_pos = (new_enemy_x, new_enemy_y, False)
 
             # If opponent was pushed off the board
             if not self.move_is_in_board(opponent_new_pos[0], opponent_new_pos[1]):
