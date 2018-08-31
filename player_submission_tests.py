@@ -64,6 +64,9 @@ def main():
             time_limit=100000, print_moves=True)
         print 'Minimax Test: Runs Successfully'
         # Uncomment to see example game
+	#insert in reverse order
+        #initial_turn = [(2, 3, False), (3, 3, False)]
+        #move_history.insert(0, initial_turn)
         #print game_as_text(winner, move_history, termination, output_b)
     except NotImplementedError:
         print 'Minimax Test: Not Implemented'
