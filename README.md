@@ -54,7 +54,7 @@ Your goal is to implement the following parts of the AI in the class CustomPlaye
 2. The minimax algorithm (`minimax()`)
 3. Alpha-beta pruning (`alphabeta()`)
 
-Your agent will have a limited amount of time to act each turn (10 seconds). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
+Your agent will have a limited amount of time to act each turn (1 second). We will call these functions directly so **don’t modify** the <u>function names</u> or the <u>parameters</u>.
 
 In addition to checking time each turn, you will be penalized if your agent takes more than a few minutes at construction time (for example, if you attempt to load the entire set of possible board states from memory). We have divided the tests into three(mentioned in details in next grading section below).  In total, your submission will be allowed to run for a maximum of <u>30 minutes</u> before being interrupted for the first section. This is increased to <u>120 minutes</u> for the second and third section.
 
