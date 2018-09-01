@@ -89,7 +89,7 @@ class CustomPlayer:
                 NOT 'move' function name.
                 Args:
                 game (Board): The board and game state.
-                legal_moves (dict): Dictionary of legal moves and their outcomes
+                legal_moves (list): List of legal moves
                 time_left (function): Used to determine time left before timeout
 
             Returns:
