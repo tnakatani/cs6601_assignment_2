@@ -16,7 +16,7 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
-    NOT_MOVED = (-1, -1, False)
+    NOT_MOVED = (-1, -1, 0)
 
     __player_1__ = None
     __player_2__ = None
@@ -67,15 +67,15 @@ class Board:
     # Returns True, playername if playername just won
     # Returns False, None if game should continue
     def __apply_move__(self, queen_move):
-        row, col, push = queen_move
+        row, col, push_magnitude = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         queen_name = self.__queen_symbols__[self.__active_players_queen__]
 
         # IF pushing
-        if push:
-            new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_pos[0], my_pos[1], opponent_pos[0], opponent_pos[1])
+        if push_magnitude > 0:
+            new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_pos[0], my_pos[1], opponent_pos[0], opponent_pos[1], push_magnitude)
 
             opponent_new_pos = (new_enemy_x, new_enemy_y, False)
 
@@ -143,7 +143,7 @@ class Board:
         return self.__get_moves__(q_move)
 
     def get_legal_moves(self):
-        # List of legal moves. Each move: (row, col, is_push)
+        # List of legal moves. Each move: (row, col, push_magnitude)
         q_move = self.__last_queen_move__[
             self.__active_players_queen__]
         
@@ -167,42 +167,54 @@ class Board:
             for mag in range(1, max(self.height, self.width)):
                 row = direction[0] * mag + r
                 col = direction[1] * mag + c
-                if self.move_is_in_board(row, col):
-                    if self.is_spot_open(row, col):
-                        moves.append((row, col, False))
-                    elif self.is_spot_queen(row, col) and self.does_move_allow_push(row, col, direction):
-                        moves.append((row, col, True))
-                        break
-                    else:
-                        break
+                if self.move_is_in_board(row, col) and self.is_spot_open(row, col):
+                    moves.append((row, col, 0))
+
+                elif self.move_is_in_board(row, col) and self.is_spot_queen(row, col):
+                    print ("MAG", mag)
+                    for push_magnitude in range(1, mag+1):
+                        if self.does_move_allow_push(row, col, direction, push_magnitude):
+                            print("PUSH MOVE", (row, col, push_magnitude))
+                            moves.append((row, col, push_magnitude))
+                        else:
+                            break
                 else:
                     break
 
         return moves
 
     def get_first_moves(self):
-        return [(i, j, False) for i in range(0, self.height) for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
+        return [(i, j, 0) for i in range(0, self.height) for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
 
     def move_is_in_board(self, row, col):
         return 0 <= row < self.height and 0 <= col < self.width
 
     def is_spot_open(self, row, col):
         return self.__board_state__[row][col] == Board.BLANK
+
     def is_spot_queen(self, row, col):
         q1 = self.__queen_symbols__[self.__active_players_queen__]
         q2 = self.__queen_symbols__[self.__inactive_players_queen__]  
         return self.__board_state__[row][col] == q1 or self.__board_state__[row][col] == q2
 
-    def does_move_allow_push(self, row, col, direction):
+    # direction is a tuple of only -1, 0, and 1
+    # magnitude is an integer of how far the queen is being pushed
+    def does_move_allow_push(self, row, col, direction, magnitude):
 
         if not self.is_spot_queen(row,col):
             return False
 
-        # Where the opponent's queen will be if it can be pushed
-        row_next = row + direction[0]
-        col_next = col + direction[1]
+        # All spots except for the last one pushed to must be available to move to and be on the board
+        for mag in range(1, magnitude - 1):
+            row_target = row + direction[0] * mag
+            col_target = col + direction[1] * mag
+            if not self.move_is_in_board(row_target, col_target) or not self.is_spot_open(row_target, col_target):
+                return False
 
-        if not self.move_is_in_board(row_next, col_next) or self.is_spot_open(row_next, col_next):
+        row_target = row + direction[0] * magnitude
+        col_target = col + direction[1] * magnitude
+
+        if not self.move_is_in_board(row_target, col_target) or self.is_spot_open(row_target, col_target):
             # and IF the square they'd be pushed TO is either off the board or an open space on the board
             return True
 
@@ -215,8 +227,8 @@ class Board:
 
     def print_board(self, legal_moves=[]):
 
-        p1_r, p1_c, push = self.__last_queen_move__[self.__queen_1__]
-        p2_r, p2_c, push = self.__last_queen_move__[self.__queen_2__]
+        p1_r, p1_c, push_magnitude = self.__last_queen_move__[self.__queen_1__]
+        p2_r, p2_c, push_magnitude = self.__last_queen_move__[self.__queen_2__]
         b = self.__board_state__
 
         out = '  |'
@@ -312,7 +324,7 @@ class Board:
         if move_queen[0] is None or move_queen[1] is None:
             return
 
-        row, col, push = move_queen
+        row, col, push_magnitude = move_queen
         self.__last_queen_move__[self.__active_players_queen__] = move_queen
         self.__board_state__[row][col] = \
             self.__queen_symbols__[self.__active_players_queen__]
@@ -337,7 +349,7 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
 
     print "Printing the game as text."
 
-    last_move = (9,9,False)
+    last_move = (9,9,0)
     
     for i, move in enumerate(move_history):
         if move is None or len(move) == 0:
@@ -381,11 +393,13 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
     ans.write("\n"+str(winner)+" has won. Reason: "+ str(termination))
     return ans.getvalue()
 
-def calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y):
+def calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y, push_magnitude):
     push_direction_x = enemy_x - my_x
     if push_direction_x != 0:
         push_direction_x /= abs(push_direction_x)
+
     push_direction_y = enemy_y - my_y
     if push_direction_y != 0:
         push_direction_y /= abs(push_direction_y)
-    return enemy_x + push_direction_x, enemy_y + push_direction_y
+
+    return enemy_x + push_direction_x * push_magnitude, enemy_y + push_direction_y * push_magnitude
