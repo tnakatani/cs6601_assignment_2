@@ -29,7 +29,7 @@ class HumanPlayer():
         choice = {}
 
         if not len(legal_moves):
-            print "No more moves left."
+            print("No more moves left.")
             return None, None
 
         counter = 1
@@ -38,14 +38,14 @@ class HumanPlayer():
             if not move[2]:
                 print('\t'.join(['[%d] (%d,%d)'%(counter, move[0], move[1])]))
             else:
-                print('\t'.join(['[%d] (%d,%d) - push' % (counter, move[0], move[1])]))
+                print('\t'.join(['[%d] (%d,%d) - push mag %d' % (counter, move[0], move[1], move[2])]))
             counter += 1
 
-        print "-------------------------"
-        print game.print_board(legal_moves)
-        print "-------------------------"
-        print ">< - impassable, o - valid move"
-        print "-------------------------"
+        print("-------------------------")
+        print(game.print_board(legal_moves))
+        print("-------------------------")
+        print(">< - impossible, o - valid move")
+        print("-------------------------")
 
         valid_choice = False
 
