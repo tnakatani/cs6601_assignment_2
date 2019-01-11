@@ -3,7 +3,7 @@ import time
 import platform
 import random
 # import io
-import StringIO
+from io import StringIO
 # import resource
 if platform.system() != 'Windows':
     import resource
@@ -171,10 +171,8 @@ class Board:
                     moves.append((row, col, 0))
 
                 elif self.move_is_in_board(row, col) and self.is_spot_queen(row, col):
-                    print ("MAG", mag)
                     for push_magnitude in range(1, mag+1):
                         if self.does_move_allow_push(row, col, direction, push_magnitude):
-                            print("PUSH MOVE", (row, col, push_magnitude))
                             moves.append((row, col, push_magnitude))
                         else:
                             break
@@ -275,7 +273,7 @@ class Board:
                 return time_limit - (curr_time_millis() - move_start)
 
             if print_moves:
-                print "\n",self.__active_players_queen__, " Turn"
+                print("\n",self.__active_players_queen__, " Turn")
 
             #try:
             legal_player_moves = self.get_legal_moves()
@@ -313,8 +311,8 @@ class Board:
             is_over, winner = self.__apply_move__(curr_move)
 
             if print_moves:
-                print "move chosen: ", curr_move
-                print self.copy().print_board()
+                print("move chosen: ", curr_move)
+                print(self.copy().print_board())
 
             if is_over:
                 return self.__active_players_queen__, move_history, \
@@ -347,7 +345,7 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
 
     board = Board(board.__player_1__, board.__player_2__, board.width, board.height)
 
-    print "Printing the game as text."
+    print("Printing the game as text.")
 
     last_move = (9,9,0)
     
