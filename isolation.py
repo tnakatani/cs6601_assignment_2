@@ -93,6 +93,10 @@ class Board:
         if self.move_is_in_board(my_pos[0], my_pos[1]):
             self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
 
+        # If opponent is isolated
+        if not self.get_opponent_moves():
+            return True, self.__active_players_queen__
+
         # swap the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
 
@@ -279,19 +283,9 @@ class Board:
             if print_moves:
                 print("\n",self.__active_players_queen__, " Turn")
 
-            #try:
             legal_player_moves = self.get_legal_moves()
             curr_move = self.__active_player__.move(
                 game_copy, legal_player_moves, time_left)  # queen added in return
-            #except AttributeError as e:
-            #    raise e
-            #except Exception as e:
-            #    print e
-            #    pass
-
-            if curr_move is None:
-                return self.__inactive_players_queen__, move_history, \
-                       (self.__active_players_queen__ +" has no legal moves left.")
 
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
@@ -319,6 +313,9 @@ class Board:
                 print(self.copy().print_board())
 
             if is_over:
+                if not self.get_opponent_moves():
+                    return self.__active_players_queen__, move_history, \
+                        (self.__inactive_players_queen__ + "has no legal moves left.")
                 return self.__active_players_queen__, move_history, \
                        (self.__inactive_players_queen__ + " was forced off the grid.")
 
