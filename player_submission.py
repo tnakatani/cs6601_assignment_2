@@ -101,7 +101,7 @@ class CustomPlayer:
 
     def utility(self, game, maximizing_player):
         """Can be updated if desired. Not compulsory. """
-        return self.eval_fn.score(game)
+        return self.eval_fn.score(game, maximizing_player)
 
     def minimax(self, game, time_left, depth, maximizing_player=True):
         """Implementation of the minimax algorithm
