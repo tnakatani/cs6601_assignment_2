@@ -394,10 +394,11 @@ def game_as_text(winner, move_history,  termination="", board=Board(1, 2)):
 def calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y, push_magnitude):
     push_direction_x = enemy_x - my_x
     if push_direction_x != 0:
-        push_direction_x /= abs(push_direction_x)
+        push_direction_x //= abs(push_direction_x)
+
 
     push_direction_y = enemy_y - my_y
     if push_direction_y != 0:
-        push_direction_y /= abs(push_direction_y)
+        push_direction_y //= abs(push_direction_y)
 
     return enemy_x + push_direction_x * push_magnitude, enemy_y + push_direction_y * push_magnitude
