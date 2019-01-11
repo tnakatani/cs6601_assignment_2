@@ -212,6 +212,10 @@ class Board:
         row_target = row + direction[0] * magnitude
         col_target = col + direction[1] * magnitude
 
+        if (row_target > self.height) or (row_target < -1) or \
+            (col_target > self.width) or (col_target < -1):
+            return False
+
         if not self.move_is_in_board(row_target, col_target) or self.is_spot_open(row_target, col_target):
             # and IF the square they'd be pushed TO is either off the board or an open space on the board
             return True
