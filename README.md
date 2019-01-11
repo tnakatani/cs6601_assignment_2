@@ -23,7 +23,7 @@ A queen cannot move through blocked squares. She can, however, move into a posit
 The first player who is unable to move his queen loses.
 
 
-em
+
 ### The Files
 
 While you'll only have to edit and submit `player_submission.py`, there are a number of notable files:
