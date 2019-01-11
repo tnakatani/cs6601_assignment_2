@@ -23,7 +23,7 @@ A queen cannot move through blocked squares. She can, however, move into a posit
 The first player who is unable to move his queen loses.
 
 
-
+em
 ### The Files
 
 While you'll only have to edit and submit `player_submission.py`, there are a number of notable files:
@@ -88,7 +88,7 @@ We have divided the tests into three sections.
 
 **assignment1c: 1 submission per 120 minutes. This third section has tests for last two parts (Iterative Deepening + AlphaBeta, +Noah's secret evaluation function).**
 
-These are split up into Section A (assignment1, assignment1a) and Section B (assignment1b) on Piazza for discussion.
+These are split up into Section A (assignment1a, assignment1b) and Section B (assignment1c) on Piazza for discussion.
 
 Submission policy: Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
 
