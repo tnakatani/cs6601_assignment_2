@@ -1,5 +1,4 @@
 import time
-import os
 import sys
 import argparse
 import json
@@ -80,7 +79,6 @@ def display_game(submission):
 
 def main():
     parser = argparse.ArgumentParser(description='Submits code to the Udacity site.')
-    # parser.add_argument('part', choices = ['assignment_1', 'play_isolation'])
     parser.add_argument('--enable-face-off', action='store_true',
                         help='Include this flag to sign up for the playoffs. AI.txt must be present')
 
@@ -92,7 +90,7 @@ def main():
     else:
         filenames.append('AI.txt')
 
-    submit('cs6601', 'assignment_1', filenames)
+    submit('cs6601', 'assignment_1c', filenames)
 
 
 if __name__ == '__main__':
