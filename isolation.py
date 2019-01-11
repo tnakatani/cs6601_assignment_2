@@ -315,7 +315,7 @@ class Board:
             if is_over:
                 if not self.get_opponent_moves():
                     return self.__active_players_queen__, move_history, \
-                           (self.__inactive_players_queen__ + "has no legal moves left.")
+                           (self.__inactive_players_queen__ + " has no legal moves left.")
                 return self.__active_players_queen__, move_history, \
                        (self.__inactive_players_queen__ + " was forced off the grid.")
 
@@ -343,7 +343,7 @@ class Board:
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
     ans = StringIO()
-    
+
     board = Board(board.__player_1__, board.__player_2__, board.width, board.height)
 
     print("Printing the game as text.")
