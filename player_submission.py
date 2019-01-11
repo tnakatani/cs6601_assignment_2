@@ -65,7 +65,7 @@ class CustomPlayer:
     You must finish and test this player to make sure it properly
     uses minimax and alpha-beta to return a good move."""
 
-    def __init__(self, search_depth, eval_fn=OpenMoveEvalFn()):
+    def __init__(self, search_depth=3, eval_fn=OpenMoveEvalFn()):
         """Initializes your player.
 
         if you find yourself with a superior eval function, update the default
