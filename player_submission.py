@@ -9,7 +9,7 @@ from random import randint
 
 
 class OpenMoveEvalFn:
-    
+
     def score(self, game, maximizing_player_turn=True):
         """Score the current game state
 

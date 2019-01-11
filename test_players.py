@@ -1,12 +1,13 @@
 from random import randint
 import random
 
+
 class RandomPlayer():
 
     def __init__(self, name="RandomPlayer"):
         self.name = name
 
-    """Player that chooses a move randomly."""    
+    """Player that chooses a move randomly."""
 
     def move(self, game, legal_moves, time_left):
         if not legal_moves:
@@ -18,13 +19,13 @@ class RandomPlayer():
         return self.name
 
 
-
 class HumanPlayer():
 
     def __init__(self, name="HumanPlayer"):
         self.name = name
 
     """Player that chooses a move according to user's input."""
+
     def move(self, game, legal_moves, time_left):
         choice = {}
 
@@ -36,7 +37,7 @@ class HumanPlayer():
         for move in legal_moves:
             choice.update({counter: move})
             if not move[2]:
-                print('\t'.join(['[%d] (%d,%d)'%(counter, move[0], move[1])]))
+                print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
             else:
                 print('\t'.join(['[%d] (%d,%d) - push mag %d' % (counter, move[0], move[1], move[2])]))
             counter += 1
@@ -51,7 +52,7 @@ class HumanPlayer():
 
         while not valid_choice:
             try:
-                index = int(input('Select move index [1-'+str(len(legal_moves))+']:'))
+                index = int(input('Select move index [1-' + str(len(legal_moves)) + ']:'))
                 valid_choice = 1 <= index <= len(legal_moves)
 
                 if not valid_choice:
