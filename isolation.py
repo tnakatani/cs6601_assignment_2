@@ -343,7 +343,7 @@ class Board:
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
     ans = StringIO()
-
+    
     board = Board(board.__player_1__, board.__player_2__, board.width, board.height)
 
     print("Printing the game as text.")
