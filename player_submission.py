@@ -19,7 +19,7 @@ class OpenMoveEvalFn:
         Note:
             1. Be very careful while doing opponent's moves. You might end up
                reducing your own moves.
-            3. If you think of better evaluation function, do it in CustomEvalFn below.
+            2. If you think of better evaluation function, do it in CustomEvalFn below.
 
             Args
                 param1 (Board): The board and game state.
@@ -100,7 +100,7 @@ class CustomPlayer:
         return best_move
 
     def utility(self, game, maximizing_player):
-        """Can be updated if desired. Not compulsory. """
+        """Can be updated if desired. Not compulsory."""
         return self.eval_fn.score(game, maximizing_player)
 
     def minimax(self, game, time_left, depth, maximizing_player=True):
