@@ -68,11 +68,11 @@ class Board:
         #Function to immediately bring a board to a desired state for testing, call board.play_isolation() afterwards to play 
         self.__board_state__ = board_state
 
-        last_move_q1 = [(row.index("Q1"),column,False) for column, row in enumerate(board_state) if "Q1" in row]
+        last_move_q1 = [(column,row.index("Q1"),0) for column, row in enumerate(board_state) if "Q1" in row]
         if (last_move_q1 != []):
             self.__last_queen_move__[self.__queen_1__] = last_move_q1[0] # set last move to the first found occurance of 'Q1'
 
-        last_move_q2 = [(row.index("Q2"),column,False) for column, row in enumerate(board_state) if "Q2" in row]
+        last_move_q2 = [(column,row.index("Q2"),0) for column, row in enumerate(board_state) if "Q2" in row]
         if (last_move_q2 != []):
             self.__last_queen_move__[self.__queen_2__] = last_move_q2[0]
 

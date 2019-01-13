@@ -16,8 +16,7 @@ def main():
     try:
         sample_board = Board(RandomPlayer(), RandomPlayer())
         # setting up the board as though we've been playing
-        sample_board.move_count = 2
-        sample_board.__board_state__ = [
+        board_state = [
             ["Q1", " ", " ", " ", " ", " ", " "],
             [ " ", " ", " ", " ", " ", " ", " "],
             [ " ", " ", " ", " ", " ", " ", " "],
@@ -26,8 +25,7 @@ def main():
             [ " ", " ", " ", " ", " ", " ", " "],
             [ " ", " ", " ", " ", " ", " ", " "]
         ]
-        sample_board.__last_queen_move__ = {sample_board.__queen_1__: (0, 0, 0),
-                                            sample_board.__queen_2__: (3, 3, 0)}
+        sample_board.set_state(board_state,True)
         test = sample_board.get_legal_moves()
         h = OpenMoveEvalFn()
         print('OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board)))
@@ -49,16 +47,14 @@ def main():
         # create dummy 5x5 board
         b = Board(RandomPlayer(), HumanPlayer(), 5, 5)
 
-        b.__board_state__ = [
+        board_state = [
             [" ", " " , " ", " ", " "],
             [" ", " ",  " ", " ", " "],
             [" ", " ",  " ","Q1", " "],
             [" ", " ",  " ","Q2", " "],
             [" ", " " , " ", " ", " "]
         ]
-        b.__last_queen_move__[b.__queen_1__] = (2, 3, 0)
-        b.__last_queen_move__[b.__queen_2__] = (3, 3, 0)
-        b.move_count = 2
+        b.set_state(board_state, True)
 
         output_b = b.copy()
         legal_moves = b.get_legal_moves()
