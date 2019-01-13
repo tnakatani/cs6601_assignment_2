@@ -64,6 +64,33 @@ class Board:
     def get_state(self):
         return deepcopy(self.__board_state__)
 
+    def set_state(self, board_state, p1_turn=True):
+        #Function to immediately bring a board to a desired state for testing, call board.play_isolation() afterwards to play 
+        self.__board_state__ = board_state
+
+        last_move_q1 = [(row.index("Q1"),column,False) for column, row in enumerate(board_state) if "Q1" in row]
+        if (last_move_q1 != []):
+            self.__last_queen_move__[self.__queen_1__] = last_move_q1[0] # set last move to the first found occurance of 'Q1'
+
+        last_move_q2 = [(row.index("Q2"),column,False) for column, row in enumerate(board_state) if "Q2" in row]
+        if (last_move_q2 != []):
+            self.__last_queen_move__[self.__queen_2__] = last_move_q2[0]
+
+        if (p1_turn):
+            self.__active_player__ = self.__player_1__
+            self.__active_players_queen__ = self.__queen_1__
+            self.__inactive_player__ = self.__player_2__
+            self.__inactive_players_queen__ = self.__queen_2__
+
+        else:
+            self.__active_player__ = self.__player_2__
+            self.__active_players_queen__ = self.__queen_2__
+            self.__inactive_player__ = self.__player_1__
+            self.__inactive_players_queen__ = self.__queen_1__
+        #Count X's to get move count + 2 for initial moves
+        self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state) 
+
+
     # Returns True, playername if playername just won
     # Returns False, None if game should continue
     def __apply_move__(self, queen_move):
