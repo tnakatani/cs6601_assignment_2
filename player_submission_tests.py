@@ -26,8 +26,8 @@ def main():
             [ " ", " ", " ", " ", " ", " ", " "],
             [ " ", " ", " ", " ", " ", " ", " "]
         ]
-        sample_board.__last_queen_move__ = {sample_board.__queen_1__: (0, 0, False),
-                                            sample_board.__queen_2__: (3, 3, False)}
+        sample_board.__last_queen_move__ = {sample_board.__queen_1__: (0, 0, 0),
+                                            sample_board.__queen_2__: (3, 3, 0)}
         test = sample_board.get_legal_moves()
         h = OpenMoveEvalFn()
         print('OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board)))
@@ -56,8 +56,8 @@ def main():
             [" ", " ",  " ","Q2", " "],
             [" ", " " , " ", " ", " "]
         ]
-        b.__last_queen_move__[b.__queen_1__] = (2, 3, False)
-        b.__last_queen_move__[b.__queen_2__] = (3, 3, False)
+        b.__last_queen_move__[b.__queen_1__] = (2, 3, 0)
+        b.__last_queen_move__[b.__queen_2__] = (3, 3, 0)
         b.move_count = 2
 
         output_b = b.copy()
@@ -67,7 +67,7 @@ def main():
         print('Minimax Test: Runs Successfully')
         # Uncomment to see example game
         # insert in reverse order
-        # initial_turn = [(2, 3, False), (3, 3, False)]
+        # initial_turn = [(2, 3, 0), (3, 3, 0)]
         # move_history.insert(0, initial_turn)
         # print game_as_text(winner, move_history, termination, output_b)
     except NotImplementedError:
