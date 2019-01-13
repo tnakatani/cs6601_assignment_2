@@ -141,6 +141,16 @@ class Board:
     def get_inactive_players_queen(self):
         return self.__inactive_players_queen__
 
+     #Returns inactive player coordinates in [row,column]
+    def get_opponent_position(self):
+        return self.__last_queen_move__[
+            self.__inactive_players_queen__][0:2]
+
+    #Returns active player coordinates in [row,column]
+    def get_position(self):
+        return self.__last_queen_move__[
+            self.__active_players_queen__][0:2]
+
     def get_opponent_moves(self):
         q_move = self.__last_queen_move__[
             self.__inactive_players_queen__]
