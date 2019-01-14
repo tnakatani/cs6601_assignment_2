@@ -217,6 +217,7 @@ class Board:
                             moves.append((row, col, push_magnitude))
                         else:
                             break
+                    break #Can't move through queen
                 else:
                     break
 
