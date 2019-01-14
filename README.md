@@ -88,7 +88,7 @@ We have divided the tests into three sections.
 
 **assignment1c: 1 submission per 120 minutes. This third section has tests for last two parts (Iterative Deepening + AlphaBeta, + secret evaluation function).**
 
-These are split up into Section A (assignment1a, assignment1b) and Section B (assignment1c) on Piazza for discussion.
+You can find the respective thread for each of the section on Piazza.
 
 Submission policy: Grades will be based on the last submission made per section. (We are running our largest class to date, so we reserve the right to modify these rules depending upon the load on the servers).
 
@@ -96,7 +96,7 @@ Submission policy: Grades will be based on the last submission made per section.
 
 In addition to the basic assignment, you will have the option to compete against your peers for the glory of being the Spring 2019 AI-Game-Playing champ. We’ll set up a system to pit your AI against others, and we’ll be handing out extra credit for the top players. May the odds be ever in your favor.
 
-If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the third section of tests (submit_c) and your CustomPlayer instance will be enlisted.
+If you wish to compete in the tournament, simply include a plaintext file with a description of your agent, titled ‘AI.txt’, while submitting for the third section of tests (*submit_c.py*) and your CustomPlayer instance will be enlisted.
 
 If you compete in the AI tournament and your agent finishes in the top 10, you will receive bonus points for this assignment (bonus points are added to the grades of each assignment. Not to final score. ):
 
