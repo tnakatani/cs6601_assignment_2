@@ -38,7 +38,7 @@ While you'll only have to edit and submit `player_submission.py`, there are a nu
 
 ### The Assignment
 
-Your task is to create an AI that can play and win a game of Sumo Isolation. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 3.7, using our provided code as a starting point.
+Your task is to create an AI that can play and win a game of Sumo Isolation with Momentum. Your AI will be tested against several pre-baked AIs as well as your peers’ AI systems. You will implement your AI in Python 3.7, using our provided code as a starting point.
 
 In this repository, we provide:
 
