@@ -77,7 +77,7 @@ The grade you receive for the assignment will be determined as follows:
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 2  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 4  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses iterative deepening and alpha-beta pruning >= 65% of the time. |
-| 5 points | Your AI defeats an agent with Noah's secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
+| 5 points | Your AI defeats an agent with a secret evaluation function that uses iterative deepening and alpha-beta pruning and optimizes various aspects of the game player >= 85% of the time  |
 
 ### Submission
 We have divided the tests into three sections. 
@@ -86,7 +86,7 @@ We have divided the tests into three sections.
 
 **assignment1b: 1 submission per 120 minutes. This second section has tests for the middle two parts (Minimax, Alphabeta).**
 
-**assignment1c: 1 submission per 120 minutes. This third section has tests for last two parts (Iterative Deepening + AlphaBeta, +Noah's secret evaluation function).**
+**assignment1c: 1 submission per 120 minutes. This third section has tests for last two parts (Iterative Deepening + AlphaBeta, + secret evaluation function).**
 
 These are split up into Section A (assignment1a, assignment1b) and Section B (assignment1c) on Piazza for discussion.
 
