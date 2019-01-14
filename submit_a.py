@@ -16,11 +16,12 @@ LATE_POLICY = \
 
 HONOR_PLEDGE = \
     """Honor Pledge:
+    
       \"I have read the Collaboration and Academic Honesty policy for CS6601.
       I certify that I have used outside references only in accordance with
       this policy, that I have cited any such references via code comments,
       and that I have not copied any portion of my submission from another
-      past or current student.\"\n"
+      past or current student.\"\n
     """
 
 
@@ -31,12 +32,12 @@ def require_pledges():
     if ans != "yes":
         raise RuntimeError("Late policy not accepted.")
 
-    print()
+    print("\n")
     print(HONOR_PLEDGE)
     ans = input("Please type 'yes' to agree and continue>")
     if ans != "yes":
         raise RuntimeError("Honor pledge not accepted")
-    print()
+    print("\n")
 
 
 def display_assignment_1_output(submission):
