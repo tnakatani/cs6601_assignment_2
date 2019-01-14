@@ -72,7 +72,7 @@ The grade you receive for the assignment will be determined as follows:
 
 | Points    | Condition                                |
 | --------- | ---------------------------------------- |
-| 5 points | You write an evaluation function, OpenMoveEval, which returns the number of moves that the AI minus the number of moves opponent can make, and your evaluation function performs correctly on some sample boards we provide. |
+| 5 points | You write an evaluation function, OpenMoveEval, which returns the number of moves that the AI can make minus the number of moves opponent can make, and your evaluation function performs correctly on some sample boards we provide. |
 | 30 points | Your AI defeats a random player >= 90% of the time. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses minimax to level 2  >= 65% of the times. |
 | 20 points | Your AI defeats an agent with OpenMoveEval function that uses alphabeta to level 4  >= 65% of the times. |
