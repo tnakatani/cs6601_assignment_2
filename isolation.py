@@ -20,6 +20,9 @@ class Board:
     BLOCKED = "X"
     NOT_MOVED = (-1, -1, 0)
 
+    # Flag True when swap occured last turn
+    SWAP_FLAG = False
+
     __player_1__ = None
     __player_2__ = None
     __queen_1__ = None
@@ -65,7 +68,7 @@ class Board:
         return deepcopy(self.__board_state__)
 
     def set_state(self, board_state, p1_turn=True):
-        #Function to immediately bring a board to a desired state for testing, call board.play_isolation() afterwards to play 
+        #Function to immediately bring a board to a desired state for testing, call board.play_isolation() afterwards to play
         self.__board_state__ = board_state
 
         last_move_q1 = [(column,row.index("Q1"),0) for column, row in enumerate(board_state) if "Q1" in row]
@@ -88,47 +91,44 @@ class Board:
             self.__inactive_player__ = self.__player_1__
             self.__inactive_players_queen__ = self.__queen_1__
         #Count X's to get move count + 2 for initial moves
-        self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state) 
+        self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state)
 
 
     # Returns True, playername if playername just won
     # Returns False, None if game should continue
     def __apply_move__(self, queen_move):
-        row, col, push_magnitude = queen_move
+        print("Move chosen:: ", queen_move)
+        row, col, swap = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         queen_name = self.__queen_symbols__[self.__active_players_queen__]
 
-        # IF pushing
-        if push_magnitude > 0:
-            new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_pos[0], my_pos[1],
-                                                                     opponent_pos[0], opponent_pos[1], push_magnitude)
-
-            opponent_new_pos = (new_enemy_x, new_enemy_y, False)
-
-            # If opponent was pushed off the board
-            if not self.move_is_in_board(opponent_new_pos[0], opponent_new_pos[1]):
-                return True, self.__active_players_queen__
+        if (swap):
+            # Apply swap move
+            self.SWAP_FLAG = True
+            opponent_new_pos = (my_pos[0], my_pos[1], True)
             self.__last_queen_move__[self.__inactive_players_queen__] = opponent_new_pos
             self.__board_state__[opponent_new_pos[0]][opponent_new_pos[1]] = \
                 self.__queen_symbols__[self.__inactive_players_queen__]
+
+        else:
+            self.SWAP_FLAG = False
+            if self.move_is_in_board(my_pos[0], my_pos[1]):
+                self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
 
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
         self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen__]
 
-        if self.move_is_in_board(my_pos[0], my_pos[1]):
-            self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
-
         # If opponent is isolated
         if not self.get_opponent_moves():
             return True, self.__active_players_queen__
 
-        # swap the players
+        # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
 
-        # swaping the queens
+        # rotate the queens
         self.__active_players_queen__, self.__inactive_players_queen__ = self.__inactive_players_queen__, self.__active_players_queen__
 
         # increment move count
@@ -185,7 +185,7 @@ class Board:
         return self.__get_moves__(q_move)
 
     def get_legal_moves(self):
-        # List of legal moves. Each move: (row, col, push_magnitude)
+        # List of legal moves. Each move: (row, col, swap) => (int, int, bool)
         q_move = self.__last_queen_move__[
             self.__active_players_queen__]
 
@@ -205,19 +205,19 @@ class Board:
         moves = []
 
         for direction in directions:
-            for mag in range(1, max(self.height, self.width)):
-                row = direction[0] * mag + r
-                col = direction[1] * mag + c
+            for dist in range(1, max(self.height, self.width)):
+                row = direction[0] * dist + r
+                col = direction[1] * dist + c
                 if self.move_is_in_board(row, col) and self.is_spot_open(row, col):
                     moves.append((row, col, 0))
 
                 elif self.move_is_in_board(row, col) and self.is_spot_queen(row, col):
-                    for push_magnitude in range(1, mag + 1):
-                        if self.does_move_allow_push(row, col, direction, push_magnitude):
-                            moves.append((row, col, push_magnitude))
+                    for distance in range(1, dist + 1):
+                        if self.does_move_allow_swap(row, col, direction, distance) and not self.SWAP_FLAG:
+                            moves.append((row, col, True))
                         else:
                             break
-                    break #Can't move through queen
+                    break
                 else:
                     break
 
@@ -238,22 +238,20 @@ class Board:
         q2 = self.__queen_symbols__[self.__inactive_players_queen__]
         return self.__board_state__[row][col] == q1 or self.__board_state__[row][col] == q2
 
-    # direction is a tuple of only -1, 0, and 1
-    # magnitude is an integer of how far the queen is being pushed
-    def does_move_allow_push(self, row, col, direction, magnitude):
+    def does_move_allow_swap(self, row, col, direction, distance):
 
         if not self.is_spot_queen(row, col):
             return False
 
         # All spots except for the last one pushed to must be available to move to and be on the board
-        for mag in range(1, magnitude - 1):
-            row_target = row + direction[0] * mag
-            col_target = col + direction[1] * mag
+        for dist in range(1, distance - 1):
+            row_target = row + direction[0] * dist
+            col_target = col + direction[1] * dist
             if not self.move_is_in_board(row_target, col_target) or not self.is_spot_open(row_target, col_target):
                 return False
 
-        row_target = row + direction[0] * magnitude
-        col_target = col + direction[1] * magnitude
+        row_target = row + direction[0] * distance
+        col_target = col + direction[1] * distance
 
         if (row_target > self.height) or (row_target < -1) or \
                 (col_target > self.width) or (col_target < -1):
@@ -265,15 +263,16 @@ class Board:
 
         return False
 
-    def move_is_legal(self, row, col):
+    # Checks if a space is OPEN, NOT if a move is legal.
+    def space_is_open(self, row, col):
         return 0 <= row < self.height and \
                0 <= col < self.width and \
                self.__board_state__[row][col] == Board.BLANK
 
     def print_board(self, legal_moves=[]):
 
-        p1_r, p1_c, push_magnitude = self.__last_queen_move__[self.__queen_1__]
-        p2_r, p2_c, push_magnitude = self.__last_queen_move__[self.__queen_2__]
+        p1_r, p1_c, swap = self.__last_queen_move__[self.__queen_1__]
+        p2_r, p2_c, swap = self.__last_queen_move__[self.__queen_2__]
         b = self.__board_state__
 
         out = '  |'
@@ -310,6 +309,16 @@ class Board:
         else:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
+
+        # Take first move for each player once randomly
+        for _ in range(2):
+            curr_move = random.choice(self.get_legal_moves())
+            # Append new move to game history
+            if self.__active_player__ == self.__player_1__:
+                move_history.append([curr_move])
+            else:
+                move_history[-1].append(curr_move)
+            is_over, winner = self.__apply_move__(curr_move)
 
         while True:
             game_copy = self.copy()
@@ -361,7 +370,7 @@ class Board:
         if move_queen[0] is None or move_queen[1] is None:
             return
 
-        row, col, push_magnitude = move_queen
+        row, col, swap_flag = move_queen
         self.__last_queen_move__[self.__active_players_queen__] = move_queen
         self.__board_state__[row][col] = \
             self.__queen_symbols__[self.__active_players_queen__]
@@ -371,7 +380,7 @@ class Board:
         self.__active_player__ = self.__inactive_player__
         self.__inactive_player__ = tmp
 
-        # swaping the queens
+        # swapping the queens
         tmp = self.__active_players_queen__
         self.__active_players_queen__ = self.__inactive_players_queen__
         self.__inactive_players_queen__ = tmp
@@ -401,12 +410,12 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
                 my_x, my_y = last_move[0][0], last_move[0][1]
                 enemy_x, enemy_y = move[0][0], move[0][1]
 
-                new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y)
+                new_enemy_x, new_enemy_y = my_x, my_y
 
                 if board.move_is_in_board(new_enemy_x, new_enemy_y):
                     board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
                 ans.write(
-                    "\n\n" + board.__queen_2__ + " pushed to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
+                    "\n\n" + board.__queen_2__ + " swapped to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
                 board.__active_players_queen__, board.__inactive_players_queen__ = board.__inactive_players_queen__, board.__active_players_queen__
 
         if len(move) > 1 and move[1] != Board.NOT_MOVED and move[0] is not None:
@@ -430,15 +439,3 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
 
     ans.write("\n" + str(winner) + " has won. Reason: " + str(termination))
     return ans.getvalue()
-
-
-def calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y, push_magnitude):
-    push_direction_x = enemy_x - my_x
-    if push_direction_x != 0:
-        push_direction_x //= abs(push_direction_x)
-
-    push_direction_y = enemy_y - my_y
-    if push_direction_y != 0:
-        push_direction_y //= abs(push_direction_y)
-
-    return enemy_x + push_direction_x * push_magnitude, enemy_y + push_direction_y * push_magnitude
