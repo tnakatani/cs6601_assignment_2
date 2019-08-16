@@ -12,6 +12,7 @@ from time import time, sleep
 
 
 def main():
+
     print()
     try:
         sample_board = Board(RandomPlayer(), RandomPlayer())
@@ -36,49 +37,60 @@ def main():
         print(traceback.format_exc())
 
     print()
+    """Example test to make sure
+    your minimax works, using the
+    OpenMoveEvalFunction evaluation function.
+    This can be used for debugging your code
+    with different model Board states. 
+    Especially important to check alphabeta 
+    pruning"""
+    # create dummy 5x5 board
+    print()
     try:
-        """Example test to make sure
-        your minimax works, using the
-        OpenMoveEvalFunction evaluation function.
-        This can be used for debugging your code
-        with different model Board states. 
-        Especially important to check alphabeta 
-        pruning"""
-        # create dummy 5x5 board
-        b = Board(RandomPlayer(), HumanPlayer(), 5, 5)
-
+        def time_left(): # For these testing purposes, let's ignore timeouts
+            return 10000
+        player = CustomPlayer()
+        sample_board = Board(player, RandomPlayer())
+        # setting up the board as though we've been playing
         board_state = [
-            [" ", " " , " ", " ", " "],
-            [" ", " ",  " ", " ", " "],
-            [" ", " ",  " ","Q1", " "],
-            [" ", " ",  " ","Q2", " "],
-            [" ", " " , " ", " ", " "]
+            ["Q1", " ", " ", " ", " ", "X", " "],
+            [ " ", " ", " ", " ", " ", " ", " "],
+            [ "X", " ", " ", " ", " ", " ", " "],
+            [ " ", " ", "X","Q2", "X", " ", " "],   
+            [ "X", "X", "X", " ", "X", " ", " "],
+            [ " ", " ", "X", " ", "X", " ", " "],
+            [ " ", " ", "X", " ", "X", " ", " "]
         ]
-        b.set_state(board_state, True)
+        sample_board.set_state(board_state,True)
 
-        output_b = b.copy()
-        legal_moves = b.get_legal_moves()
-        winner, move_history, termination = b.play_isolation(
-            time_limit=100000, print_moves=True)
-        print('Minimax Test: Runs Successfully')
-        # Uncomment to see example game
-        # insert in reverse order
-        # initial_turn = [(2, 3, 0), (3, 3, 0)]
-        # move_history.insert(0, initial_turn)
-        # print game_as_text(winner, move_history, termination, output_b)
+        test_pass = True
+
+        expected_depth_scores = [(1,3),(2,-4),(3,2),(4,-1),(5,1)]
+
+        for depth, exp_score in expected_depth_scores:
+            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"), beta=float("inf"), maximizing_player=True)
+            if exp_score != score:
+                print("Minimax failed for depth: ", depth)
+                test_pass = False
+
+        if test_pass:
+            print("Minimax Test: Runs Successfully!")
     except NotImplementedError:
-        print('Minimax Test: Not Implemented')
+        print('Minimax Test: Not implemented')
     except:
         print('Minimax Test: ERROR OCCURRED')
         print(traceback.format_exc())
 
+    print()
+
     """Example test you can run
     to make sure your AI does better
     than random."""
+
     print("")
     try:
         r = RandomPlayer()
-        h = CustomPlayer()
+        h = HumanPlayer()
         game = Board(r, h, 7, 7)
         output_b = game.copy()
         winner, move_history, termination = game.play_isolation(time_limit=1000, print_moves=True)
