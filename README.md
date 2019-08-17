@@ -1,3 +1,5 @@
+**The assignment is not yet released for the Fall 2019 and might be subject to change.**
+
 # Assignment 1 - Isolation
 
 ## Setup
