@@ -141,7 +141,7 @@ class Board:
         self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen__]
 
         # If opponent is isolated
-        if not self.get_opponent_moves():
+        if not self.get_inactive_moves():
             return True, self.__active_players_queen__
 
         # rotate the players
@@ -229,7 +229,7 @@ class Board:
         """
         return self.__inactive_players_queen__
 
-    def get_opponent_position(self):
+    def get_inactive_position(self):
         """
         Get position of inactive player (player waiting for opponent to make move) in [row, column] format
         Parameters:
@@ -240,7 +240,7 @@ class Board:
         return self.__last_queen_move__[
             self.__inactive_players_queen__][0:2]
 
-    def get_position(self):
+    def get_active_position(self):
         """
         Get position of active player (player actively making move) in [row, column] format
         Parameters:
@@ -251,7 +251,7 @@ class Board:
         return self.__last_queen_move__[
             self.__active_players_queen__][0:2]
 
-    def get_opponent_moves(self):
+    def get_inactive_moves(self):
         """
         Get all legal moves of inactive player on current board state as a list of possible moves.
         Parameters:
@@ -264,7 +264,7 @@ class Board:
 
         return self.__get_moves__(q_move)
 
-    def get_legal_moves(self):
+    def get_active_moves(self):
         """
         Get all legal moves of active player on current board state as a list of possible moves.
         Parameters:
@@ -280,7 +280,7 @@ class Board:
     def __get_moves__(self, move):
         """
         Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called, 
-        use get_legal_moves or get_opponent_moves instead.
+        use get_active_moves or get_inactive_moves instead.
         Parameters:
             move: (int, int, bool), Last move made by player in question (where they currently are)
         Returns:
@@ -481,7 +481,7 @@ class Board:
             if print_moves:
                 print("\n", self.__active_players_queen__, " Turn")
 
-            legal_player_moves = self.get_legal_moves()
+            legal_player_moves = self.get_active_moves()
             curr_move = self.__active_player__.move(
                 game_copy, legal_player_moves, time_left)  # queen added in return
 
@@ -497,7 +497,7 @@ class Board:
                        (self.__active_players_queen__ + " timed out.")
 
             # Safety Check
-            legal_moves = self.get_legal_moves()
+            legal_moves = self.get_active_moves()
             if curr_move not in legal_moves:
                 return self.__inactive_players_queen__, move_history, \
                        (self.__active_players_queen__ + " made an illegal move.")
@@ -510,7 +510,7 @@ class Board:
                 print(self.copy().print_board())
 
             if is_over:
-                if not self.get_opponent_moves():
+                if not self.get_inactive_moves():
                     return self.__active_players_queen__, move_history, \
                            (self.__inactive_players_queen__ + " has no legal moves left.")
                 return self.__active_players_queen__, move_history, \
