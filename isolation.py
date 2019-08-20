@@ -470,16 +470,6 @@ class Board:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
 
-        # Take first move for each player once randomly
-        for _ in range(2):
-            curr_move = random.choice(self.get_legal_moves())
-            # Append new move to game history
-            if self.__active_player__ == self.__player_1__:
-                move_history.append([curr_move])
-            else:
-                move_history[-1].append(curr_move)
-            is_over, winner = self.__apply_move__(curr_move)
-
         while True:
             game_copy = self.copy()
             move_start = curr_time_millis()
