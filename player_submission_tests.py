@@ -68,7 +68,7 @@ def main():
         expected_depth_scores = [(1,3),(2,-4),(3,2),(4,-1),(5,1)]
 
         for depth, exp_score in expected_depth_scores:
-            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"), beta=float("inf"), maximizing_player=True)
+            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"), beta=float("inf"), my_turn=True)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
                 test_pass = False

@@ -10,7 +10,7 @@ from random import randint
 
 class OpenMoveEvalFn:
 
-    def score(self, game, maximizing_player_turn=True):
+    def score(self, game, my_turn=True):
         """Score the current game state
 
         Evaluation function that outputs a score equal to how many
@@ -23,7 +23,7 @@ class OpenMoveEvalFn:
 
             Args
                 param1 (Board): The board and game state.
-                param2 (bool): True if maximizing player is active.
+                param2 (bool): True if relevant player is actively taking a turn.
 
             Returns:
                 float: The current state's score. MyMoves-OppMoves.
@@ -38,7 +38,7 @@ class CustomEvalFn:
     def __init__(self):
         pass
 
-    def score(self, game, maximizing_player_turn=True):
+    def score(self, game, my_turn=True):
         """Score the current game state
 
         Custom evaluation function that acts however you think it should. This
@@ -47,7 +47,7 @@ class CustomEvalFn:
 
         Args
             game (Board): The board and game state.
-            maximizing_player_turn (bool): True if maximizing player is active.
+            my_turn (bool): True if relevant player is actively taking a turn
 
         Returns:
             float: The current state's score, based on your own heuristic.
@@ -99,18 +99,18 @@ class CustomPlayer:
         best_move, utility = self.minimax(game, time_left, depth=self.search_depth)
         return best_move
 
-    def utility(self, game, maximizing_player):
+    def utility(self, game, my_turn):
         """Can be updated if desired. Not compulsory."""
-        return self.eval_fn.score(game, maximizing_player)
+        return self.eval_fn.score(game, my_turn)
 
-    def minimax(self, game, time_left, depth, maximizing_player=True):
+    def minimax(self, game, time_left, depth, my_turn=True):
         """Implementation of the minimax algorithm
 
         Args:
             game (Board): A board and game state.
             time_left (function): Used to determine time left before timeout
             depth: Used to track how deep you are in the search tree
-            maximizing_player (bool): True if maximizing player is active.
+            my_turn (bool): True if your player is active.
 
         Returns:
             (tuple, int): best_move, val
@@ -119,7 +119,7 @@ class CustomPlayer:
         raise NotImplementedError
         return best_move, best_val
 
-    def alphabeta(self, game, time_left, depth, alpha=float("-inf"), beta=float("inf"), maximizing_player=True):
+    def alphabeta(self, game, time_left, depth, alpha=float("-inf"), beta=float("inf"), my_turn=True):
         """Implementation of the alphabeta algorithm
 
         Args:
@@ -128,7 +128,7 @@ class CustomPlayer:
             depth: Used to track how deep you are in the search tree
             alpha (float): Alpha value for pruning
             beta (float): Beta value for pruning
-            maximizing_player (bool): True if maximizing player is active.
+            my_turn (bool): True if your player is active.
 
         Returns:
             (tuple, int): best_move, val
