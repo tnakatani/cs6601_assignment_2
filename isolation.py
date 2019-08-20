@@ -18,7 +18,7 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
-    NOT_MOVED = (-1, -1, 0)
+    NOT_MOVED = (-1, -1, False)
 
     # Flag True when swap occured last turn
     SWAP_FLAG = False
@@ -65,10 +65,24 @@ class Board:
         self.move_count = 0
 
     def get_state(self):
+        """
+        Get physical board state
+        Parameters:
+            None
+        Returns: 
+            State of the board: list[char]
+        """
         return deepcopy(self.__board_state__)
 
     def set_state(self, board_state, p1_turn=True):
-        #Function to immediately bring a board to a desired state for testing, call board.play_isolation() afterwards to play
+        '''
+        Function to immediately bring a board to a desired state. Useful for testing purposes; call board.play_isolation() afterwards to play
+        Parameters:
+            board_state: list[str], Desired state to set to board
+            p1_turn: bool, Flag to determine which player is active
+        Returns:
+            None
+        '''
         self.__board_state__ = board_state
 
         last_move_q1 = [(column,row.index("Q1"),0) for column, row in enumerate(board_state) if "Q1" in row]
@@ -94,9 +108,14 @@ class Board:
         self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state)
 
 
-    # Returns True, playername if playername just won
-    # Returns False, None if game should continue
     def __apply_move__(self, queen_move):
+        '''
+        Apply chosen move to a board state and check for game end
+        Parameters:
+            queen_move: (int, int, bool), Desired move to apply
+        Returns:
+            result: (bool, str), Game Over flag, winner 
+        '''
         print("Move chosen:: ", queen_move)
         row, col, swap = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
@@ -137,6 +156,13 @@ class Board:
         return False, None
 
     def copy(self):
+        '''
+        Create a copy of this board and game state.
+        Parameters:
+            None
+        Returns:
+            Copy of self: Board class
+        '''
         b = Board(self.__player_1__, self.__player_2__,
                   width=self.width, height=self.height)
         for key, value in self.__last_queen_move__.items():
@@ -152,46 +178,114 @@ class Board:
         return b
 
     def forecast_move(self, queen_move):
+        """
+        See what board state would result from making a particular move without changing the board state itself.
+        Parameters:
+            queen_move: (int, int, bool), Desired move to forecast
+        Returns:
+            (Board, bool, str): Resultant board from move, flag for game-over, winner (if game is over)
+        """
         new_board = self.copy()
         is_over, winner = new_board.__apply_move__(queen_move)
         return new_board, is_over, winner
 
     def get_active_player(self):
+        """
+        See which player is active. Used mostly in play_isolation for display purposes.
+        Parameters:
+            None
+        Returns:
+            str: Name of the player who's actively taking a turn
+        """
         return self.__active_player__
 
     def get_inactive_player(self):
+        """
+        See which player is inactive. Used mostly in play_isolation for display purposes.
+        Parameters:
+            None
+        Returns:
+            str: Name of the player who's waiting for opponent to take a turn
+        """
         return self.__inactive_player__
 
     def get_active_players_queen(self):
+        """
+        See which queen is inactive. Used mostly in play_isolation for display purposes.
+        Parameters:
+            None
+        Returns:
+            str: Queen name of the player who's waiting for opponent to take a turn
+        """
         return self.__active_players_queen__
 
     def get_inactive_players_queen(self):
+        """
+        See which queen is inactive. Used mostly in play_isolation for display purposes.
+        Parameters:
+            None
+        Returns:
+            str: Queen name of the player who's waiting for opponent to take a turn
+        """
         return self.__inactive_players_queen__
 
-     #Returns inactive player coordinates in [row,column]
     def get_opponent_position(self):
+        """
+        Get position of inactive player (player waiting for opponent to make move) in [row, column] format
+        Parameters:
+            None
+        Returns:
+           [int, int]: [row,col] of inactive player
+        """
         return self.__last_queen_move__[
             self.__inactive_players_queen__][0:2]
 
-    #Returns active player coordinates in [row,column]
     def get_position(self):
+        """
+        Get position of active player (player actively making move) in [row, column] format
+        Parameters:
+            None
+        Returns:
+           [int, int]: [row,col] of inactive player
+        """
         return self.__last_queen_move__[
             self.__active_players_queen__][0:2]
 
     def get_opponent_moves(self):
+        """
+        Get all legal moves of inactive player on current board state as a list of possible moves.
+        Parameters:
+            None
+        Returns:
+           [(int, int, bool)]: List of all legal moves
+        """
         q_move = self.__last_queen_move__[
             self.__inactive_players_queen__]
 
         return self.__get_moves__(q_move)
 
     def get_legal_moves(self):
-        # List of legal moves. Each move: (row, col, swap) => (int, int, bool)
+        """
+        Get all legal moves of active player on current board state as a list of possible moves.
+        Parameters:
+            None
+        Returns:
+           [(int, int, bool)]: List of all legal moves
+        """
         q_move = self.__last_queen_move__[
             self.__active_players_queen__]
 
         return self.__get_moves__(q_move)
 
     def __get_moves__(self, move):
+        """
+        Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called, 
+        use get_legal_moves or get_opponent_moves instead.
+        Parameters:
+            move: (int, int, bool), Last move made by player in question (where they currently are)
+        Returns:
+           [(int, int, bool)]: List of all legal moves
+        """
 
         if move == self.NOT_MOVED:
             return self.get_first_moves()
@@ -224,26 +318,68 @@ class Board:
         return moves
 
     def get_first_moves(self):
+        """
+        Return all moves for first turn in game (i.e. every board position)
+        Parameters:
+            None
+        Returns:
+           [(int, int, bool)]: List of all legal moves
+        """
         return [(i, j, 0) for i in range(0, self.height)
                           for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
 
     def move_is_in_board(self, row, col):
+        """
+        Sanity check for making sure a move is within the bounds of the board.
+        Parameters:
+            row: int, Row position of move in question
+            col: int, Column position of move in question
+        Returns:
+            bool: Whether the [row,col] values are within valid ranges
+        """
         return 0 <= row < self.height and 0 <= col < self.width
 
     def is_spot_open(self, row, col):
+        """
+        Sanity check for making sure a move isn't occupied by an X.
+        Parameters:
+            row: int, Row position of move in question
+            col: int, Column position of move in question
+        Returns:
+            bool: Whether the [row,col] position is blank (no X)
+        """
         return self.__board_state__[row][col] == Board.BLANK
 
     def is_spot_queen(self, row, col):
+        """
+        Sanity check for checking if a spot is occupied by a player
+        Parameters:
+            row: int, Row position of move in question
+            col: int, Column position of move in question
+        Returns:
+            bool: Whether the [row,col] position is currently occupied by a player's queen
+        """
         q1 = self.__queen_symbols__[self.__active_players_queen__]
         q2 = self.__queen_symbols__[self.__inactive_players_queen__]
         return self.__board_state__[row][col] == q1 or self.__board_state__[row][col] == q2
 
     def does_move_allow_swap(self, row, col, direction, distance):
 
+        """
+        Sanity check for checking if a move is a valid swap move
+        Parameters:
+            row: int, Row position of move in question
+            col: int, Column position of move in question
+            direction: (int, int), Directional unit vector of incoming queen
+            distance: int, Distance between [row,col] and incoming queen
+        Returns:
+            bool: Whether the [row,col] move is a valid swap move
+        """
+
         if not self.is_spot_queen(row, col):
             return False
 
-        # All spots except for the last one pushed to must be available to move to and be on the board
+        # All spots up to the other queen to must be available to move to and be on the board
         for dist in range(1, distance - 1):
             row_target = row + direction[0] * dist
             col_target = col + direction[1] * dist
@@ -263,13 +399,28 @@ class Board:
 
         return False
 
-    # Checks if a space is OPEN, NOT if a move is legal.
     def space_is_open(self, row, col):
+        """
+        Sanity check to see if a space is within the bounds of the board and blank. Not meant to be called directly if you don't know what 
+        you're looking for.
+        Parameters:
+            row: int, Row value of desired space
+            col: int, Col value of desired space
+        Returns:
+            bool: (Row, Col ranges are valid) AND (space is blank)
+        """
         return 0 <= row < self.height and \
                0 <= col < self.width and \
                self.__board_state__[row][col] == Board.BLANK
 
     def print_board(self, legal_moves=[]):
+        """
+        Function for printing board state & indicating possible moves for active player.
+        Parameters:
+            legal_moves: [(int, int, bool)], List of legal moves to indicate when printing board spaces.
+        Returns:
+            Str: Visual interpretation of board state & possible moves for active player
+        """
 
         p1_r, p1_c, swap = self.__last_queen_move__[self.__queen_1__]
         p2_r, p2_c, swap = self.__last_queen_move__[self.__queen_2__]
@@ -301,6 +452,15 @@ class Board:
         return out
 
     def play_isolation(self, time_limit=10000, print_moves=False):
+        """
+        Method to play out a game of isolation with the agents passed into the Board class.
+        Initializes and updates move_history variable, enforces timeouts, and prints the game.
+        Parameters:
+            time_limit: int, time limit in milliseconds that each player has before they time out.
+            print_moves: bool, Should the method print details of the game in real time
+        Returns:
+            (str, [(int, int, bool)], str): Queen of Winner, Move history, Reason for game over
+        """
         move_history = []
 
         if platform.system() == 'Windows':
@@ -367,13 +527,29 @@ class Board:
                        (self.__inactive_players_queen__ + " was forced off the grid.")
 
     def __apply_move_write__(self, move_queen):
+        """
+        Equivalent to __apply_move__, meant specifically for applying move history to a board 
+        for analyzing an already played game.
+        Parameters: 
+            move_queen: (int, int, bool), Move to apply to board
+        Returns:
+            None
+        """
         if move_queen[0] is None or move_queen[1] is None:
             return
 
         row, col, swap_flag = move_queen
-        self.__last_queen_move__[self.__active_players_queen__] = move_queen
-        self.__board_state__[row][col] = \
-            self.__queen_symbols__[self.__active_players_queen__]
+
+        if (move_queen[2]):
+            # Apply swap move
+            opponent_new_pos = (my_pos[0], my_pos[1], True)
+            self.__last_queen_move__[self.__inactive_players_queen__] = opponent_new_pos
+            self.__board_state__[opponent_new_pos[0]][opponent_new_pos[1]] = \
+                self.__queen_symbols__[self.__inactive_players_queen__]
+        else:
+            self.__last_queen_move__[self.__active_players_queen__] = move_queen
+            self.__board_state__[row][col] = \
+                self.__queen_symbols__[self.__active_players_queen__]
 
         # swap the players
         tmp = self.__active_player__
@@ -389,6 +565,15 @@ class Board:
 
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
+    """
+    Function to play out a move history on a new board. Used for analyzing an interesting move history 
+    Parameters: 
+        move_history: [(int, int, bool)], History of all moves in order of game in question
+        termination: str, Reason for game over of game in question. Obtained from play_isolation
+        board: Board, board that game in question was played on. Used to initialize board copy
+    Returns:
+        Str: Print output of move_history being played out.
+    """
     ans = StringIO()
 
     board = Board(board.__player_1__, board.__player_2__, board.width, board.height)
