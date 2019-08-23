@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import traceback
-from player_submission import OpenMoveEvalFn, CustomEvalFn, CustomPlayer
 from isolation import Board, game_as_text
 from test_players import RandomPlayer, HumanPlayer
 import platform
@@ -10,25 +9,23 @@ if platform.system() != 'Windows':
 
 from time import time, sleep
 
-
-def main():
-
+def correctOpenEvalFn(yourOpenEvalFn):
     print()
     try:
         sample_board = Board(RandomPlayer(), RandomPlayer())
         # setting up the board as though we've been playing
         board_state = [
             ["Q1", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", " ","Q2", " ", " ", " "],
-            [ " ", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", " ", " ", " ", " ", " "]
+            [" ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", "Q2", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " "]
         ]
-        sample_board.set_state(board_state,True)
-        test = sample_board.get_legal_moves()
-        h = OpenMoveEvalFn()
+        sample_board.set_state(board_state, True)
+        #test = sample_board.get_legal_moves()
+        h = yourOpenEvalFn()
         print('OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board)))
     except NotImplementedError:
         print('OpenMoveEvalFn Test: Not implemented')
@@ -37,77 +34,8 @@ def main():
         print(traceback.format_exc())
 
     print()
-    """Example test to make sure
-    your minimax works, using the
-    OpenMoveEvalFunction evaluation function.
-    This can be used for debugging your code
-    with different model Board states. 
-    Especially important to check alphabeta 
-    pruning"""
-    # create dummy 5x5 board
-    print()
-    try:
-        def time_left(): # For these testing purposes, let's ignore timeouts
-            return 10000
-        player = CustomPlayer()
-        sample_board = Board(player, RandomPlayer())
-        # setting up the board as though we've been playing
-        board_state = [
-            ["Q1", " ", " ", " ", " ", "X", " "],
-            [ " ", " ", " ", " ", " ", " ", " "],
-            [ "X", " ", " ", " ", " ", " ", " "],
-            [ " ", " ", "X","Q2", "X", " ", " "],   
-            [ "X", "X", "X", " ", "X", " ", " "],
-            [ " ", " ", "X", " ", "X", " ", " "],
-            [ " ", " ", "X", " ", "X", " ", " "]
-        ]
-        sample_board.set_state(board_state,True)
 
-        test_pass = True
-
-        expected_depth_scores = [(1,3),(2,-4),(3,2),(4,-1),(5,1)]
-
-        for depth, exp_score in expected_depth_scores:
-            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"), beta=float("inf"), my_turn=True)
-            if exp_score != score:
-                print("Minimax failed for depth: ", depth)
-                test_pass = False
-
-        if test_pass:
-            player = CustomPlayer()
-            sample_board = Board(player, RandomPlayer())
-            # setting up the board as though we've been playing
-            board_state = [
-                [ " ", " ", " ", " ", "X", " ", "X"],
-                [ "X", "X", "X", " ", "X", "Q2", " "],
-                [ " ", "X", "X", " ", "X", " ", " "],
-                [ "X", "X", "X", " ", "X", "X", " "],   
-                [ "X", " ", "Q1", " ", "X", " ", "X"],
-                [ "X", " ", " ", " ", "X", "X", " "],
-                [ "X", " ", " ", " ", "X", " ", " "]
-            ]
-            sample_board.set_state(board_state,True)
-
-            test_pass = True
-
-            expected_depth_scores = [(1,5),(2,5),(3,5),(4,6),(5,6)]
-
-            for depth, exp_score in expected_depth_scores:
-                move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"), beta=float("inf"), my_turn=True)
-                if exp_score != score:
-                    print("Minimax failed for depth: ", depth)
-                    test_pass = False
-
-        if test_pass:
-            print("Minimax Test: Runs Successfully!")
-
-    except NotImplementedError:
-        print('Minimax Test: Not implemented')
-    except:
-        print('Minimax Test: ERROR OCCURRED')
-        print(traceback.format_exc())
-
-    print()
+def beatRandom(yourAgent):
 
     """Example test you can run
     to make sure your AI does better
@@ -128,7 +56,79 @@ def main():
     except:
         print('CustomPlayer Test: ERROR OCCURRED')
         print(traceback.format_exc())
+    
+    print()
 
+def minimaxTest(yourAgent):
+    """Example test to make sure
+    your minimax works, using the
+    OpenMoveEvalFunction evaluation function.
+    This can be used for debugging your code
+    with different model Board states.
+    Especially important to check alphabeta
+    pruning"""
 
-if __name__ == "__main__":
-    main()
+    # create dummy 5x5 board
+    print()
+    try:
+        def time_left():  # For these testing purposes, let's ignore timeouts
+            return 10000
+
+        player = yourAgent()
+        sample_board = Board(player, RandomPlayer())
+        # setting up the board as though we've been playing
+        board_state = [
+            ["Q1", " ", " ", " ", " ", "X", " "],
+            [" ", " ", " ", " ", " ", " ", " "],
+            ["X", " ", " ", " ", " ", " ", " "],
+            [" ", " ", "X", "Q2", "X", " ", " "],
+            ["X", "X", "X", " ", "X", " ", " "],
+            [" ", " ", "X", " ", "X", " ", " "],
+            [" ", " ", "X", " ", "X", " ", " "]
+        ]
+        sample_board.set_state(board_state, True)
+
+        test_pass = True
+
+        expected_depth_scores = [(1, 3), (2, -4), (3, 2), (4, -1), (5, 1)]
+
+        for depth, exp_score in expected_depth_scores:
+            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"),
+                                             beta=float("inf"), my_turn=True)
+            if exp_score != score:
+                print("Minimax failed for depth: ", depth)
+                test_pass = False
+
+        if test_pass:
+            player = yourAgent()
+            sample_board = Board(player, RandomPlayer())
+            # setting up the board as though we've been playing
+            board_state = [
+                [" ", " ", " ", " ", "X", " ", "X"],
+                ["X", "X", "X", " ", "X", "Q2", " "],
+                [" ", "X", "X", " ", "X", " ", " "],
+                ["X", "X", "X", " ", "X", "X", " "],
+                ["X", " ", "Q1", " ", "X", " ", "X"],
+                ["X", " ", " ", " ", "X", "X", " "],
+                ["X", " ", " ", " ", "X", " ", " "]
+            ]
+            sample_board.set_state(board_state, True)
+
+            test_pass = True
+
+            expected_depth_scores = [(1, 5), (2, 5), (3, 5), (4, 6), (5, 6)]
+
+            for depth, exp_score in expected_depth_scores:
+                move, score = player.move(sample_board, time_left)
+                if exp_score != score:
+                    print("Minimax failed for depth: ", depth)
+                    test_pass = False
+
+        if test_pass:
+            print("Minimax Test: Runs Successfully!")
+
+    except NotImplementedError:
+        print('Minimax Test: Not implemented')
+    except:
+        print('Minimax Test: ERROR OCCURRED')
+        print(traceback.format_exc())
