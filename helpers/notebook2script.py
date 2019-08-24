@@ -4,7 +4,6 @@ import os
 import sys
 import re
 import json
-import numpy as np
 
 def is_export(cell):
     if cell['cell_type'] != 'code': return False
@@ -12,17 +11,9 @@ def is_export(cell):
     if len(src) == 0 or len(src[0]) < 7: return False
     return re.match(r'^\s*#\s*export\s*$', src[0], re.IGNORECASE) is not None
 
-def removeTestLines(cellText):
-    matchList = [re.search("^tests", cell) for cell in cellText]
-    linesToRemoveIdx = [matchList.index(i) for i in matchList if i is not None]
-    linesToRem = [cellText[i] for i in linesToRemoveIdx]
-    for i in linesToRem:
-        cellText.remove(i)
-    return cellText
-    
 def notebook2scriptSingle(fname):
     "Finds cells starting with `#export` and puts them into a new module"
-    fname_out = "submissions.py"
+    fname_out = 'submission.py'
     main_dic = json.load(open(fname,'r',encoding="utf-8"))
     code_cells = [c for c in main_dic['cells'] if is_export(c)]
     module = f'''
@@ -32,10 +23,7 @@ def notebook2scriptSingle(fname):
 # file to edit: {fname}
 
 '''
-    for cell in code_cells:
-        text = removeTestLines(cell['source'])
-        module += ''.join(text[1:]) + '\n\n'
-        
+    for cell in code_cells: module += ''.join(cell['source'][1:]) + '\n\n'
     # remove trailing spaces
     module = re.sub(r' +$', '', module, flags=re.MULTILINE)
     output_path = fname_out
@@ -43,4 +31,4 @@ def notebook2scriptSingle(fname):
     print(f"Converted {fname} to {output_path}")
 
 if __name__ == '__main__':
-    notebook2scriptSingle('player_submission.ipynb')
+    notebook2scriptSingle('notebook.ipynb')
