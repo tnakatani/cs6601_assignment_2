@@ -59,7 +59,7 @@ def beatRandom(yourAgent):
     
     print()
 
-def minimaxTest(yourAgent):
+def minimaxTest(yourAgent, testMethod):
     """Example test to make sure
     your minimax works, using the
     OpenMoveEvalFunction evaluation function.
@@ -93,8 +93,7 @@ def minimaxTest(yourAgent):
         expected_depth_scores = [(1, 3), (2, -4), (3, 2), (4, -1), (5, 1)]
 
         for depth, exp_score in expected_depth_scores:
-            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"),
-                                             beta=float("inf"), my_turn=True)
+            move, score = testMethod(player, sample_board, time_left, depth=depth, my_turn=True)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
                 test_pass = False
@@ -119,7 +118,7 @@ def minimaxTest(yourAgent):
             expected_depth_scores = [(1, 5), (2, 5), (3, 5), (4, 6), (5, 6)]
 
             for depth, exp_score in expected_depth_scores:
-                move, score = player.move(sample_board, time_left)
+                move, score = testMethod(player, sample_board, time_left, depth=depth, my_turn=True)
                 if exp_score != score:
                     print("Minimax failed for depth: ", depth)
                     test_pass = False
