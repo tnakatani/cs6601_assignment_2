@@ -116,7 +116,7 @@ class Board:
         Returns:
             result: (bool, str), Game Over flag, winner 
         '''
-        print("Move chosen:: ", queen_move)
+        #print("Move chosen:: ", queen_move)
         row, col, swap = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
