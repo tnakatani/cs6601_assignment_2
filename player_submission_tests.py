@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import traceback
 from isolation import Board, game_as_text
-from test_players import RandomPlayer, HumanPlayer
+from test_players import RandomPlayer, HumanPlayer, Player
 import platform
 
 if platform.system() != 'Windows':
@@ -44,8 +44,8 @@ def beatRandom(yourAgent):
     print("")
     try:
         r = RandomPlayer()
-        h = HumanPlayer()
-        game = Board(r, h, 7, 7)
+        p = yourAgent()
+        game = Board(r, p, 7, 7)
         output_b = game.copy()
         winner, move_history, termination = game.play_isolation(time_limit=1000, print_moves=True)
         print("\n", winner, " has won. Reason: ", termination)
@@ -59,7 +59,7 @@ def beatRandom(yourAgent):
     
     print()
 
-def minimaxTest(yourAgent):
+def minimaxTest(minimax_fn):
     """Example test to make sure
     your minimax works, using the
     OpenMoveEvalFunction evaluation function.
@@ -74,7 +74,7 @@ def minimaxTest(yourAgent):
         def time_left():  # For these testing purposes, let's ignore timeouts
             return 10000
 
-        player = yourAgent()
+        player = Player() #using as a dummy player to create a board
         sample_board = Board(player, RandomPlayer())
         # setting up the board as though we've been playing
         board_state = [
@@ -93,8 +93,7 @@ def minimaxTest(yourAgent):
         expected_depth_scores = [(1, 3), (2, -4), (3, 2), (4, -1), (5, 1)]
 
         for depth, exp_score in expected_depth_scores:
-            move, score = player.minimax(sample_board, time_left, depth=depth, alpha=float("-inf"),
-                                             beta=float("inf"), my_turn=True)
+            move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
                 test_pass = False

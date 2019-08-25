@@ -1,13 +1,21 @@
 from random import randint
 import random
 
-
-class RandomPlayer():
-
-    def __init__(self, name="RandomPlayer"):
+class Player():
+    def __init__(self, name="Player"):
         self.name = name
 
+    def move(self, game, legal_moves, time_left):
+        pass
+
+    def get_name(self):
+        return self.name
+
+
+class RandomPlayer(Player):
     """Player that chooses a move randomly."""
+    def __init__(self, name="RandomPlayer"):
+        super().__init__(name)
 
     def move(self, game, legal_moves, time_left):
         if not legal_moves:
@@ -19,12 +27,13 @@ class RandomPlayer():
         return self.name
 
 
-class HumanPlayer():
-
+class HumanPlayer(Player):
+    """
+    Player that chooses a move according to user's input. 
+    (Useful if you play in the terminal)
+    """
     def __init__(self, name="HumanPlayer"):
-        self.name = name
-
-    """Player that chooses a move according to user's input."""
+        super().__init__(name)
 
     def move(self, game, legal_moves, time_left):
         choice = {}
