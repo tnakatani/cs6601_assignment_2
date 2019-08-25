@@ -17,11 +17,11 @@ class RandomPlayer(Player):
     def __init__(self, name="RandomPlayer"):
         super().__init__(name)
 
-    def move(self, game, legal_moves, time_left):
-        if not legal_moves:
+    def move(self, game, time_left):
+        if not game.get_player_moves(self):
             return None
         else:
-            return random.choice(legal_moves)
+            return random.choice(game.get_player_moves(self))
 
     def get_name(self):
         return self.name

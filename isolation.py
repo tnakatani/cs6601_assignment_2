@@ -116,7 +116,7 @@ class Board:
         Returns:
             result: (bool, str), Game Over flag, winner 
         '''
-        #print("Move chosen:: ", queen_move)
+        #print("Applying move:: ", queen_move)
         row, col, swap = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
@@ -276,6 +276,49 @@ class Board:
             self.__active_players_queen__]
 
         return self.__get_moves__(q_move)
+
+    def get_player_moves(self, my_player=None):
+        """
+        Get all legal moves of certain player object. Should pass in yourself to get your moves.
+        Parameters:
+            my_player (Player), Player to get moves for
+            If calling from within a player class, my_player = self can be passed.
+        returns
+            [(int, int, bool)]: List of all legal moves
+
+        """
+        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+            return self.get_active_moves()
+        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+            return self.get_inactive_moves()
+        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+            return self.get_active_moves()
+        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+            return self.get_inactive_moves()
+        else:
+            raise ValueError("No value for my_player!")
+
+    def get_opponent_moves(self, my_player=None):
+        """
+        Get all legal moves of the opponent of the player provided. Should pass in yourself to get your opponent's moves.
+        If calling from within a player class, my_player = self can be passed.
+        Parameters:
+            my_player (Player), The player facing the opponent in question
+            If calling from within a player class, my_player = self can be passed.
+        returns
+            [(int, int, bool)]: List of all opponent's moves
+
+        """
+        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+            return self.get_inactive_moves()
+        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+            return self.get_active_moves()
+        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+            return self.get_inactive_moves()
+        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+            return self.get_active_moves()
+        else:
+            raise ValueError("No value for my_player!")
 
     def __get_moves__(self, move):
         """
@@ -470,6 +513,16 @@ class Board:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
 
+        # Take first move for each player once randomly
+        for _ in range(2):
+            curr_move = random.choice(self.get_active_moves())
+            # Append new move to game history
+            if self.__active_player__ == self.__player_1__:
+                move_history.append([curr_move])
+            else:
+                move_history[-1].append(curr_move)
+            is_over, winner = self.__apply_move__(curr_move)
+
         while True:
             game_copy = self.copy()
             move_start = curr_time_millis()
@@ -481,9 +534,13 @@ class Board:
             if print_moves:
                 print("\n", self.__active_players_queen__, " Turn")
 
-            legal_player_moves = self.get_active_moves()
+            if (self.SWAP_FLAG):
+                game_copy.SWAP_FLAG = True
+            else:
+                game_copy.SWAP_FLAG = False
+            #legal_player_moves = self.get_active_moves()
             curr_move = self.__active_player__.move(
-                game_copy, legal_player_moves, time_left)  # queen added in return
+                game_copy, time_left)  # queen added in return
 
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
@@ -525,6 +582,7 @@ class Board:
         Returns:
             None
         """
+
         if move_queen[0] is None or move_queen[1] is None:
             return
 

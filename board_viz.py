@@ -96,9 +96,7 @@ class InteractiveGame():
         self.game_is_over, winner = self.game.__apply_move__(move)
         if (not self.game_is_over) and (self.opponent is not None):
             opponents_legal_moves = self.game.get_active_moves()
-            opponent_move = self.opponent.move(self.game, 
-                                               legal_moves = opponents_legal_moves,
-                                               time_left=1000)
+            opponent_move = self.opponent.move(self.game, time_left=1000)
             assert opponent_move in opponents_legal_moves, \
             f"Opponents move {opponent_move} is not in list of legal moves {opponents_legal_moves}"
             self.game_is_over, winner = self.game.__apply_move__(opponent_move)

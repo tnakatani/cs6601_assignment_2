@@ -26,7 +26,7 @@ def correctOpenEvalFn(yourOpenEvalFn):
         sample_board.set_state(board_state, True)
         #test = sample_board.get_legal_moves()
         h = yourOpenEvalFn()
-        print('OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board)))
+        print('OpenMoveEvalFn Test: This board has a score of %s.' % (h.score(sample_board, sample_board.get_active_player())))
     except NotImplementedError:
         print('OpenMoveEvalFn Test: Not implemented')
     except:
@@ -59,7 +59,7 @@ def beatRandom(yourAgent):
     
     print()
 
-def minimaxTest(minimax_fn):
+def minimaxTest(yourAgent, minimax_fn):
     """Example test to make sure
     your minimax works, using the
     OpenMoveEvalFunction evaluation function.
@@ -69,12 +69,13 @@ def minimaxTest(minimax_fn):
     pruning"""
 
     # create dummy 5x5 board
+    print("Now running the Minimax test.")
     print()
     try:
         def time_left():  # For these testing purposes, let's ignore timeouts
             return 10000
 
-        player = Player() #using as a dummy player to create a board
+        player = yourAgent() #using as a dummy player to create a board
         sample_board = Board(player, RandomPlayer())
         # setting up the board as though we've been playing
         board_state = [
@@ -118,7 +119,7 @@ def minimaxTest(minimax_fn):
             expected_depth_scores = [(1, 5), (2, 5), (3, 5), (4, 6), (5, 6)]
 
             for depth, exp_score in expected_depth_scores:
-                move, score = testMethod(player, sample_board, time_left, depth=depth, my_turn=True)
+                move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
                 if exp_score != score:
                     print("Minimax failed for depth: ", depth)
                     test_pass = False
