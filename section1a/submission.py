@@ -127,7 +127,7 @@ def alphabeta(player, game, time_left, depth, alpha=float("-inf"), beta=float("i
     raise NotImplementedError
     return best_move, val
 
-# ADD YOU LOCAL TESTS HERE IF DESIRED
+# ADD YOUR LOCAL TESTS HERE IF DESIRED
 
 class CustomEvalFn:
     def __init__(self):
