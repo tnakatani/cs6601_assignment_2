@@ -622,6 +622,8 @@ class Board:
             return
 
         row, col, swap_flag = move_queen
+        my_pos = self.__last_queen_move__[self.__active_players_queen__]
+        opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         if (move_queen[2]):
             # Apply swap move
@@ -695,12 +697,12 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
                 my_x, my_y = last_move[1][0], last_move[1][1]
                 enemy_x, enemy_y = move[1][0], move[1][1]
 
-                new_enemy_x, new_enemy_y = calculate_enemy_push_location(my_x, my_y, enemy_x, enemy_y)
+                new_enemy_x, new_enemy_y = calculate_enemy_swap_location(my_x, my_y, enemy_x, enemy_y)
 
                 if board.move_is_in_board(new_enemy_x, new_enemy_y):
                     board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
                 ans.write(
-                    "\n\n" + board.__queen_1__ + " pushed to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
+                    "\n\n" + board.__queen_1__ + " swapped to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
                 board.__active_players_queen__, board.__inactive_players_queen__ = board.__inactive_players_queen__, board.__active_players_queen__
 
         last_move = move
