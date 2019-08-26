@@ -472,6 +472,7 @@ class Board:
             if not self.move_is_in_board(row_target, col_target) or not self.is_spot_open(row_target, col_target):
                 return False
 
+        '''
         row_target = row + direction[0] * distance
         col_target = col + direction[1] * distance
 
@@ -482,8 +483,9 @@ class Board:
         if not self.move_is_in_board(row_target, col_target) or self.is_spot_open(row_target, col_target):
             # and IF the square they'd be pushed TO is either off the board or an open space on the board
             return True
+        '''
 
-        return False
+        return True
 
     def space_is_open(self, row, col):
         """
