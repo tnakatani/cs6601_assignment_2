@@ -1,7 +1,6 @@
 from copy import deepcopy
 import time
 import platform
-import random
 # import io
 from io import StringIO
 
@@ -250,6 +249,49 @@ class Board:
         """
         return self.__last_queen_move__[
             self.__active_players_queen__][0:2]
+
+    def get_player_position(self, my_player=None):
+        """
+        Get position of certain player object. Should pass in yourself to get your position.
+        Parameters:
+            my_player (Player), Player to get position for
+            If calling from within a player class, my_player = self can be passed.
+        returns
+            [int, int]: [Row, Col] position of player
+
+        """
+        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+            return self.get_active_position()
+        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+            return self.get_inactive_position()
+        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+            return self.get_active_position()
+        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+            return self.get_inactive_position()
+        else:
+            raise ValueError("No value for my_player!")
+
+
+    def get_opponent_position(self, my_player=None):
+        """
+        Get position of my_player's opponent.
+        Parameters:
+            my_player (Player), Player to get opponent's position
+            If calling from within a player class, my_player = self can be passed.
+        returns
+            [int, int]: [Row, col] position of my_player's opponent
+
+        """
+        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+            return self.get_inactive_position()
+        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+            return self.get_active_position()
+        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+            return self.get_inactive_position()
+        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+            return self.get_active_position()
+        else:
+            raise ValueError("No value for my_player!")
 
     def get_inactive_moves(self):
         """
@@ -513,16 +555,6 @@ class Board:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
 
-        # Take first move for each player once randomly
-        for _ in range(2):
-            curr_move = random.choice(self.get_active_moves())
-            # Append new move to game history
-            if self.__active_player__ == self.__player_1__:
-                move_history.append([curr_move])
-            else:
-                move_history[-1].append(curr_move)
-            is_over, winner = self.__apply_move__(curr_move)
-
         while True:
             game_copy = self.copy()
             move_start = curr_time_millis()
@@ -538,7 +570,7 @@ class Board:
                 game_copy.SWAP_FLAG = True
             else:
                 game_copy.SWAP_FLAG = False
-            #legal_player_moves = self.get_active_moves()
+            
             curr_move = self.__active_player__.move(
                 game_copy, time_left)  # queen added in return
 
