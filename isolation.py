@@ -383,16 +383,17 @@ class Board:
 
         moves = []
 
+
         for direction in directions:
             for dist in range(1, max(self.height, self.width)):
                 row = direction[0] * dist + r
                 col = direction[1] * dist + c
-                if self.move_is_in_board(row, col) and self.is_spot_open(row, col):
-                    moves.append((row, col, 0))
+                if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col, False) not in moves:
+                    moves.append((row, col, False))
 
                 elif self.move_is_in_board(row, col) and self.is_spot_queen(row, col):
                     for distance in range(1, dist + 1):
-                        if self.does_move_allow_swap(row, col, direction, distance) and not self.SWAP_FLAG:
+                        if self.does_move_allow_swap(row, col, direction, distance) and not self.SWAP_FLAG and(row, col, True) not in moves:
                             moves.append((row, col, True))
                         else:
                             break
