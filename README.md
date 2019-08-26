@@ -28,7 +28,7 @@ Activate the environment:
 conda activate ai_env
 ```
 
-In case you use a different name, to list of all environments you have on your machine you can run `conda env list`.
+In case you used a different environment name, to list of all environments you have on your machine you can run `conda env list`.
 
 Install additional package that will be used to for visualising the game board.
 
