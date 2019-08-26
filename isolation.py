@@ -629,12 +629,19 @@ class Board:
             # Apply swap move
             opponent_new_pos = (my_pos[0], my_pos[1], True)
             self.__last_queen_move__[self.__inactive_players_queen__] = opponent_new_pos
+            self.__last_queen_move__[self.__active_players_queen__] = (row, col, True)
             self.__board_state__[opponent_new_pos[0]][opponent_new_pos[1]] = \
                 self.__queen_symbols__[self.__inactive_players_queen__]
+            self.__board_state__[row][col] = \
+                self.__queen_symbols__[self.__active_players_queen__]
         else:
             self.__last_queen_move__[self.__active_players_queen__] = move_queen
             self.__board_state__[row][col] = \
                 self.__queen_symbols__[self.__active_players_queen__]
+
+        if self.move_is_in_board(my_pos[0], my_pos[1]):
+            self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
+
 
         # swap the players
         tmp = self.__active_player__
@@ -682,11 +689,8 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
 
                 new_enemy_x, new_enemy_y = my_x, my_y
 
-                if board.move_is_in_board(new_enemy_x, new_enemy_y):
-                    board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
                 ans.write(
                     "\n\n" + board.__queen_2__ + " swapped to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
-                board.__active_players_queen__, board.__inactive_players_queen__ = board.__inactive_players_queen__, board.__active_players_queen__
 
         if len(move) > 1 and move[1] != Board.NOT_MOVED and move[0] is not None:
             ans.write(board.print_board())
@@ -695,15 +699,11 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
 
             if move[1] is not None and move[1][2] is True:
                 my_x, my_y = last_move[1][0], last_move[1][1]
-                enemy_x, enemy_y = move[1][0], move[1][1]
+                new_enemy_x, new_enemy_y = move[1][0], move[1][1]
+                new_enemy_x, new_enemy_y = my_x, my_y
 
-                new_enemy_x, new_enemy_y = calculate_enemy_swap_location(my_x, my_y, enemy_x, enemy_y)
-
-                if board.move_is_in_board(new_enemy_x, new_enemy_y):
-                    board.__apply_move_write__((new_enemy_x, new_enemy_y, False))
                 ans.write(
                     "\n\n" + board.__queen_1__ + " swapped to (" + str(new_enemy_x) + "," + str(new_enemy_y) + ")\r\n")
-                board.__active_players_queen__, board.__inactive_players_queen__ = board.__inactive_players_queen__, board.__active_players_queen__
 
         last_move = move
 
