@@ -5,7 +5,7 @@ class Player():
     def __init__(self, name="Player"):
         self.name = name
 
-    def move(self, game, legal_moves, time_left):
+    def move(self, game, time_left):
         pass
 
     def get_name(self):
@@ -35,7 +35,8 @@ class HumanPlayer(Player):
     def __init__(self, name="HumanPlayer"):
         super().__init__(name)
 
-    def move(self, game, legal_moves, time_left):
+    def move(self, game, time_left):
+        legal_moves = game.get_player_moves(self)
         choice = {}
 
         if not len(legal_moves):
@@ -48,7 +49,7 @@ class HumanPlayer(Player):
             if not move[2]:
                 print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
             else:
-                print('\t'.join(['[%d] (%d,%d) - push mag %d' % (counter, move[0], move[1], move[2])]))
+                print('\t'.join(['[%d] (%d,%d) - swap' % (counter, move[0], move[1])]))
             counter += 1
 
         print("-------------------------")
