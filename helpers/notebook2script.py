@@ -71,6 +71,15 @@ def require_pledges():
 
 if __name__ == '__main__':
     require_pledges()
-    folder_location = sys.argv[1]
-    os.makedirs(folder_location,exist_ok=True)
-    notebook2scriptSingle('notebook.ipynb', folder_location)
+
+    try:
+        if (len(sys.argv) > 2): # Warning if extra parameters have been provided
+            print("Please note that the notebook will now be submitted to the first directory specified immediately "
+                  "after \'helpers/notebook.ipynb\'. Any arguments that come after are ignored.\n")
+        folder_location = sys.argv[1]
+        os.makedirs(folder_location,exist_ok=True)
+        notebook2scriptSingle('notebook.ipynb', folder_location)
+    except IndexError:
+        print("An error has occurred in trying to export your notebook.ipynb. Please verify "
+              "whether you have provided a folder name to the command when running the script. "
+              "The format of a proper command is \'python helpers/notebook2script.ipynb path/to/folder\'.")
