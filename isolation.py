@@ -111,7 +111,8 @@ class Board:
         '''
         Apply chosen move to a board state and check for game end
         Parameters:
-            queen_move: (int, int, bool), Desired move to apply
+            queen_move: (int, int, bool), Desired move to apply. Takes the 
+            form of (row, column, does this move cause a swap or not).
         Returns:
             result: (bool, str), Game Over flag, winner 
         '''
@@ -180,7 +181,9 @@ class Board:
         """
         See what board state would result from making a particular move without changing the board state itself.
         Parameters:
-            queen_move: (int, int, bool), Desired move to forecast
+            queen_move: (int, int, bool), Desired move to forecast. Takes the form of
+            (row, column, does this move cause a swap or not).
+
         Returns:
             (Board, bool, str): Resultant board from move, flag for game-over, winner (if game is over)
         """
@@ -299,7 +302,8 @@ class Board:
         Parameters:
             None
         Returns:
-           [(int, int, bool)]: List of all legal moves
+           [(int, int, bool)]: List of all legal moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
         """
         q_move = self.__last_queen_move__[
             self.__inactive_players_queen__]
@@ -312,7 +316,8 @@ class Board:
         Parameters:
             None
         Returns:
-           [(int, int, bool)]: List of all legal moves
+           [(int, int, bool)]: List of all legal moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
         """
         q_move = self.__last_queen_move__[
             self.__active_players_queen__]
@@ -326,7 +331,8 @@ class Board:
             my_player (Player), Player to get moves for
             If calling from within a player class, my_player = self can be passed.
         returns
-            [(int, int, bool)]: List of all legal moves
+            [(int, int, bool)]: List of all legal moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
 
         """
         if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
@@ -348,7 +354,8 @@ class Board:
             my_player (Player), The player facing the opponent in question
             If calling from within a player class, my_player = self can be passed.
         returns
-            [(int, int, bool)]: List of all opponent's moves
+            [(int, int, bool)]: List of all opponent's moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
 
         """
         if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
@@ -367,9 +374,11 @@ class Board:
         Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called, 
         use get_active_moves or get_inactive_moves instead.
         Parameters:
-            move: (int, int, bool), Last move made by player in question (where they currently are)
+            move: (int, int, bool), Last move made by player in question (where they currently are). 
+            Takes the form of (row, column, does this move cause a swap or not).
         Returns:
-           [(int, int, bool)]: List of all legal moves
+           [(int, int, bool)]: List of all legal moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
         """
 
         if move == self.NOT_MOVED:
@@ -409,7 +418,8 @@ class Board:
         Parameters:
             None
         Returns:
-           [(int, int, bool)]: List of all legal moves
+           [(int, int, bool)]: List of all legal moves. Each move takes the form of
+            (row, column, does this move cause a swap or not).
         """
         return [(i, j, 0) for i in range(0, self.height)
                           for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
@@ -505,7 +515,8 @@ class Board:
         """
         Function for printing board state & indicating possible moves for active player.
         Parameters:
-            legal_moves: [(int, int, bool)], List of legal moves to indicate when printing board spaces.
+            legal_moves: [(int, int, bool)], List of legal moves to indicate when printing board spaces. 
+            Each move takes the form of (row, column, does this move cause a swap or not).
         Returns:
             Str: Visual interpretation of board state & possible moves for active player
         """
@@ -547,7 +558,8 @@ class Board:
             time_limit: int, time limit in milliseconds that each player has before they time out.
             print_moves: bool, Should the method print details of the game in real time
         Returns:
-            (str, [(int, int, bool)], str): Queen of Winner, Move history, Reason for game over
+            (str, [(int, int, bool)], str): Queen of Winner, Move history, Reason for game over.
+            Each move in move history takes the form of (row, column, does this move cause a swap or not).
         """
         move_history = []
 
@@ -613,7 +625,8 @@ class Board:
         Equivalent to __apply_move__, meant specifically for applying move history to a board 
         for analyzing an already played game.
         Parameters: 
-            move_queen: (int, int, bool), Move to apply to board
+            move_queen: (int, int, bool), Move to apply to board. Takes
+            the form of (row, column, does this move cause a swap or not).
         Returns:
             None
         """
@@ -660,7 +673,8 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
     """
     Function to play out a move history on a new board. Used for analyzing an interesting move history 
     Parameters: 
-        move_history: [(int, int, bool)], History of all moves in order of game in question
+        move_history: [(int, int, bool)], History of all moves in order of game in question. 
+        Each move takes the form of (row, column, does this move cause a swap or not).
         termination: str, Reason for game over of game in question. Obtained from play_isolation
         board: Board, board that game in question was played on. Used to initialize board copy
     Returns:
