@@ -94,16 +94,17 @@ class InteractiveGame():
         if platform.system() == 'Windows':
             def curr_time_millis():
                 return int(round(time.time() * 1000))
-            else:
-                def curr_time_millis():
-                    return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
+        else:
+            def curr_time_millis():
+                return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
         move_start = curr_time_millis()
         
         def time_left(time_limit = 1000):
             # print("Limit: "+str(time_limit) +" - "+str(curr_time_millis()-move_start))
             return time_limit - (curr_time_millis() - move_start)
 
-        if self.game_is_over: return print('The game is over!')
+        if self.game_is_over:
+            return print('The game is over!')
         ### swap move workaround ###
         # find if current location is in the legal moves
         # legal_moves is of length 1 if move exists, and len 0 if move is illegal
