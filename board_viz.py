@@ -10,6 +10,16 @@ from IPython.display import display, clear_output
 from isolation import Board
 from test_players import Player
 
+import time
+import platform
+# import io
+from io import StringIO
+
+# import resource
+if platform.system() != 'Windows':
+    import resource
+
+
 def get_details(name):
     if name == 'Q1':
         color = 'SpringGreen'
@@ -81,6 +91,18 @@ class InteractiveGame():
         display(self.gridb)
 
     def select_move(self, b):
+        if platform.system() == 'Windows':
+            def curr_time_millis():
+                return int(round(time.time() * 1000))
+            else:
+                def curr_time_millis():
+                    return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
+        move_start = curr_time_millis()
+        
+        def time_left(time_limit = 1000):
+            # print("Limit: "+str(time_limit) +" - "+str(curr_time_millis()-move_start))
+            return time_limit - (curr_time_millis() - move_start)
+
         if self.game_is_over: return print('The game is over!')
         ### swap move workaround ###
         # find if current location is in the legal moves
@@ -96,7 +118,7 @@ class InteractiveGame():
         self.game_is_over, winner = self.game.__apply_move__(move)
         if (not self.game_is_over) and (self.opponent is not None):
             opponents_legal_moves = self.game.get_active_moves()
-            opponent_move = self.opponent.move(self.game, time_left=1000)
+            opponent_move = self.opponent.move(self.game, time_left=time_left)
             assert opponent_move in opponents_legal_moves, \
             f"Opponents move {opponent_move} is not in list of legal moves {opponents_legal_moves}"
             self.game_is_over, winner = self.game.__apply_move__(opponent_move)
