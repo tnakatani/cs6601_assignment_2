@@ -175,6 +175,7 @@ class Board:
         b.__active_players_queen__ = self.__active_players_queen__
         b.__inactive_players_queen__ = self.__inactive_players_queen__
         b.__board_state__ = self.get_state()
+        b.SWAP_FLAG = self.SWAP_FLAG
         return b
 
     def forecast_move(self, queen_move):
