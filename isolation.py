@@ -17,6 +17,7 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
+    LASER = "O"
     NOT_MOVED = (-1, -1, False)
 
     # Flag True when swap occured last turn
@@ -34,6 +35,8 @@ class Board:
 
     __last_queen_move__ = {}
     __last_queen_symbols__ = {}
+
+    __last_laser_pos__ = []
 
     move_count = 0
 
@@ -84,11 +87,12 @@ class Board:
         '''
         self.__board_state__ = board_state
 
-        last_move_q1 = [(column,row.index("Q1"),0) for column, row in enumerate(board_state) if "Q1" in row]
+        last_move_q1 = [(column, row.index("Q1"), 0) for column, row in enumerate(board_state) if "Q1" in row]
         if (last_move_q1 != []):
-            self.__last_queen_move__[self.__queen_1__] = last_move_q1[0] # set last move to the first found occurance of 'Q1'
+            # set last move to the first found occurance of 'Q1'
+            self.__last_queen_move__[self.__queen_1__] = last_move_q1[0]
 
-        last_move_q2 = [(column,row.index("Q2"),0) for column, row in enumerate(board_state) if "Q2" in row]
+        last_move_q2 = [(column, row.index("Q2"), 0) for column, row in enumerate(board_state) if "Q2" in row]
         if (last_move_q2 != []):
             self.__last_queen_move__[self.__queen_2__] = last_move_q2[0]
 
@@ -103,9 +107,8 @@ class Board:
             self.__active_players_queen__ = self.__queen_2__
             self.__inactive_player__ = self.__player_1__
             self.__inactive_players_queen__ = self.__queen_1__
-        #Count X's to get move count + 2 for initial moves
+        # Count X's to get move count + 2 for initial moves
         self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state)
-
 
     def __apply_move__(self, queen_move):
         '''
@@ -116,13 +119,13 @@ class Board:
         Returns:
             result: (bool, str), Game Over flag, winner 
         '''
-        #print("Applying move:: ", queen_move)
+        # print("Applying move:: ", queen_move)
         row, col, swap = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         queen_name = self.__queen_symbols__[self.__active_players_queen__]
-
+        self.__clear_laser__()
         if (swap):
             # Apply swap move
             self.SWAP_FLAG = True
@@ -135,6 +138,7 @@ class Board:
             self.SWAP_FLAG = False
             if self.move_is_in_board(my_pos[0], my_pos[1]):
                 self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
+                self.__create_laser__(queen_move, my_pos)
 
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
@@ -154,6 +158,54 @@ class Board:
         self.move_count = self.move_count + 1
 
         return False, None
+
+    def __create_laser__(self, current_position, previous_position):
+        curr_row, curr_col, _ = current_position
+        prev_row, prev_col, _ = previous_position
+        vertical_iterator = 1
+        horizontal_iterator = 1
+
+        if curr_row < prev_row:
+            horizontal_iterator = -1
+        if curr_col < prev_col:
+            vertical_iterator = -1
+
+        if curr_col == prev_col:
+            # vertical move
+            row = prev_row + horizontal_iterator
+            while row != curr_row:
+                # for i in range(min(curr_row, prev_row), max(curr_row, prev_row)):
+                #     if i == curr_row or i == prev_row:
+                #         continue
+                self.__last_laser_pos__.append((row, curr_col))
+                self.__board_state__[row][curr_col] = Board.LASER
+                row = row + horizontal_iterator
+
+        elif curr_row == prev_row:
+            # horizontal move
+            # for i in range(min(curr_col, prev_col), max(curr_col, prev_col)):
+            #     if i == curr_col or i == prev_col:
+            #         continue
+            #     self.__last_laser_pos__.append((curr_row, i))
+            #     self.__board_state__[curr_row][i] = Board.LASER
+
+            col = prev_col + vertical_iterator
+            while col != curr_col:
+                self.__last_laser_pos__.append((curr_row, col))
+                self.__board_state__[curr_row][col] = Board.LASER
+                col = col + vertical_iterator
+        else:
+            # diagonal move
+
+            print("Diagonal Move")
+            # col = prev_col + vertical_iterator
+            # row = prev_row + horizontal_iterator
+
+            while col != curr_col and row != curr_row:
+                self.__last_laser_pos__.append((row, col))
+                self.__board_state__[row][col] = Board.LASER
+                col = col + vertical_iterator
+                row = row + horizontal_iterator
 
     def copy(self):
         '''
@@ -241,7 +293,7 @@ class Board:
            [int, int]: [row,col] of inactive player
         """
         return self.__last_queen_move__[
-            self.__inactive_players_queen__][0:2]
+                   self.__inactive_players_queen__][0:2]
 
     def get_active_position(self):
         """
@@ -252,7 +304,7 @@ class Board:
            [int, int]: [row,col] of inactive player
         """
         return self.__last_queen_move__[
-            self.__active_players_queen__][0:2]
+                   self.__active_players_queen__][0:2]
 
     def get_player_position(self, my_player=None):
         """
@@ -274,7 +326,6 @@ class Board:
             return self.get_inactive_position()
         else:
             raise ValueError("No value for my_player!")
-
 
     def get_opponent_position(self, my_player=None):
         """
@@ -388,11 +439,10 @@ class Board:
         r, c, _ = move
 
         directions = [(-1, -1), (-1, 0), (-1, 1),
-                      ( 0, -1),          ( 0, 1),
-                      ( 1, -1), ( 1, 0), ( 1, 1)]
+                      (0, -1), (0, 1),
+                      (1, -1), (1, 0), (1, 1)]
 
         moves = []
-
 
         for direction in directions:
             for dist in range(1, max(self.height, self.width)):
@@ -403,7 +453,8 @@ class Board:
 
                 elif self.move_is_in_board(row, col) and self.is_spot_queen(row, col):
                     for distance in range(1, dist + 1):
-                        if self.does_move_allow_swap(row, col, direction, distance) and not self.SWAP_FLAG and(row, col, True) not in moves:
+                        if self.does_move_allow_swap(row, col, direction, distance) and not self.SWAP_FLAG and (
+                                row, col, True) not in moves:
                             moves.append((row, col, True))
                         else:
                             break
@@ -423,7 +474,7 @@ class Board:
             (row, column, does this move cause a swap or not).
         """
         return [(i, j, 0) for i in range(0, self.height)
-                          for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
+                for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
 
     def move_is_in_board(self, row, col):
         """
@@ -586,7 +637,7 @@ class Board:
                 game_copy.SWAP_FLAG = True
             else:
                 game_copy.SWAP_FLAG = False
-            
+
             curr_move = self.__active_player__.move(
                 game_copy, time_left)  # queen added in return
 
@@ -656,7 +707,6 @@ class Board:
         if self.move_is_in_board(my_pos[0], my_pos[1]):
             self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
 
-
         # swap the players
         tmp = self.__active_player__
         self.__active_player__ = self.__inactive_player__
@@ -668,6 +718,14 @@ class Board:
         self.__inactive_players_queen__ = tmp
 
         self.move_count = self.move_count + 1
+
+    def __clear_laser__(self):
+        if len(self.__last_laser_pos__) == 0:
+            return
+        for pos in self.__last_laser_pos__:
+            self.__board_state__[pos[0]][pos[1]] = Board.BLANK
+
+        self.__last_laser_pos__ = []
 
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
