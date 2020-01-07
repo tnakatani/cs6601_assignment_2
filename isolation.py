@@ -160,6 +160,15 @@ class Board:
         return False, None
 
     def __create_laser__(self, current_position, previous_position):
+        """
+        Creates a laser between the previous and current position of the player
+        Parameters:
+            current_position: (int, int) Current Row and Column position of the player
+            previous_position: (int, int) Previous Row and Column position of the player
+        Returns:
+            None
+        """
+
         curr_row, curr_col, _ = current_position
         prev_row, prev_col, _ = previous_position
         vertical_iterator = 1
@@ -174,21 +183,12 @@ class Board:
             # vertical move
             row = prev_row + horizontal_iterator
             while row != curr_row:
-                # for i in range(min(curr_row, prev_row), max(curr_row, prev_row)):
-                #     if i == curr_row or i == prev_row:
-                #         continue
                 self.__last_laser_pos__.append((row, curr_col))
                 self.__board_state__[row][curr_col] = Board.LASER
                 row = row + horizontal_iterator
 
         elif curr_row == prev_row:
             # horizontal move
-            # for i in range(min(curr_col, prev_col), max(curr_col, prev_col)):
-            #     if i == curr_col or i == prev_col:
-            #         continue
-            #     self.__last_laser_pos__.append((curr_row, i))
-            #     self.__board_state__[curr_row][i] = Board.LASER
-
             col = prev_col + vertical_iterator
             while col != curr_col:
                 self.__last_laser_pos__.append((curr_row, col))
@@ -196,11 +196,7 @@ class Board:
                 col = col + vertical_iterator
         else:
             # diagonal move
-
-            print("Diagonal Move")
-            # col = prev_col + vertical_iterator
             col = prev_col
-            # row = prev_row + horizontal_iterator
             row = prev_row
 
             while col != curr_col and row != curr_row:
@@ -214,8 +210,6 @@ class Board:
                         row, col) != (curr_row, curr_col):
                     self.__last_laser_pos__.append((row, col))
                     self.__board_state__[row][col] = Board.LASER
-                # col = col + vertical_iterator
-                # row = row + horizontal_iterator
 
     def copy(self):
         '''
@@ -730,10 +724,16 @@ class Board:
         self.move_count = self.move_count + 1
 
     def __clear_laser__(self):
-        # print("Clear Laser")
+        """
+        Clears the laser made in the previous move
+        Parameters:
+            None
+        Returns:
+            None
+        """
         if len(self.__last_laser_pos__) == 0:
             return
-        # print("Clear Laser 2 ", len(self.__last_laser_pos__))
+
         for pos in self.__last_laser_pos__:
             self.__board_state__[pos[0]][pos[1]] = Board.BLANK
 
