@@ -199,13 +199,23 @@ class Board:
 
             print("Diagonal Move")
             # col = prev_col + vertical_iterator
+            col = prev_col
             # row = prev_row + horizontal_iterator
+            row = prev_row
 
             while col != curr_col and row != curr_row:
-                self.__last_laser_pos__.append((row, col))
-                self.__board_state__[row][col] = Board.LASER
                 col = col + vertical_iterator
+                if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
+                        row, col) != (curr_row, curr_col):
+                    self.__last_laser_pos__.append((row, col))
+                    self.__board_state__[row][col] = Board.LASER
                 row = row + horizontal_iterator
+                if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
+                        row, col) != (curr_row, curr_col):
+                    self.__last_laser_pos__.append((row, col))
+                    self.__board_state__[row][col] = Board.LASER
+                # col = col + vertical_iterator
+                # row = row + horizontal_iterator
 
     def copy(self):
         '''
@@ -720,8 +730,10 @@ class Board:
         self.move_count = self.move_count + 1
 
     def __clear_laser__(self):
+        # print("Clear Laser")
         if len(self.__last_laser_pos__) == 0:
             return
+        # print("Clear Laser 2 ", len(self.__last_laser_pos__))
         for pos in self.__last_laser_pos__:
             self.__board_state__[pos[0]][pos[1]] = Board.BLANK
 
