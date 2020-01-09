@@ -22,9 +22,9 @@ if platform.system() != 'Windows':
 
 def get_details(name):
     if name == 'Q1':
-        color = 'SpringGreen'
-    elif name == 'Q2':
         color = 'tomato'
+    elif name == 'Q2':
+        color = 'cyan'
     elif name == 'q1':
         color = 'HoneyDew'
         name = ' '
@@ -33,6 +33,9 @@ def get_details(name):
         name = ' '
     elif name == 'X':
         color = 'black'
+    elif name == 'O':
+        color = 'red'
+        name = ' '
     else:
         color = 'Lavender'
     style = ButtonStyle(button_color=color)
