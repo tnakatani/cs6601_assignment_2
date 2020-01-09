@@ -201,15 +201,16 @@ class Board:
 
             while col != curr_col and row != curr_row:
                 col = col + vertical_iterator
-                if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
-                        row, col) != (curr_row, curr_col):
-                    self.__last_laser_pos__.append((row, col))
-                    self.__board_state__[row][col] = Board.LASER
                 row = row + horizontal_iterator
                 if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
                         row, col) != (curr_row, curr_col):
                     self.__last_laser_pos__.append((row, col))
                     self.__board_state__[row][col] = Board.LASER
+
+                # if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
+                #         row, col) != (curr_row, curr_col):
+                #     self.__last_laser_pos__.append((row, col))
+                #     self.__board_state__[row][col] = Board.LASER
 
     def copy(self):
         '''
