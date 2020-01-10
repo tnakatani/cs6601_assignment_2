@@ -46,10 +46,7 @@ class HumanPlayer(Player):
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
-            if not move[2]:
-                print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
-            else:
-                print('\t'.join(['[%d] (%d,%d) - swap' % (counter, move[0], move[1])]))
+            print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
             counter += 1
 
         print("-------------------------")

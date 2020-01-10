@@ -17,7 +17,7 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
-    LASER = "O"
+    TRAIL = "O"
     NOT_MOVED = (-1, -1)
 
 
@@ -173,7 +173,7 @@ class Board:
             row = prev_row + horizontal_iterator
             while row != curr_row:
                 self.__last_laser_pos__.append((row, curr_col))
-                self.__board_state__[row][curr_col] = Board.LASER
+                self.__board_state__[row][curr_col] = Board.TRAIL
                 row = row + horizontal_iterator
 
         elif curr_row == prev_row:
@@ -181,7 +181,7 @@ class Board:
             col = prev_col + vertical_iterator
             while col != curr_col:
                 self.__last_laser_pos__.append((curr_row, col))
-                self.__board_state__[curr_row][col] = Board.LASER
+                self.__board_state__[curr_row][col] = Board.TRAIL
                 col = col + vertical_iterator
         else:
             # diagonal move
@@ -194,12 +194,12 @@ class Board:
                 if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
                         row, col) != (curr_row, curr_col):
                     self.__last_laser_pos__.append((row, col))
-                    self.__board_state__[row][col] = Board.LASER
+                    self.__board_state__[row][col] = Board.TRAIL
 
                 # if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
                 #         row, col) != (curr_row, curr_col):
                 #     self.__last_laser_pos__.append((row, col))
-                #     self.__board_state__[row][col] = Board.LASER
+                #     self.__board_state__[row][col] = Board.TRAIL
 
     def copy(self):
         '''
@@ -542,6 +542,8 @@ class Board:
                     out += 'o '
                 elif b[i][j] == Board.BLANK:
                     out += '  '
+                elif b[i][j] == Board.TRAIL:
+                    out += '- '
                 else:
                     out += '><'
 
