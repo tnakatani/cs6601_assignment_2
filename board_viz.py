@@ -54,7 +54,7 @@ def get_viz_board_state(game, show_legal_moves):
     legal_moves = game.get_active_moves()
     active_player = 'q1' if game.__active_player__ is game.__player_1__ else 'q2'
     if show_legal_moves:
-        for r,c,_ in legal_moves: 
+        for r,c in legal_moves: 
             if board_state[r][c][0] != 'Q':
                 board_state[r][c] = active_player
     return board_state
@@ -111,7 +111,7 @@ class InteractiveGame():
         ### swap move workaround ###
         # find if current location is in the legal moves
         # legal_moves is of length 1 if move exists, and len 0 if move is illegal
-        legal_moves = [(x,y,s) for x,y,s in self.game.get_active_moves() if (x,y) == (b.x, b.y)]
+        legal_moves = [(x,y) for x,y in self.game.get_active_moves() if (x,y) == (b.x, b.y)]
         if not legal_moves:
             print(f"move {(b.x, b.y)} is illegal!")
             return
