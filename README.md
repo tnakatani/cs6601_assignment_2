@@ -1,4 +1,4 @@
-# Assignment 1 - Swap Isolation
+# Assignment 1 - Trailblazer Isolation
 
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
