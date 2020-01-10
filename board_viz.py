@@ -22,9 +22,9 @@ if platform.system() != 'Windows':
 
 def get_details(name):
     if name == 'Q1':
-        color = 'tomato'
+        color = 'SpringGreen'
     elif name == 'Q2':
-        color = 'cyan'
+        color = 'tomato'
     elif name == 'q1':
         color = 'HoneyDew'
         name = ' '
@@ -34,7 +34,7 @@ def get_details(name):
     elif name == 'X':
         color = 'black'
     elif name == 'O':
-        color = 'red'
+        color = 'orange'
         name = ' '
     else:
         color = 'Lavender'
