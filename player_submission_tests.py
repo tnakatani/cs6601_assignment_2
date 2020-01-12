@@ -79,25 +79,27 @@ def minimaxTest(yourAgent, minimax_fn):
         sample_board = Board(player, RandomPlayer())
         # setting up the board as though we've been playing
         board_state = [
-            ["Q1", " ", " ", " ", " ", "X", " "],
-            [" ", " ", " ", " ", " ", " ", " "],
-            ["X", " ", " ", " ", " ", " ", " "],
-            [" ", " ", "X", "Q2", "X", " ", " "],
-            ["X", "X", "X", " ", "X", " ", " "],
+            [" ", "X", "X", " ", "X", "X", " "],
+            [" ", " ", "X", " ", " ", "X", " "],
+            ["X", " ", " ", " ", " ", "Q1"," "],
+            [" ", "X", "X", "Q2","X", " ", " "],
+            ["X", " ", "X", " ", " ", " ", " "],
             [" ", " ", "X", " ", "X", " ", " "],
-            [" ", " ", "X", " ", "X", " ", " "]
+            ["X", " ", "X", " ", " ", " ", " "]
         ]
         sample_board.set_state(board_state, True)
 
         test_pass = True
 
-        expected_depth_scores = [(1, 4), (2, -2), (3, 4), (4, -2), (5, 2)]
+        expected_depth_scores = [(1, -2), (2, 0), (3, 3), (4, 4), (5, 1)]
 
         for depth, exp_score in expected_depth_scores:
             move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
                 test_pass = False
+            else:
+                print("Minimax passed for depth: ", depth)
 
         if test_pass:
             player = yourAgent()
@@ -107,25 +109,30 @@ def minimaxTest(yourAgent, minimax_fn):
                 [" ", " ", " ", " ", "X", " ", "X"],
                 ["X", "X", "X", " ", "X", "Q2", " "],
                 [" ", "X", "X", " ", "X", " ", " "],
-                ["X", "X", "X", " ", "X", "X", " "],
+                ["X", " ", "X", " ", "X", "X", " "],
                 ["X", " ", "Q1", " ", "X", " ", "X"],
-                ["X", " ", " ", " ", "X", "X", " "],
-                ["X", " ", " ", " ", "X", " ", " "]
+                [" ", " ", " ", " ", "X", "X", " "],
+                ["X", " ", " ", " ", " ", " ", " "]
             ]
             sample_board.set_state(board_state, True)
 
             test_pass = True
 
-            expected_depth_scores = [(1, 5), (2, 5), (3, 5), (4, 6), (5, 6)]
+            expected_depth_scores = [(1, -4), (2, 3), (3, -1), (4, 1), (5, -2)]
 
             for depth, exp_score in expected_depth_scores:
-                move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
+                move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=False)
                 if exp_score != score:
                     print("Minimax failed for depth: ", depth)
                     test_pass = False
+                else:
+                    print("Minimax passed for depth: ", depth)
 
         if test_pass:
             print("Minimax Test: Runs Successfully!")
+
+        else:
+            print("Minimax Test: Failed")
 
     except NotImplementedError:
         print('Minimax Test: Not implemented')
