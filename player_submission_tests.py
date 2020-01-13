@@ -103,7 +103,7 @@ def minimaxTest(yourAgent, minimax_fn):
 
         if test_pass:
             player = yourAgent()
-            sample_board = Board(player, RandomPlayer())
+            sample_board = Board(RandomPlayer(),player)
             # setting up the board as though we've been playing
             board_state = [
                 [" ", " ", " ", " ", "X", " ", "X"],
@@ -114,11 +114,11 @@ def minimaxTest(yourAgent, minimax_fn):
                 [" ", " ", " ", " ", "X", "X", " "],
                 ["X", " ", " ", " ", " ", " ", " "]
             ]
-            sample_board.set_state(board_state, True)
+            sample_board.set_state(board_state, p1_turn=True)
 
             test_pass = True
 
-            expected_depth_scores = [(1, -4), (2, 0), (3, -1), (4, 1), (5, -2)]
+            expected_depth_scores = [(1, -7), (2, -7), (3, -7), (4, -9), (5, -8)]
 
             for depth, exp_score in expected_depth_scores:
                 move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=False)
