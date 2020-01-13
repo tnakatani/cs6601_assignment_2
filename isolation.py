@@ -215,6 +215,8 @@ class Board:
             b.__last_queen_move__[key] = value
         for key, value in self.__queen_symbols__.items():
             b.__queen_symbols__[key] = value
+            
+        b.__last_laser_pos__ = self.__last_laser_pos__
         b.move_count = self.move_count
         b.__active_player__ = self.__active_player__
         b.__inactive_player__ = self.__inactive_player__
