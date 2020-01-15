@@ -34,7 +34,6 @@ class Board:
     __last_queen_move__ = {}
     __last_queen_symbols__ = {}
 
-    __last_laser_pos__ = []
 
     move_count = 0
 
@@ -61,6 +60,8 @@ class Board:
         self.__inactive_player__ = player_2
         self.__active_players_queen__ = self.__queen_1__
         self.__inactive_players_queen__ = self.__queen_2__
+
+        self.__last_laser_pos__ = []
 
         self.move_count = 0
 
