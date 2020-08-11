@@ -17,7 +17,7 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
-    TRAIL = "O"
+    FORCEFIELD = "O"
     NOT_MOVED = (-1, -1)
 
     __player_1__ = None
@@ -156,7 +156,7 @@ class Board:
 
     def __create_forcefield__(self, current_position):
         """
-        Creates a laser between the previous and current position of the player
+        Creates a forcefield between the previous and current position of the player
         Parameters:
             current_position: (int, int) Current Row and Column position of the player
             previous_position: (int, int) Previous Row and Column position of the player
@@ -169,7 +169,7 @@ class Board:
             for col in range(curr_col - 1, curr_col + 2):
                 if self.__can_place_forcefield__(curr_row, curr_col, row, col):
                     self.__last_forcefield_pos__.append((row, col))
-                    self.__board_state__[row][col] = Board.TRAIL
+                    self.__board_state__[row][col] = Board.FORCEFIELD
 
 
     def copy(self):
@@ -515,7 +515,7 @@ class Board:
                     out += 'o '
                 elif b[i][j] == Board.BLANK:
                     out += '  '
-                elif b[i][j] == Board.TRAIL:
+                elif b[i][j] == Board.FORCEFIELD:
                     out += '- '
                 else:
                     out += '><'
@@ -630,7 +630,7 @@ class Board:
 
     def __clear_forcefield__(self):
         """
-        Clears the laser made in the previous move
+        Clears the forcefield made in the previous move
         Parameters:
             None
         Returns:
