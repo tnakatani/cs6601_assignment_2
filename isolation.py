@@ -17,9 +17,8 @@ sys.path[0] = os.getcwd()
 class Board:
     BLANK = " "
     BLOCKED = "X"
-    TRAIL = "O"
+    FORCEFIELD = "O"
     NOT_MOVED = (-1, -1)
-
 
     __player_1__ = None
     __player_2__ = None
@@ -61,7 +60,7 @@ class Board:
         self.__active_players_queen__ = self.__queen_1__
         self.__inactive_players_queen__ = self.__queen_2__
 
-        self.__last_laser_pos__ = []
+        self.__last_forcefield_pos__ = []
 
         self.move_count = 0
 
@@ -124,11 +123,12 @@ class Board:
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         queen_name = self.__queen_symbols__[self.__active_players_queen__]
-        self.__clear_laser__()
+        self.__clear_forcefield__()
 
         if self.move_is_in_board(my_pos[0], my_pos[1]):
             self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
-            self.__create_laser__(queen_move, my_pos)
+
+        self.__create_forcefield__(queen_move)
 
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
@@ -149,9 +149,14 @@ class Board:
 
         return False, None
 
-    def __create_laser__(self, current_position, previous_position):
+    def __can_place_forcefield__(self, curr_row, curr_col, row, col):
+        return (row != curr_row or col != curr_col) \
+                and self.move_is_in_board(row, col) \
+                and self.__board_state__[row][col] == Board.BLANK
+
+    def __create_forcefield__(self, current_position):
         """
-        Creates a laser between the previous and current position of the player
+        Creates a forcefield between the previous and current position of the player
         Parameters:
             current_position: (int, int) Current Row and Column position of the player
             previous_position: (int, int) Previous Row and Column position of the player
@@ -160,47 +165,12 @@ class Board:
         """
 
         curr_row, curr_col  = current_position
-        prev_row, prev_col  = previous_position
-        vertical_iterator = 1
-        horizontal_iterator = 1
+        for row in range(curr_row - 1, curr_row + 2):
+            for col in range(curr_col - 1, curr_col + 2):
+                if self.__can_place_forcefield__(curr_row, curr_col, row, col):
+                    self.__last_forcefield_pos__.append((row, col))
+                    self.__board_state__[row][col] = Board.FORCEFIELD
 
-        if curr_row < prev_row:
-            horizontal_iterator = -1
-        if curr_col < prev_col:
-            vertical_iterator = -1
-
-        if curr_col == prev_col:
-            # vertical move
-            row = prev_row + horizontal_iterator
-            while row != curr_row:
-                self.__last_laser_pos__.append((row, curr_col))
-                self.__board_state__[row][curr_col] = Board.TRAIL
-                row = row + horizontal_iterator
-
-        elif curr_row == prev_row:
-            # horizontal move
-            col = prev_col + vertical_iterator
-            while col != curr_col:
-                self.__last_laser_pos__.append((curr_row, col))
-                self.__board_state__[curr_row][col] = Board.TRAIL
-                col = col + vertical_iterator
-        else:
-            # diagonal move
-            col = prev_col
-            row = prev_row
-
-            while col != curr_col and row != curr_row:
-                col = col + vertical_iterator
-                row = row + horizontal_iterator
-                if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
-                        row, col) != (curr_row, curr_col):
-                    self.__last_laser_pos__.append((row, col))
-                    self.__board_state__[row][col] = Board.TRAIL
-
-                # if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
-                #         row, col) != (curr_row, curr_col):
-                #     self.__last_laser_pos__.append((row, col))
-                #     self.__board_state__[row][col] = Board.TRAIL
 
     def copy(self):
         '''
@@ -217,7 +187,7 @@ class Board:
         for key, value in self.__queen_symbols__.items():
             b.__queen_symbols__[key] = value
 
-        b.__last_laser_pos__ = deepcopy(self.__last_laser_pos__)
+        b.__last_forcefield_pos__ = deepcopy(self.__last_forcefield_pos__)
         b.move_count = self.move_count
         b.__active_player__ = self.__active_player__
         b.__inactive_player__ = self.__inactive_player__
@@ -545,7 +515,7 @@ class Board:
                     out += 'o '
                 elif b[i][j] == Board.BLANK:
                     out += '  '
-                elif b[i][j] == Board.TRAIL:
+                elif b[i][j] == Board.FORCEFIELD:
                     out += '- '
                 else:
                     out += '><'
@@ -658,21 +628,21 @@ class Board:
 
         self.move_count = self.move_count + 1
 
-    def __clear_laser__(self):
+    def __clear_forcefield__(self):
         """
-        Clears the laser made in the previous move
+        Clears the forcefield made in the previous move
         Parameters:
             None
         Returns:
             None
         """
-        if len(self.__last_laser_pos__) == 0:
+        if len(self.__last_forcefield_pos__) == 0:
             return
 
-        for pos in self.__last_laser_pos__:
+        for pos in self.__last_forcefield_pos__:
             self.__board_state__[pos[0]][pos[1]] = Board.BLANK
 
-        self.__last_laser_pos__ = []
+        self.__last_forcefield_pos__ = []
 
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
