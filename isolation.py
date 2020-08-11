@@ -226,7 +226,7 @@ class Board:
         Parameters:
             None
         Returns:
-            (Player): the player who's actively taking a turn
+            (Player): the player who's waiting for opponent to take a turn
         """
         return self.__inactive_player__
 
