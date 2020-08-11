@@ -20,7 +20,6 @@ class Board:
     TRAIL = "O"
     NOT_MOVED = (-1, -1)
 
-
     __player_1__ = None
     __player_2__ = None
     __queen_1__ = None
@@ -61,7 +60,7 @@ class Board:
         self.__active_players_queen__ = self.__queen_1__
         self.__inactive_players_queen__ = self.__queen_2__
 
-        self.__last_laser_pos__ = []
+        self.__last_forcefield_pos__ = []
 
         self.move_count = 0
 
@@ -70,7 +69,7 @@ class Board:
         Get physical board state
         Parameters:
             None
-        Returns: 
+        Returns:
             State of the board: list[char]
         """
         return deepcopy(self.__board_state__)
@@ -113,10 +112,10 @@ class Board:
         '''
         Apply chosen move to a board state and check for game end
         Parameters:
-            queen_move: (int, int), Desired move to apply. Takes the 
+            queen_move: (int, int), Desired move to apply. Takes the
             form of (row, column).
         Returns:
-            result: (bool, str), Game Over flag, winner 
+            result: (bool, str), Game Over flag, winner
         '''
         # print("Applying move:: ", queen_move)
         row, col = queen_move
@@ -124,11 +123,12 @@ class Board:
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
 
         queen_name = self.__queen_symbols__[self.__active_players_queen__]
-        self.__clear_laser__()
-   
+        self.__clear_forcefield__()
+
         if self.move_is_in_board(my_pos[0], my_pos[1]):
             self.__board_state__[my_pos[0]][my_pos[1]] = Board.BLOCKED
-            self.__create_laser__(queen_move, my_pos)
+
+        self.__create_forcefield__(queen_move)
 
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
@@ -149,7 +149,12 @@ class Board:
 
         return False, None
 
-    def __create_laser__(self, current_position, previous_position):
+    def __can_place_forcefield__(self, curr_row, curr_col, row, col):
+        return (row != curr_row or col != curr_col) \
+                and self.move_is_in_board(row, col) \
+                and self.__board_state__[row][col] == Board.BLANK
+
+    def __create_forcefield__(self, current_position):
         """
         Creates a laser between the previous and current position of the player
         Parameters:
@@ -160,47 +165,12 @@ class Board:
         """
 
         curr_row, curr_col  = current_position
-        prev_row, prev_col  = previous_position
-        vertical_iterator = 1
-        horizontal_iterator = 1
-
-        if curr_row < prev_row:
-            horizontal_iterator = -1
-        if curr_col < prev_col:
-            vertical_iterator = -1
-
-        if curr_col == prev_col:
-            # vertical move
-            row = prev_row + horizontal_iterator
-            while row != curr_row:
-                self.__last_laser_pos__.append((row, curr_col))
-                self.__board_state__[row][curr_col] = Board.TRAIL
-                row = row + horizontal_iterator
-
-        elif curr_row == prev_row:
-            # horizontal move
-            col = prev_col + vertical_iterator
-            while col != curr_col:
-                self.__last_laser_pos__.append((curr_row, col))
-                self.__board_state__[curr_row][col] = Board.TRAIL
-                col = col + vertical_iterator
-        else:
-            # diagonal move
-            col = prev_col
-            row = prev_row
-
-            while col != curr_col and row != curr_row:
-                col = col + vertical_iterator
-                row = row + horizontal_iterator
-                if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
-                        row, col) != (curr_row, curr_col):
-                    self.__last_laser_pos__.append((row, col))
+        for row in range(curr_row - 1, curr_row + 2):
+            for col in range(curr_col - 1, curr_col + 2):
+                if self.__can_place_forcefield__(curr_row, curr_col, row, col):
+                    self.__last_forcefield_pos__.append((row, col))
                     self.__board_state__[row][col] = Board.TRAIL
 
-                # if self.__board_state__[row][col] == Board.BLANK and (row, col) != self.get_inactive_position() and (
-                #         row, col) != (curr_row, curr_col):
-                #     self.__last_laser_pos__.append((row, col))
-                #     self.__board_state__[row][col] = Board.TRAIL
 
     def copy(self):
         '''
@@ -216,8 +186,8 @@ class Board:
             b.__last_queen_move__[key] = value
         for key, value in self.__queen_symbols__.items():
             b.__queen_symbols__[key] = value
-            
-        b.__last_laser_pos__ = deepcopy(self.__last_laser_pos__)
+
+        b.__last_forcefield_pos__ = deepcopy(self.__last_forcefield_pos__)
         b.move_count = self.move_count
         b.__active_player__ = self.__active_player__
         b.__inactive_player__ = self.__inactive_player__
@@ -420,10 +390,10 @@ class Board:
 
     def __get_moves__(self, move):
         """
-        Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called, 
+        Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called,
         use get_active_moves or get_inactive_moves instead.
         Parameters:
-            move: (int, int), Last move made by player in question (where they currently are). 
+            move: (int, int), Last move made by player in question (where they currently are).
             Takes the form of (row, column).
         Returns:
            [(int, int)]: List of all legal moves. Each move takes the form of
@@ -503,7 +473,7 @@ class Board:
 
     def space_is_open(self, row, col):
         """
-        Sanity check to see if a space is within the bounds of the board and blank. Not meant to be called directly if you don't know what 
+        Sanity check to see if a space is within the bounds of the board and blank. Not meant to be called directly if you don't know what
         you're looking for.
         Parameters:
             row: int, Row value of desired space
@@ -519,7 +489,7 @@ class Board:
         """
         Function for printing board state & indicating possible moves for active player.
         Parameters:
-            legal_moves: [(int, int)], List of legal moves to indicate when printing board spaces. 
+            legal_moves: [(int, int)], List of legal moves to indicate when printing board spaces.
             Each move takes the form of (row, column).
         Returns:
             Str: Visual interpretation of board state & possible moves for active player
@@ -623,9 +593,9 @@ class Board:
 
     def __apply_move_write__(self, move_queen):
         """
-        Equivalent to __apply_move__, meant specifically for applying move history to a board 
+        Equivalent to __apply_move__, meant specifically for applying move history to a board
         for analyzing an already played game.
-        Parameters: 
+        Parameters:
             move_queen: (int, int), Move to apply to board. Takes
             the form of (row, column).
         Returns:
@@ -658,7 +628,7 @@ class Board:
 
         self.move_count = self.move_count + 1
 
-    def __clear_laser__(self):
+    def __clear_forcefield__(self):
         """
         Clears the laser made in the previous move
         Parameters:
@@ -666,20 +636,20 @@ class Board:
         Returns:
             None
         """
-        if len(self.__last_laser_pos__) == 0:
+        if len(self.__last_forcefield_pos__) == 0:
             return
 
-        for pos in self.__last_laser_pos__:
+        for pos in self.__last_forcefield_pos__:
             self.__board_state__[pos[0]][pos[1]] = Board.BLANK
 
-        self.__last_laser_pos__ = []
+        self.__last_forcefield_pos__ = []
 
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
     """
-    Function to play out a move history on a new board. Used for analyzing an interesting move history 
-    Parameters: 
-        move_history: [(int, int)], History of all moves in order of game in question. 
+    Function to play out a move history on a new board. Used for analyzing an interesting move history
+    Parameters:
+        move_history: [(int, int)], History of all moves in order of game in question.
         Each move takes the form of (row, column).
         termination: str, Reason for game over of game in question. Obtained from play_isolation
         board: Board, board that game in question was played on. Used to initialize board copy
@@ -703,13 +673,13 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
             board.__apply_move_write__(move[0])
             ans.write("\n\n" + board.__queen_1__ + " moves to (" + str(move[0][0]) + "," + str(move[0][1]) + ")\r\n")
 
-            
+
         if len(move) > 1 and move[1] != Board.NOT_MOVED and move[0] is not None:
             ans.write(board.print_board())
             board.__apply_move_write__(move[1])
             ans.write("\n\n" + board.__queen_2__ + " moves to (" + str(move[1][0]) + "," + str(move[1][1]) + ")\r\n")
 
-            
+
         last_move = move
 
     ans.write("\n" + str(winner) + " has won. Reason: " + str(termination))
