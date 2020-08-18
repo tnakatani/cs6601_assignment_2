@@ -1,6 +1,6 @@
 **The assignment is not yet released for the Fall 2020 and might be subject to change.**
 
-# Assignment 1 - Trailblazer Isolation
+# Assignment 1 - Forcefield Isolation
 
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
