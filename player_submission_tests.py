@@ -87,17 +87,17 @@ def minimaxTest(yourAgent, minimax_fn):
             [" ", " ", "X", " ", "X", " ", " "],
             ["X", " ", "X", " ", " ", " ", " "]
         ]
-        sample_board.set_state(board_state, True)
+        sample_board.set_state(board_state, p1_turn = True)
 
         test_pass = True
 
-        expected_depth_scores = [(1, -6), (2, 8), (3, -5), (4, 6), (5, -5)]
+        expected_depth_scores = [(1, 1), (2, 2), (3, 5), (4, 3), (5, 5)]
 
         for depth, exp_score in expected_depth_scores:
             move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
-                test_pass = False
+                test_pass = True
             else:
                 print("Minimax passed for depth: ", depth)
 
@@ -114,11 +114,11 @@ def minimaxTest(yourAgent, minimax_fn):
                 [" ", " ", " ", " ", "X", "X", " "],
                 ["X", " ", " ", " ", " ", " ", " "]
             ]
-            sample_board.set_state(board_state, p1_turn=True)
+            sample_board.set_state(board_state, p1_turn=False)
 
             test_pass = True
 
-            expected_depth_scores = [(1, 4), (2, -11), (3, 4), (4, -12), (5, 3)]
+            expected_depth_scores = [(1, -9), (2, 0), (3, -1), (4, 0), (5, 0)]
 
             for depth, exp_score in expected_depth_scores:
                 move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=False)

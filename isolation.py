@@ -99,12 +99,16 @@ class Board:
             self.__active_players_queen__ = self.__queen_1__
             self.__inactive_player__ = self.__player_2__
             self.__inactive_players_queen__ = self.__queen_2__
+            if (last_move_q2 != []):
+                self.__create_forcefield__(last_move_q2[0])
 
         else:
             self.__active_player__ = self.__player_2__
             self.__active_players_queen__ = self.__queen_2__
             self.__inactive_player__ = self.__player_1__
             self.__inactive_players_queen__ = self.__queen_1__
+            if (last_move_q1 != []):
+                self.__create_forcefield__(last_move_q1[0])
         # Count X's to get move count + 2 for initial moves
         self.move_count = sum(row.count('X') + row.count('Q1') + row.count('Q2') for row in board_state)
 
@@ -117,7 +121,7 @@ class Board:
         Returns:
             result: (bool, str), Game Over flag, winner
         '''
-        # print("Applying move:: ", queen_move)
+        #print("Applying move:: ", queen_move)
         row, col = queen_move
         my_pos = self.__last_queen_move__[self.__active_players_queen__]
         opponent_pos = self.__last_queen_move__[self.__inactive_players_queen__]
@@ -133,17 +137,22 @@ class Board:
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
         self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen__]
-
-        # If opponent is isolated
-        if not self.get_inactive_moves():
-            return True, self.__active_players_queen__
-
+        
+        #### If opponent is isolated
+        #if not self.get_inactive_moves():
+        #   return True, self.__active_players_queen__
+        ###
+        
         # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
-
+        
         # rotate the queens
         self.__active_players_queen__, self.__inactive_players_queen__ = self.__inactive_players_queen__, self.__active_players_queen__
 
+        # If opponent is isolated
+        if not self.get_active_moves():
+            return True, self.__inactive_players_queen__
+        
         # increment move count
         self.move_count = self.move_count + 1
 
@@ -325,8 +334,10 @@ class Board:
         """
         q_move = self.__last_queen_move__[
             self.__inactive_players_queen__]
-
-        return self.__get_moves__(q_move)
+        self.__clear_forcefield__()
+        moves = self.__get_moves__(q_move)
+        self.__create_forcefield__(q_move)
+        return moves
 
     def get_active_moves(self):
         """
@@ -417,7 +428,6 @@ class Board:
                 col = direction[1] * dist + c
                 if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col) not in moves:
                     moves.append((row, col))
-
                 else:
                     break
 
@@ -585,11 +595,11 @@ class Board:
                 print(self.copy().print_board())
 
             if is_over:
-                if not self.get_inactive_moves():
-                    return self.__active_players_queen__, move_history, \
-                           (self.__inactive_players_queen__ + " has no legal moves left.")
-                return self.__active_players_queen__, move_history, \
-                       (self.__inactive_players_queen__ + " was forced off the grid.")
+                if not self.get_active_moves():
+                    return self.__inactive_players_queen__, move_history, \
+                           (self.__active_players_queen__ + " has no legal moves left.")
+                return self.__inactive_players_queen__, move_history, \
+                       (self.__active_players_queen__ + " was forced off the grid.")
 
     def __apply_move_write__(self, move_queen):
         """
