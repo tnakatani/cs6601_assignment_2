@@ -76,7 +76,11 @@ class Board:
 
     def set_state(self, board_state, p1_turn=True):
         '''
-        Function to immediately bring a board to a desired state. Useful for testing purposes; call board.play_isolation() afterwards to play
+        Function to immediately bring a board to a desired state. Useful for testing purposes; call board.play_isolation() afterwards to play.
+        Note that error testing is minimal in this function. Please be sure to only pass a list of same size lists of strings. Each string
+        should be one of the following: BLANK, BLOCKED, "Q1", "Q2". Do not pass in the forcefield. If any other strings are passed, the
+        game may throw errors.
+
         Parameters:
             board_state: list[str], Desired state to set to board
             p1_turn: bool, Flag to determine which player is active
@@ -137,22 +141,22 @@ class Board:
         # apply move of active player
         self.__last_queen_move__[self.__active_players_queen__] = queen_move
         self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen__]
-        
+
         #### If opponent is isolated
         #if not self.get_inactive_moves():
         #   return True, self.__active_players_queen__
         ###
-        
+
         # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
-        
+
         # rotate the queens
         self.__active_players_queen__, self.__inactive_players_queen__ = self.__inactive_players_queen__, self.__active_players_queen__
 
         # If opponent is isolated
         if not self.get_active_moves():
             return True, self.__inactive_players_queen__
-        
+
         # increment move count
         self.move_count = self.move_count + 1
 
