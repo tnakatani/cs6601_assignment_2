@@ -56,7 +56,7 @@ def beatRandom(yourAgent):
     except:
         print('CustomPlayer Test: ERROR OCCURRED')
         print(traceback.format_exc())
-    
+
     print()
 
 def minimaxTest(yourAgent, minimax_fn):
@@ -79,22 +79,23 @@ def minimaxTest(yourAgent, minimax_fn):
         sample_board = Board(player, RandomPlayer())
         # setting up the board as though we've been playing
         board_state = [
-            [" ", "X", "X", " ", "X", "X", " "],
-            [" ", " ", "X", " ", " ", "X", " "],
+            [" ", "X", " ", "X", " ", " ", " "],
+            [" ", " ", " ", " ", " ", "X", " "],
             ["X", " ", " ", " ", " ", "Q1"," "],
-            [" ", "X", "X", "Q2","X", " ", " "],
-            ["X", " ", "X", " ", " ", " ", " "],
-            [" ", " ", "X", " ", "X", " ", " "],
-            ["X", " ", "X", " ", " ", " ", " "]
+            [" ", "X", " ", "Q2"," ", " ", "X"],
+            [" ", " ", "X", " ", " ", " ", " "],
+            [" ", " ", " ", "X", " ", "X", " "],
+            [" ", " ", "X", " ", " ", "X", " "]
         ]
         sample_board.set_state(board_state, p1_turn = True)
 
         test_pass = True
 
-        expected_depth_scores = [(1, 1), (2, 2), (3, 5), (4, 3), (5, 5)]
+        expected_depth_scores = [(1, 7), (2, -6), (3, 1), (4, -1), (5, 2)]
 
         for depth, exp_score in expected_depth_scores:
             move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
+            print(score)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
                 test_pass = True
@@ -103,25 +104,26 @@ def minimaxTest(yourAgent, minimax_fn):
 
         if test_pass:
             player = yourAgent()
-            sample_board = Board(RandomPlayer(),player)
+            sample_board = Board(RandomPlayer(), player)
             # setting up the board as though we've been playing
             board_state = [
-                [" ", " ", " ", " ", "X", " ", "X"],
-                ["X", "X", "X", " ", "X", "Q2", " "],
-                [" ", "X", "X", " ", "X", " ", " "],
-                ["X", " ", "X", " ", "X", "X", " "],
-                ["X", " ", "Q1", " ", "X", " ", "X"],
-                [" ", " ", " ", " ", "X", "X", " "],
-                ["X", " ", " ", " ", " ", " ", " "]
+                [" ", "X", " ", " ", "X", " ", "X"],
+                [" ", " ", "X", "X", " ", "Q2", " "],
+                ["X", " ", " ", " ", " ", " ", " "],
+                [" ", " ", " ", " ", " ", "X", "X"],
+                [" ", "X", "Q1", " ", "X", " ", " "],
+                ["X", " ", " ", " ", " ", " ", " "],
+                ["X", " ", " ", " ", "X", " ", "X"]
             ]
             sample_board.set_state(board_state, p1_turn=False)
 
             test_pass = True
 
-            expected_depth_scores = [(1, -9), (2, 0), (3, -1), (4, 0), (5, 0)]
+            expected_depth_scores = [(1, 3), (2, -8), (3, 3), (4, -5), (5, -2)]
 
             for depth, exp_score in expected_depth_scores:
-                move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=False)
+                move, score = minimax_fn(player, sample_board, time_left, depth=depth, my_turn=True)
+                print(score)
                 if exp_score != score:
                     print("Minimax failed for depth: ", depth)
                     test_pass = False
