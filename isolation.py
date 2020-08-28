@@ -299,12 +299,12 @@ class Board:
             return self.get_active_position()
         if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
             return self.get_inactive_position()
-        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+        if (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
             return self.get_active_position()
-        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+        if (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
             return self.get_inactive_position()
-        else:
-            raise ValueError("No value for my_player!")
+        
+        raise ValueError("No value for my_player!")
 
     def get_opponent_position(self, my_player=None):
         """
@@ -320,12 +320,12 @@ class Board:
             return self.get_inactive_position()
         if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
             return self.get_active_position()
-        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
+        if (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
             return self.get_inactive_position()
-        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+        if (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
             return self.get_active_position()
-        else:
-            raise ValueError("No value for my_player!")
+        
+        raise ValueError("No value for my_player!")
 
     def get_inactive_moves(self):
         """
