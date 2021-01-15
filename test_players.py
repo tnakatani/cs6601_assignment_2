@@ -20,8 +20,48 @@ class RandomPlayer(Player):
     def move(self, game, time_left):
         if not game.get_player_moves(self):
             return None
-        else:
-            return random.choice(game.get_player_moves(self))
+        repeat_move = True
+        while repeat_move:
+            
+            queen1_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen1__)]
+            #print(queen1_moves)
+            if len(queen1_moves):
+                move1 = queen1_moves[randint(0,len(queen1_moves)-1)]
+            else:
+                move1 = None
+
+            queen2_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen2__)]
+            #print(queen2_moves)
+            if len(queen2_moves):
+                move2 = queen2_moves[randint(0,len(queen2_moves)-1)]
+            else:
+                move2 = None
+
+            queen3_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen3__)]
+            #print(queen3_moves)
+            if len(queen3_moves):
+                move3 = queen3_moves[randint(0,len(queen3_moves)-1)]
+            else:
+                move3 = None
+
+            if move1 == None or move2 == None or move3 == None:
+                return move1,move2,move3
+
+            if move1 != move2 and move2!= move3 and move3 != move1:
+                repeat_move = False
+                return move1,move2,move3
+            if move1 == move2:
+                if len(queen1_moves) <= 1 and len(queen2_moves) <= 1:
+                    return None,None,move3
+            elif move2 == move3:
+                if len(queen2_moves) <= 1 and len(queen3_moves) <= 1:
+                    return move1,None,None
+            elif move3 == move1:
+                if len(queen1_moves) <= 1 and len(queen3_moves) <= 1:
+                    return None,move2,None
+            elif move1 == move2 == move3:
+                if len(queen1_moves) <= 1 and len(queen2_moves) <= 1 and len(queen3_moves) <= 1:
+                    return None,None,None
 
     def get_name(self):
         return self.name
