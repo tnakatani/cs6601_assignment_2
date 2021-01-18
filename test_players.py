@@ -34,8 +34,23 @@ class HumanPlayer(Player):
     def __init__(self, name="HumanPlayer"):
         super().__init__(name)
 
+    def __get_moves(self, moves):
+        moves_list = list(moves.values())
+        legal_moves = []
+        for move1 in moves_list[0]:
+            for move2 in moves_list[1]:
+                if move1 == move2:
+                    continue
+                for move3 in moves_list[2]:
+                    if move1 == move3 or move2 == move3:
+                        continue
+                    legal_moves.append((move1, move2, move3))
+
+        return legal_moves
+
     def move(self, game, time_left):
-        legal_moves = game.get_player_moves(self)
+        queen_moves = game.get_player_moves(self)
+        legal_moves = self.__get_moves(queen_moves)
         choice = {}
 
         if not len(legal_moves):
@@ -45,7 +60,7 @@ class HumanPlayer(Player):
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
-            print('\t'.join(['[%d] (%s)' % (counter, move)]))
+            print('\t'.join(['[%d] %s' % (counter, move)]))
             counter += 1
 
         print("-------------------------")
