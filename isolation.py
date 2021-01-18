@@ -37,6 +37,7 @@ class Board:
 
 
     move_count = 0
+    bf_count = 0
 
     def __init__(self, player_1, player_2, width=7, height=7):
         self.width = width
@@ -78,6 +79,7 @@ class Board:
         self.__inactive_players_queen3__= self.__queen_2_3__
 
         self.move_count = 0
+        self.bf_count = 0
 
     def get_queen_name(self,queen_num):
         """
@@ -400,7 +402,7 @@ class Board:
         """
         Get all legal moves of inactive player on current board state as a list of possible moves.
         Parameters:
-            None
+            move1,move2,move3
         Returns:
            [(int, int)]: List of all legal moves. Each move takes the form of
             (row, column).
@@ -410,6 +412,37 @@ class Board:
         q3_move = self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen3__)]       
         return {self.__inactive_players_queen1__:self.__get_moves__(q1_move) , self.__inactive_players_queen2__:self.__get_moves__(q2_move) , self.__inactive_players_queen3__:self.__get_moves__(q3_move)}
 
+    def is_valid_move_tuple(self,q1_move,q2_move,q3_move):
+        """
+        Checks if a move tuple: (move1,move2,move3) is valid
+        Parameters:
+            q1_move,q2_move,q3_move: (int,int),(int,int),(int,int) -> The 3 queen moves
+        Returns:
+           bool: Whether the move is valid or not (i.e. it is legal and non-conflicting)
+        """
+        q1_moves = self.get_active_moves()[self.__active_players_queen1__]
+        q2_moves = self.get_active_moves()[self.__active_players_queen2__]
+        q3_moves = self.get_active_moves()[self.__active_players_queen3__]
+        if q1_move == q2_move or q2_move == q3_move or q3_move == q1_move:
+            # Return True because there is no other move (although the game will end)
+            if len(q1_moves) <= 1 and len(q2_moves) <= 1:
+                return True
+            elif len(q2_moves) <= 1 and len(q3_moves) <= 1:
+                return True
+            elif len(q3_moves) <= 1 and len(q1_moves) <= 1:
+                return True
+            elif len(q1_moves) <= 1 and len(q2_moves) <= 1 and len(q3_moves) <= 1:
+                return True
+            else:
+                return False
+        elif q1_move not in q1_moves:
+            return False
+        elif q2_move not in q2_moves:
+            return False
+        elif q3_move not in q3_moves:
+            return False
+        else:
+            return True
     def get_active_moves(self):
         """
         Get all legal moves of active player on current board state as a list of possible moves.
@@ -425,6 +458,11 @@ class Board:
         q2_move = self.__last_queen_move__[self.get_queen_name(self.__active_players_queen2__)] 
         q3_move = self.__last_queen_move__[self.get_queen_name(self.__active_players_queen3__)]       
         return {self.__active_players_queen1__:self.__get_moves__(q1_move) , self.__active_players_queen2__:self.__get_moves__(q2_move) , self.__active_players_queen3__:self.__get_moves__(q3_move)}
+
+    def get_total_active_moves(self):
+        move_dict = self.get_active_moves()
+        all_moves = move_dict[self.__active_players_queen1__] + move_dict[self.__active_players_queen2__] + move_dict[self.__active_players_queen3__]
+        return all_moves
 
     def get_player_moves(self, my_player=None):
         """
@@ -666,6 +704,10 @@ class Board:
 
             if print_moves:
                 print("\n", self.__active_player__.get_name(), " Turn")
+            
+            # Counting number of legal moves for calculating branching factor of game
+            self.bf_count += len(self.get_total_active_moves())
+
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left) 
             # Check for a null move
             if curr_move_queen1 is None or curr_move_queen2 is None or curr_move_queen3 is None:
@@ -822,9 +864,24 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
 
 if __name__ == '__main__':
     print("Starting game:")
+    wins = [0,0]
+    avg_moves = 0
+    avg_bf = 0
     from test_players import RandomPlayer
-    board = Board(RandomPlayer(name= "Player 1"), RandomPlayer(name="Player 2"))
-    winner, move_history, termination = board.play_isolation(time_limit=30000, print_moves=True)
-    print(termination)
+    for x in range(100000):
+        board = Board(RandomPlayer(name= "Player 1"), RandomPlayer(name="Player 2"))
+        winner, move_history, termination = board.play_isolation(time_limit=30000, print_moves=False)
+        print("Game %d Result: " % (x) + termination)
+        if winner == "Player 1":
+            wins[0] += 1
+        else:
+            wins[1] += 1
+        num_moves = len(move_history) * 2
+        avg_moves += num_moves
+        branching_factor = (board.bf_count - 147 - 138)/num_moves
+        avg_bf += branching_factor
+    print("Wins are",wins)
+    print("The average moves per game are: ",avg_moves/(x+1))
+    print("The average branching factor per game is: ",avg_bf/(x+1))
     #board_copy = board.copy()
     #print(game_as_text(winner, move_history, termination, board_copy))

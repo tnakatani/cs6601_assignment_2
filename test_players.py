@@ -22,7 +22,6 @@ class RandomPlayer(Player):
             return None
         repeat_move = True
         while repeat_move:
-            
             queen1_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen1__)]
             #print(queen1_moves)
             if len(queen1_moves):
@@ -44,24 +43,14 @@ class RandomPlayer(Player):
             else:
                 move3 = None
 
-            if move1 == None or move2 == None or move3 == None:
+            if game.is_valid_move_tuple(move1,move2,move3):
                 return move1,move2,move3
+            else:
+                if len(queen1_moves) <= 1 or len(queen2_moves) <= 1 or len(queen3_moves) <= 1:
+                    return move1,move2,move3
 
-            if move1 != move2 and move2!= move3 and move3 != move1:
-                repeat_move = False
-                return move1,move2,move3
-            if move1 == move2:
-                if len(queen1_moves) <= 1 and len(queen2_moves) <= 1:
-                    return None,None,move3
-            elif move2 == move3:
-                if len(queen2_moves) <= 1 and len(queen3_moves) <= 1:
-                    return move1,None,None
-            elif move3 == move1:
-                if len(queen1_moves) <= 1 and len(queen3_moves) <= 1:
-                    return None,move2,None
-            elif move1 == move2 == move3:
-                if len(queen1_moves) <= 1 and len(queen2_moves) <= 1 and len(queen3_moves) <= 1:
-                    return None,None,None
+            if move1 is None or move2 is None or move3 is None:
+                return move1,move2, move3
 
     def get_name(self):
         return self.name
