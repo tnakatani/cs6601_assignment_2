@@ -21,8 +21,15 @@ class RandomPlayer(Player):
         if not game.get_player_moves(self):
             return None
         repeat_move = True
+        moves = game.get_player_moves(self)
+        if moves:
+            move = random.choice(moves)
+            return move
+        else:
+            return None,None,None
+        """
         while repeat_move:
-            queen1_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen1__)]
+            queen1_moves = 
             #print(queen1_moves)
             if len(queen1_moves):
                 move1 = queen1_moves[randint(0,len(queen1_moves)-1)]
@@ -51,7 +58,7 @@ class RandomPlayer(Player):
 
             if move1 is None or move2 is None or move3 is None:
                 return move1,move2, move3
-
+        """
     def get_name(self):
         return self.name
 
