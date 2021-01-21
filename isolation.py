@@ -132,33 +132,33 @@ class Board:
         self.__board_state__ = board_state
 
         # Your last moves for queens 1-3
-        last_move_p1_q1 = [(column, row.index("P1_Q1")) for column, row in enumerate(board_state) if "P1_Q1" in row]
+        last_move_p1_q1 = [(column, row.index("11")) for column, row in enumerate(board_state) if "11" in row]
         if (last_move_p1_q1 != []):
             # set last move to the first found occurance of 'P1_Q1'
             self.__last_queen_move__[self.__queen_1_1__] = last_move_p1_q1[0]
         
-        last_move_p1_q2 = [(column, row.index("P1_Q2")) for column, row in enumerate(board_state) if "P1_Q2" in row]
+        last_move_p1_q2 = [(column, row.index("12")) for column, row in enumerate(board_state) if "12" in row]
         if (last_move_p1_q2 != []):
             # set last move to the first found occurance of 'P1_Q2'
             self.__last_queen_move__[self.__queen_1_2__] = last_move_p1_q2[0]
         
-        last_move_p1_q3 = [(column, row.index("P1_Q3")) for column, row in enumerate(board_state) if "P1_Q3" in row]
+        last_move_p1_q3 = [(column, row.index("13")) for column, row in enumerate(board_state) if "13" in row]
         if (last_move_p1_q3 != []):
             # set last move to the first found occurance of 'P1_Q3'
             self.__last_queen_move__[self.__queen_1_3__] = last_move_p1_q3[0]
 
         # Opponents last moves for queens 1-3
-        last_move_p2_q1 = [(column, row.index("P2_Q1")) for column, row in enumerate(board_state) if "P2_Q1" in row]
+        last_move_p2_q1 = [(column, row.index("21")) for column, row in enumerate(board_state) if "21" in row]
         if (last_move_p2_q1 != []):
             # set last move to the first found occurance of 'P2_Q1'
             self.__last_queen_move__[self.__queen_2_1__] = last_move_p2_q1[0]
         
-        last_move_p2_q2 = [(column, row.index("P2_Q2")) for column, row in enumerate(board_state) if "P2_Q2" in row]
+        last_move_p2_q2 = [(column, row.index("22")) for column, row in enumerate(board_state) if "22" in row]
         if (last_move_p2_q2 != []):
             # set last move to the first found occurance of 'P2_Q2'
             self.__last_queen_move__[self.__queen_2_2__] = last_move_p2_q2[0]
         
-        last_move_p2_q3 = [(column, row.index("P2_Q3")) for column, row in enumerate(board_state) if "P2_Q3" in row]
+        last_move_p2_q3 = [(column, row.index("23")) for column, row in enumerate(board_state) if "23" in row]
         if (last_move_p2_q3 != []):
             # set last move to the first found occurance of 'P2_Q3'
             self.__last_queen_move__[self.__queen_2_3__] = last_move_p2_q3[0]
@@ -186,8 +186,8 @@ class Board:
             self.__inactive_players_queen3__= self.__queen_1_3__
 
         # Count X's to get move count + 6 for initial moves
-        self.move_count = sum(row.count('X') + row.count('P1_Q1') + row.count('P1_Q2') + row.count('P1_Q3') + \
-                              row.count('P2_Q1') + row.count('P2_Q2') + row.count('P2_Q3') for row in board_state)
+        self.move_count = sum(row.count('X') + row.count('11') + row.count('12') + row.count('13') + \
+                              row.count('21') + row.count('22') + row.count('23') for row in board_state)
 
     def __apply_move__(self, queen_1_move, queen_2_move, queen_3_move):
         '''
