@@ -707,7 +707,10 @@ class Board:
             
             # Counting number of legal moves for calculating branching factor of game
             self.bf_count += len(self.get_active_moves())
-            # print(len(self.get_active_moves()))
+            #print(len(self.get_active_moves()))
+            #if len(self.get_active_moves()) < 50:
+                #print(self.get_active_moves())
+                #exit(1)
             #exit(1)
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left) 
             # Check for a null move
@@ -869,8 +872,9 @@ if __name__ == '__main__':
     avg_moves = 0
     avg_bf = 0
     from test_players import RandomPlayer
+    from test_players import HumanPlayer
     for x in range(1):
-        board = Board(RandomPlayer(name= "Player 1"), RandomPlayer(name="Player 2"))
+        board = Board(RandomPlayer(name= "Player 1"), HumanPlayer(name="Player 2"))
         winner, move_history, termination = board.play_isolation(time_limit=30000, print_moves=True)
         print("Game %d Result: " % (x) + termination)
         if winner == "Player 1":
@@ -879,8 +883,8 @@ if __name__ == '__main__':
             wins[1] += 1
         num_moves = len(move_history) * 2
         avg_moves += num_moves
-        branching_factor = (board.bf_count - 147 - 138)/num_moves
-        print(branching_factor)
+        branching_factor = (board.bf_count - 110544 - 91080)/num_moves
+        #print(branching_factor)
         avg_bf += branching_factor
     print("Wins are",wins)
     print("The average moves per game are: ",avg_moves/(x+1))

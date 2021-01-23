@@ -19,46 +19,15 @@ class RandomPlayer(Player):
 
     def move(self, game, time_left):
         if not game.get_player_moves(self):
-            return None
-        repeat_move = True
+            return None,None,None
+
         moves = game.get_player_moves(self)
         if moves:
             move = random.choice(moves)
             return move
         else:
             return None,None,None
-        """
-        while repeat_move:
-            queen1_moves = 
-            #print(queen1_moves)
-            if len(queen1_moves):
-                move1 = queen1_moves[randint(0,len(queen1_moves)-1)]
-            else:
-                move1 = None
 
-            queen2_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen2__)]
-            #print(queen2_moves)
-            if len(queen2_moves):
-                move2 = queen2_moves[randint(0,len(queen2_moves)-1)]
-            else:
-                move2 = None
-
-            queen3_moves = game.get_player_moves(self)[game.get_queen_name(game.__active_players_queen3__)]
-            #print(queen3_moves)
-            if len(queen3_moves):
-                move3 = queen3_moves[randint(0,len(queen3_moves)-1)]
-            else:
-                move3 = None
-
-            if game.is_valid_move_tuple(move1,move2,move3):
-                return move1,move2,move3
-            else:
-                if len(queen1_moves) <= 1 or len(queen2_moves) <= 1 or len(queen3_moves) <= 1:
-                    return move1,move2,move3
-
-            if move1 is None or move2 is None or move3 is None:
-                return move1,move2, move3
-        """
     def get_name(self):
         return self.name
 
@@ -77,12 +46,12 @@ class HumanPlayer(Player):
 
         if not len(legal_moves):
             print("No more moves left.")
-            return None, None
+            return None, None, None
 
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
-            print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
+            print('\t'.join(['[%d] (%s)' % (counter, move)]))
             counter += 1
 
         print("-------------------------")
