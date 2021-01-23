@@ -36,6 +36,7 @@ class Board:
     __last_queen_move__ = {}
     __last_queen_symbols__ = {}
     move_count = 0
+    bf_count = 0
 
     def __init__(self, player_1, player_2, width=7, height=7):
         self.width = width
@@ -80,6 +81,7 @@ class Board:
         self.__inactive_players_queen3__= self.__queen_2_3__
 
         self.move_count = 0
+        self.bf_count = 0
 
     def get_state(self):
         """
@@ -348,7 +350,7 @@ class Board:
         """
         Get all legal moves of inactive player on current board state as a list of possible moves.
         Parameters:
-            None
+            move1,move2,move3
         Returns:
            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
             ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 

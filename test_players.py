@@ -18,7 +18,6 @@ class RandomPlayer(Player):
         super().__init__(name)
 
     def move(self, game, time_left):
-        
         move = random.choice(game.get_player_moves(self))
         return move
 
@@ -34,23 +33,8 @@ class HumanPlayer(Player):
     def __init__(self, name="HumanPlayer"):
         super().__init__(name)
 
-    def __get_moves(self, moves):
-        moves_list = list(moves.values())
-        legal_moves = []
-        for move1 in moves_list[0]:
-            for move2 in moves_list[1]:
-                if move1 == move2:
-                    continue
-                for move3 in moves_list[2]:
-                    if move1 == move3 or move2 == move3:
-                        continue
-                    legal_moves.append((move1, move2, move3))
-
-        return legal_moves
-
     def move(self, game, time_left):
-        queen_moves = game.get_player_moves(self)
-        legal_moves = self.__get_moves(queen_moves)
+        legal_moves = game.get_player_moves(self)
         choice = {}
 
         if not len(legal_moves):
@@ -60,7 +44,11 @@ class HumanPlayer(Player):
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
+<<<<<<< HEAD
             print('\t'.join(['[%d] %s' % (counter, move)]))
+=======
+            print('\t'.join(['[%d] (%s)' % (counter, move)]))
+>>>>>>> 0e1f175... Changed visualization and terminal game play code
             counter += 1
 
         print("-------------------------")

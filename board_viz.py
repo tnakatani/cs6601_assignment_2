@@ -26,10 +26,10 @@ def get_details(name):
     elif name == 'Q2':
         color = 'tomato'
     elif name == 'q1':
-        color = 'HoneyDew'
+        color = '#bdffbd'
         name = ' '
     elif name == 'q2':
-        color = 'MistyRose'
+        color = '#ffb6ae'
         name = ' '
     elif name == 'X':
         color = 'black'
@@ -54,10 +54,9 @@ def get_viz_board_state(game, show_legal_moves):
     legal_moves = game.get_active_moves()
     active_player = 'q1' if game.__active_player__ is game.__player_1__ else 'q2'
     if show_legal_moves:
-        for moves in legal_moves.values():
-            for r,c in moves: 
-                if board_state[r][c][0] != 'Q':
-                    board_state[r][c] = active_player
+        for moves in legal_moves:
+            for r,c in moves:
+                board_state[r][c] = active_player
     return board_state
 
 def create_board_gridbox(game, show_legal_moves, click_callback=None):
@@ -97,20 +96,6 @@ class InteractiveGame():
         display(self.gridb)
         display(self.output_section)
 
-    def __get_moves(self, moves):
-        moves_list = list(moves.values())
-        legal_moves = []
-        for move1 in moves_list[0]:
-            for move2 in moves_list[1]:
-                if move1 == move2:
-                    continue
-                for move3 in moves_list[2]:
-                    if move1 == move3 or move2 == move3:
-                        continue
-                    legal_moves.append((move1, move2, move3))
-
-        return legal_moves
-
     def __reset_turn(self):
         self.__click_count = 0
         self.__move = []
@@ -143,7 +128,7 @@ class InteractiveGame():
         ### swap move workaround ###
         # find if current location is in the legal moves
         # legal_moves is of length 1 if move exists, and len 0 if move is illegal
-        moves = self.__get_moves(self.game.get_active_moves())
+        moves = self.game.get_active_moves()
         legal_moves = [(x,y,z) for x,y,z in moves if [x,y,z] == self.__move]
         if not legal_moves:
             output = f"move {self.__move} is illegal!"
