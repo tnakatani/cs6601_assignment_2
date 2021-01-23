@@ -26,6 +26,9 @@ class Board:
     __active_player__ = None
     __inactive_player__ = None
 
+    __active_player_name__ = ""
+    __inactive_player_name__ = ""
+
     __active_players_queen1__= None
     __active_players_queen2__= None
     __active_players_queen3__= None
@@ -71,6 +74,9 @@ class Board:
 
         self.__active_player__ = player_1
         self.__inactive_player__ = player_2
+
+        self.__active_player_name__ = f"{player_1.__class__.__name__} - Q1"
+        self.__inactive_player_name__ = f"{player_2.__class__.__name__} - Q2"
 
         self.__active_players_queen1__= self.__queen_1_1__
         self.__active_players_queen2__= self.__queen_1_2__
@@ -168,22 +174,26 @@ class Board:
             self.__active_players_queen1__= self.__queen_1_1__
             self.__active_players_queen2__= self.__queen_1_2__
             self.__active_players_queen3__= self.__queen_1_3__
+            self.__active_player_name__ = f"{self.__player_1__.__class__.__name__} - Q1"
 
             self.__inactive_player__ = self.__player_2__
             self.__inactive_players_queen1__= self.__queen_2_1__
             self.__inactive_players_queen2__= self.__queen_2_2__
             self.__inactive_players_queen3__= self.__queen_2_3__
+            self.__inactive_player_name__ = f"{self.__player_2__.__class__.__name__} - Q2"
 
         else:
             self.__active_player__ = self.__player_2__
             self.__active_players_queen1__= self.__queen_2_1__
             self.__active_players_queen2__= self.__queen_2_2__
             self.__active_players_queen3__= self.__queen_2_3__
+            self.__active_player_name__ = f"{self.__player_2__.__class__.__name__} - Q1"
 
             self.__inactive_player__ = self.__player_1__
             self.__inactive_players_queen1__= self.__queen_1_1__
             self.__inactive_players_queen2__= self.__queen_1_2__
             self.__inactive_players_queen3__= self.__queen_1_3__
+            self.__inactive_player_name__ = f"{self.__player_1__.__class__.__name__} - Q2"
 
         # Count X's to get move count + 6 for initial moves
         self.move_count = sum(row.count('X') + row.count('11') + row.count('12') + row.count('13') + \
@@ -703,7 +713,7 @@ class Board:
                 return time_limit - (curr_time_millis() - move_start)
 
             if print_moves:
-                print("\n", self.__active_player__.get_name(), " Turn")
+                print("\n", self.__active_player_name__, " Turn")
             
             # Counting number of legal moves for calculating branching factor of game
             self.bf_count += len(self.get_active_moves())
@@ -716,7 +726,7 @@ class Board:
             # Check for a null move
             if curr_move_queen1 is None or curr_move_queen2 is None or curr_move_queen3 is None:
                 if print_moves:
-                    print('Winner: ' + str(self.__inactive_player__.get_name()))
+                    print('Winner: ' + str(self.__inactive_player_name__))
                 queen1_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen1__)]
                 queen2_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen2__)]
                 queen3_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen3__)]
@@ -728,13 +738,13 @@ class Board:
                 if not queen3_moves:
                     unmovable_queens.append("Queen 3")
 
-                return str(self.__inactive_player__.get_name()), move_history, str(self.__active_player__.get_name()) + " could not move " + ", ".join(unmovable_queens)
+                return str(self.__inactive_player_name__), move_history, str(self.__active_player_name__) + " could not move " + ", ".join(unmovable_queens)
 
             # Check if one of the Queens move to the same square
             if curr_move_queen1 == curr_move_queen2 or curr_move_queen2 == curr_move_queen3 or curr_move_queen1 == curr_move_queen3:
                 if print_moves:
                     print('Winner: ' + str(self.__inactive_player__.get_name()))
-                return self.__inactive_player__.get_name(), move_history, str(self.__active_player__.get_name()) + " moved 2 or more queens to the same location!"
+                return self.__inactive_player_name__, move_history, str(self.__active_player_name__) + " moved 2 or more queens to the same location!"
             
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
@@ -746,21 +756,21 @@ class Board:
             if time_limit and time_left() <= 0:
                 if print_moves:
                     print('Winner: ' + str(self.__inactive_player__))
-                return self.__inactive_player__, move_history, \
-                       (str(self.__active_player__.get_name()) + " timed out.")
+                return self.__inactive_player_name__, move_history, \
+                       (str(self.__active_player_name__) + " timed out.")
 
             # Safety Check
             legal_moves_queen1 = self.get_legal_moves_of_queen1()
             legal_moves_queen2 = self.get_legal_moves_of_queen2()
             legal_moves_queen3 = self.get_legal_moves_of_queen3()
             if curr_move_queen1 not in legal_moves_queen1:
-                return self.__inactive_player__, move_history, \
+                return self.__inactive_player_name__, move_history, \
                        (self.__active_players_queen1__ + " made an illegal move.")
             elif curr_move_queen2 not in legal_moves_queen2:
-                return self.__inactive_player__, move_history, \
+                return self.__inactive_player_name__, move_history, \
                        (self.__active_players_queen2__  + " made an illegal move.")
             elif curr_move_queen3 not in legal_moves_queen3:
-                return self.__inactive_player__, move_history, \
+                return self.__inactive_player_name__, move_history, \
                        (self.__active_players_queen3__  + " made an illegal move.")
 
 
@@ -773,10 +783,10 @@ class Board:
 
             if is_over:
                 if not self.get_active_moves():
-                    return self.__inactive_player__, move_history, \
-                           (str(self.__active_player__.get_name()) + " has no legal moves left.")
-                return self.__inactive_player__, move_history, \
-                       (str(self.__active_player__.get_name()) + " was forced off the grid.")
+                    return self.__inactive_player_name__, move_history, \
+                           (str(self.__active_player_name__) + " has no legal moves left.")
+                return self.__inactive_player_name__, move_history, \
+                       (str(self.__active_player_name__) + " was forced off the grid.")
 
     def __apply_move_write__(self, queen_1_move,queen_2_move,queen_3_move):
         """
