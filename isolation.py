@@ -251,6 +251,7 @@ class Board:
 
         # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
+        self.__active_player_name__, self.__inactive_player_name__ = self.__inactive_player_name__, self.__active_player_name__
 
         # rotate the queens
         self.__active_players_queen1__,self.__inactive_players_queen1__ = self.__inactive_players_queen1__,self.__active_players_queen1__
@@ -283,7 +284,9 @@ class Board:
 
         b.move_count = self.move_count
         b.__active_player__ = self.__active_player__
+        b.__active_player_name__ = self.__active_player_name__
         b.__inactive_player__ = self.__inactive_player__
+        b.__inactive_player_name__ = self.__inactive_player_name__
         b.__active_players_queen1__ = self.__active_players_queen1__
         b.__active_players_queen2__ = self.__active_players_queen2__
         b.__active_players_queen3__ = self.__active_players_queen3__
@@ -696,7 +699,6 @@ class Board:
             Each move in move history takes the form of (row, column).
         """
         move_history = []
-
         if platform.system() == 'Windows':
             def curr_time_millis():
                 return int(round(time.time() * 1000))
@@ -722,9 +724,10 @@ class Board:
                 #print(self.get_active_moves())
                 #exit(1)
             #exit(1)
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left) 
+            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
             # Check for a null move
             if curr_move_queen1 is None or curr_move_queen2 is None or curr_move_queen3 is None:
+                """
                 if print_moves:
                     print('Winner: ' + str(self.__inactive_player_name__))
                 queen1_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen1__)]
@@ -737,8 +740,8 @@ class Board:
                     unmovable_queens.append("Queen 2")
                 if not queen3_moves:
                     unmovable_queens.append("Queen 3")
-
-                return str(self.__inactive_player_name__), move_history, str(self.__active_player_name__) + " could not move " + ", ".join(unmovable_queens)
+                """
+                return str(self.__inactive_player_name__), move_history, str(self.__active_player_name__) + " could not move " + ", " #.join(unmovable_queens)
 
             # Check if one of the Queens move to the same square
             if curr_move_queen1 == curr_move_queen2 or curr_move_queen2 == curr_move_queen3 or curr_move_queen1 == curr_move_queen3:
@@ -822,6 +825,7 @@ class Board:
 
          # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
+        self.__active_player_name__, self.__inactive_player_name__ = self.__inactive_player_name__, self.__active_player_name__
 
         # rotate the queens
         self.__active_players_queen1__ = self.__inactive_players_queen1__
