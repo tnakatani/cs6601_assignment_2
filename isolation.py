@@ -707,7 +707,7 @@ class Board:
             
             # Counting number of legal moves for calculating branching factor of game
             self.bf_count += len(self.get_active_moves())
-            print(len(self.get_active_moves()))
+            # print(len(self.get_active_moves()))
             #exit(1)
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left) 
             # Check for a null move
