@@ -65,7 +65,7 @@ class HumanPlayer(Player):
                 valid_choice = 1 <= index <= len(legal_moves)
 
                 if not valid_choice:
-                    print('Illegal move of queen! Try again.')
+                    print('Illegal move of queen or invalid entry! Try again.')
             except Exception:
                 print('Invalid entry! Try again.')
 
