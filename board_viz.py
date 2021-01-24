@@ -196,7 +196,7 @@ class ReplayGame():
     def generate_board_state_history(self,):        
         for move_pair in self.move_history:
             for move in move_pair:
-                self.new_board.__apply_move__(move)
+                self.new_board.__apply_move__(move[0],move[1],move[2])
                 board_vis_state = get_viz_board_state(self.new_board, self.show_legal_moves)
                 board_state = self.new_board.get_state()
                 self.board_history.append((copy.deepcopy(board_vis_state), copy.deepcopy(board_state)))
