@@ -1,10 +1,8 @@
 from copy import deepcopy
 import time
 import platform
-# import io
 from io import StringIO
 
-# import resource
 if platform.system() != 'Windows':
     import resource
 
@@ -13,7 +11,6 @@ import os
 import itertools
 
 sys.path[0] = os.getcwd()
-
 
 class Board:
     BLANK = " "
@@ -38,10 +35,7 @@ class Board:
 
     __last_queen_move__ = {}
     __last_queen_symbols__ = {}
-
-
     move_count = 0
-    bf_count = 0
 
     def __init__(self, player_1, player_2, width=7, height=7):
         self.width = width
@@ -86,32 +80,7 @@ class Board:
         self.__inactive_players_queen3__= self.__queen_2_3__
 
         self.move_count = 0
-        self.bf_count = 0
 
-    def get_queen_name(self,queen_num):
-        """
-        Get the name of a queen
-        Parameters:
-            player_num : int, Player number which is either 1 or 2
-            queen_num : int, Queen number which is either 1, 2, or 3
-        Returns:
-            The name of a given Queen: list[char]
-        """
-        if queen_num == self.__player_1__.__class__.__name__ + " - P1_Q1":
-            return self.__queen_1_1__
-        elif queen_num == self.__player_1__.__class__.__name__ + " - P1_Q2":
-            return self.__queen_1_2__
-        elif queen_num == self.__player_1__.__class__.__name__ + " - P1_Q3":
-            return self.__queen_1_3__
-        elif queen_num == self.__player_2__.__class__.__name__ + " - P2_Q1":
-            return self.__queen_2_1__
-        elif queen_num == self.__player_2__.__class__.__name__ + " - P2_Q2":
-            return self.__queen_2_2__
-        elif queen_num == self.__player_2__.__class__.__name__ + " - P2_Q3":
-            return self.__queen_2_3__
-        else:
-            return None
-    
     def get_state(self):
         """
         Get physical board state
@@ -127,7 +96,6 @@ class Board:
         Function to immediately bring a board to a desired state. Useful for testing purposes; call board.play_isolation() afterwards to play.
         Note that error testing is minimal in this function. Please be sure to only pass a list of same size lists of strings. Each string
         should be one of the following: BLANK, BLOCKED, "P1_Q1", "P1_Q2", "P1_Q3", "P2_Q1", "P2_Q2", "P2_Q3".
-        Do not pass in the forcefield. If any other strings are passed, the game may throw errors.
 
         Parameters:
             board_state: list[str], Desired state to set to board
@@ -137,117 +105,52 @@ class Board:
         '''
         self.__board_state__ = board_state
 
-        # Your last moves for queens 1-3
-        last_move_p1_q1 = [(column, row.index("11")) for column, row in enumerate(board_state) if "11" in row]
-        if (last_move_p1_q1 != []):
-            # set last move to the first found occurance of 'P1_Q1'
-            self.__last_queen_move__[self.__queen_1_1__] = last_move_p1_q1[0]
+        string_options = ["P1_Q1", "P1_Q2", "P1_Q3","P2_Q1","P2_Q2","P2_Q3"]
+        all_queens = [self.__queen_1_1__, self.__queen_1_2__, self.__queen_1_3__, self.__queen_2_1__, self.__queen_2_2__, self.__queen_2_3__]
+
+        for queen,string_opt in zip(all_queens,string_options):
+            last_move = [(column, row.index(string_opt)) for column, row in enumerate(board_state) if string_opt in row]
+            if (last_move != []):
+                self.__last_queen_move__[queen] = last_move[0]
         
-        last_move_p1_q2 = [(column, row.index("12")) for column, row in enumerate(board_state) if "12" in row]
-        if (last_move_p1_q2 != []):
-            # set last move to the first found occurance of 'P1_Q2'
-            self.__last_queen_move__[self.__queen_1_2__] = last_move_p1_q2[0]
-        
-        last_move_p1_q3 = [(column, row.index("13")) for column, row in enumerate(board_state) if "13" in row]
-        if (last_move_p1_q3 != []):
-            # set last move to the first found occurance of 'P1_Q3'
-            self.__last_queen_move__[self.__queen_1_3__] = last_move_p1_q3[0]
+        # rotate the players
+        self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
 
-        # Opponents last moves for queens 1-3
-        last_move_p2_q1 = [(column, row.index("21")) for column, row in enumerate(board_state) if "21" in row]
-        if (last_move_p2_q1 != []):
-            # set last move to the first found occurance of 'P2_Q1'
-            self.__last_queen_move__[self.__queen_2_1__] = last_move_p2_q1[0]
-        
-        last_move_p2_q2 = [(column, row.index("22")) for column, row in enumerate(board_state) if "22" in row]
-        if (last_move_p2_q2 != []):
-            # set last move to the first found occurance of 'P2_Q2'
-            self.__last_queen_move__[self.__queen_2_2__] = last_move_p2_q2[0]
-        
-        last_move_p2_q3 = [(column, row.index("23")) for column, row in enumerate(board_state) if "23" in row]
-        if (last_move_p2_q3 != []):
-            # set last move to the first found occurance of 'P2_Q3'
-            self.__last_queen_move__[self.__queen_2_3__] = last_move_p2_q3[0]
-
-        if (p1_turn):
-            self.__active_player__ = self.__player_1__
-            self.__active_players_queen1__= self.__queen_1_1__
-            self.__active_players_queen2__= self.__queen_1_2__
-            self.__active_players_queen3__= self.__queen_1_3__
-            self.__active_player_name__ = f"{self.__player_1__.__class__.__name__} - Q1"
-
-            self.__inactive_player__ = self.__player_2__
-            self.__inactive_players_queen1__= self.__queen_2_1__
-            self.__inactive_players_queen2__= self.__queen_2_2__
-            self.__inactive_players_queen3__= self.__queen_2_3__
-            self.__inactive_player_name__ = f"{self.__player_2__.__class__.__name__} - Q2"
-
-        else:
-            self.__active_player__ = self.__player_2__
-            self.__active_players_queen1__= self.__queen_2_1__
-            self.__active_players_queen2__= self.__queen_2_2__
-            self.__active_players_queen3__= self.__queen_2_3__
-            self.__active_player_name__ = f"{self.__player_2__.__class__.__name__} - Q1"
-
-            self.__inactive_player__ = self.__player_1__
-            self.__inactive_players_queen1__= self.__queen_1_1__
-            self.__inactive_players_queen2__= self.__queen_1_2__
-            self.__inactive_players_queen3__= self.__queen_1_3__
-            self.__inactive_player_name__ = f"{self.__player_1__.__class__.__name__} - Q2"
+        # rotate the queens
+        self.__active_players_queen1__,self.__inactive_players_queen1__ = self.__inactive_players_queen1__,self.__active_players_queen1__
+        self.__active_players_queen2__,self.__inactive_players_queen2__ = self.__inactive_players_queen2__,self.__active_players_queen2__
+        self.__active_players_queen3__,self.__inactive_players_queen3__ = self.__inactive_players_queen3__,self.__active_players_queen3__
 
         # Count X's to get move count + 6 for initial moves
         self.move_count = sum(row.count('X') + row.count('11') + row.count('12') + row.count('13') + \
                               row.count('21') + row.count('22') + row.count('23') for row in board_state)
 
-    def __apply_move__(self, queen_1_move, queen_2_move, queen_3_move):
+    def __apply_move__(self, move):
         '''
         Apply chosen move to a board state and check for game end
         Parameters:
-            queen_1_move: (int, int), Desired move to apply for the 1st Queen. Takes the form of (row, column).
-            queen_2_move: (int, int), Desired move to apply for the 2nd Queen. Takes the form of (row, column).
-            queen_3_move: (int, int), Desired move to apply for the 3rd Queen. Takes the form of (row, column).
+            move: ((int,int),(int,int),(int,int)), Desired move for all 3 queens
         Returns:
             result: (bool, str), Game Over flag, winner
         '''
-        #print("Applying move: Q1 to %s, Q2 to %s, and Q3 to %s" % ((queen_1_move, queen_2_move, queen_3_move)))
-        
-        # Apply move of Queen 1
-        row, col = queen_1_move
-        #print(self.__last_queen_move__)
-        q1_pos = self.__last_queen_move__[self.__active_players_queen1__]
-        queen1_name = self.__queen_symbols__[self.__active_players_queen1__]
-        self.__board_state__[row][col] = queen1_name
+        if not self.is_valid_move(move):
+            return True, self.__inactive_player_name__
 
-        if self.move_is_in_board(q1_pos[0], q1_pos[1]):
-            self.__board_state__[q1_pos[0]][q1_pos[1]] = Board.BLOCKED
+        queens = self.get_active_players_queens()
 
-        self.__last_queen_move__[self.__active_players_queen1__] = queen_1_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen1__]
+        # apply the move, one queen at a time
+        for queen_num, queen in enumerate(queens):
+            row,col = move[queen_num]
+            
+            queen_pos = self.__last_queen_move__[queen]
+            queen_name = self.__queen_symbols__[queen]
+            self.__board_state__[row][col] = queen_name
 
-        # Apply move of Queen 2
-        row, col = queen_2_move
-        q2_pos = self.__last_queen_move__[self.__active_players_queen2__]
-        queen2_name = self.__queen_symbols__[self.__active_players_queen2__]
-        self.__board_state__[row][col] = queen2_name
+            if self.move_is_in_board(queen_pos[0], queen_pos[1]):
+                self.__board_state__[queen_pos[0]][queen_pos[1]] = Board.BLOCKED
 
-        if self.move_is_in_board(q2_pos[0], q2_pos[1]):
-            self.__board_state__[q2_pos[0]][q2_pos[1]] = Board.BLOCKED
-
-        self.__last_queen_move__[self.__active_players_queen2__] = queen_2_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen2__]
-
-        # Apply move of Queen 3
-        row, col = queen_3_move
-        q3_pos = self.__last_queen_move__[self.__active_players_queen3__]
-        queen3_name = self.__queen_symbols__[self.__active_players_queen3__]
-        self.__board_state__[row][col] = queen3_name
-
-        if self.move_is_in_board(q3_pos[0], q3_pos[1]):
-            self.__board_state__[q3_pos[0]][q3_pos[1]] = Board.BLOCKED
-
-        self.__last_queen_move__[self.__active_players_queen3__] = queen_3_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen3__]
-
+            self.__last_queen_move__[queen] = move[queen_num]
+            self.__board_state__[row][col] = self.__queen_symbols__[queen]
 
         # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
@@ -260,7 +163,7 @@ class Board:
 
         # If opponent is isolated
         if not self.get_active_moves():
-            return True, self.__inactive_player__
+            return True, self.__inactive_player_name__
 
         # increment move count
         self.move_count = self.move_count + 1
@@ -296,18 +199,18 @@ class Board:
         b.__board_state__ = self.get_state()
         return b
 
-    def forecast_move(self, queen_1_move, queen_2_move, queen_3_move):
+    def forecast_move(self, move):
         """
         See what board state would result from making a particular move without changing the board state itself.
         Parameters:
-            queen_move: (int, int), Desired move to forecast. Takes the form of
-            (row, column).
+            move: ((int, int),(int, int),(int, int)), Desired move to forecast. Takes the form of
+            a (row, column) 3 tuple.
 
         Returns:
             (Board, bool, str): Resultant board from move, flag for game-over, winner (if game is over)
         """
         new_board = self.copy()
-        is_over, winner = new_board.__apply_move__(queen_1_move, queen_2_move,queen_3_move)
+        is_over, winner = new_board.__apply_move__(move)
         return new_board, is_over, winner
 
     def get_active_player(self):
@@ -336,39 +239,39 @@ class Board:
         Parameters:
             None
         Returns:
-            str: Queen name of the player who's waiting for opponent to take a turn
+            list[str] : List of the active player's queens
         """
-        return self.__active_players_queen1__, self.__active_players_queen2__, self.__active_players_queen3__
+        return [self.__active_players_queen1__, self.__active_players_queen2__, self.__active_players_queen3__]
 
-    def get_inactive_players_queen(self):
+    def get_inactive_players_queens(self):
         """
         See which queens are inactive. Used mostly in play_isolation for display purposes.
         Parameters:
             None
         Returns:
-            str: Queen name of the player who's waiting for opponent to take a turn
+            list[str] : List of the inactive player's queens
         """
-        return self.__inactive_players_queen1__, self.__inactive_players_queen2__, self.__inactive_players_queen3__
+        return [self.__inactive_players_queen1__, self.__inactive_players_queen2__, self.__inactive_players_queen3__]
 
     def get_inactive_position(self):
         """
-        Get position of inactive player (player waiting for opponent to make move) in [row, column] format
+        Get position of inactive player (player waiting for opponent to make move) in [(row, column)] format
         Parameters:
             None
         Returns:
-           [int, int]: [row,col] of inactive player
+           [(int, int),(int, int),(int, int)]: List of (row,col) of inactive players queens
         """
-        return self.__last_queen_move__[self.__inactive_players_queen1__], self.__last_queen_move__[self.__inactive_players_queen2__], self.__last_queen_move__[self.__inactive_players_queen3__]
+        return [self.__last_queen_move__[self.__inactive_players_queen1__], self.__last_queen_move__[self.__inactive_players_queen2__], self.__last_queen_move__[self.__inactive_players_queen3__]]
 
     def get_active_position(self):
         """
-        Get position of active player (player actively making move) in [row, column] format
+        Get position of active player (player actively making move) in [(row, column)] format
         Parameters:
             None
         Returns:
-           [int, int]: [row,col] of inactive player
+           [(int, int),(int, int),(int, int)]: List of (row,col) of active players queens
         """
-        return self.__last_queen_move__[self.__active_players_queen1__], self.__last_queen_move__[self.__active_players_queen2__], self.__last_queen_move__[self.__active_players_queen3__]
+        return [self.__last_queen_move__[self.__active_players_queen1__], self.__last_queen_move__[self.__active_players_queen2__], self.__last_queen_move__[self.__active_players_queen3__]]
 
     def get_player_position(self, my_player=None):
         """
@@ -377,19 +280,15 @@ class Board:
             my_player (Player), Player to get position for
             If calling from within a player class, my_player = self can be passed.
         returns
-            [int, int]: [Row, Col] position of player
+            [(int, int),(int, int),(int, int)]: List of (row,col) of the players queens
 
         """
-        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+        if my_player == self.__active_player__:
             return self.get_active_position()
-        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+        elif my_player == self.__inactive_player__:
             return self.get_inactive_position()
-        if (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
-            return self.get_active_position()
-        if (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
-            return self.get_inactive_position()
-        
-        raise ValueError("No value for my_player!")
+        else:
+            raise ValueError("No value for my_player!")
 
     def get_opponent_position(self, my_player=None):
         """
@@ -401,55 +300,67 @@ class Board:
             [int, int]: [Row, col] position of my_player's opponent
 
         """
-        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+        if my_player == self.__active_player__:
             return self.get_inactive_position()
-        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
+        elif my_player == self.__inactive_player__:
             return self.get_active_position()
-        if (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
-            return self.get_inactive_position()
-        if (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
-            return self.get_active_position()
-        
-        raise ValueError("No value for my_player!")
+        else:
+            raise ValueError("No value for my_player!")
 
-    def get_inactive_moves(self):
+    def is_valid_move(self,move):
         """
-        Get all legal moves of inactive player on current board state as a list of possible moves.
+        Checks if a move tuple: (move1,move2,move3) is valid
         Parameters:
-            move1,move2,move3
+            move: ((int,int),(int,int),(int,int)), the move itself to check
+        Returns:
+           bool: Whether the move is valid or not (i.e. it is legal and non-conflicting)
+        """
+        if move[0] == move[1] or move[1] == move[2] or move[2] == move[0]:
+                return False
+        else:
+            return True
+
+    def get_moves_from_dictionary(self,move_dict,queens):
+        """
+        Calculates a list of legal moves for the inactive or active player. 
+        Called in get_active_moves() and get_inactive_moves().
+        Parameters:
+            move_dict: dict, dictionary of (key -> queen, value -> queen_moves) for the 3 queens
+            queens: [tuple], a list of queens (either active or inactive)
         Returns:
            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
             ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
-        q1_move = self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen1__)]
-        q2_move = self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen2__)] 
-        q3_move = self.__last_queen_move__[self.get_queen_name(self.__inactive_players_queen3__)]       
-        move_dict = {self.__inactive_players_queen1__:self.__get_moves__(q1_move) , self.__inactive_players_queen2__:self.__get_moves__(q2_move) , self.__inactive_players_queen3__:self.__get_moves__(q3_move)}
-        queen1_moves = move_dict[self.__inactive_players_queen1__]
-        queen2_moves = move_dict[self.__inactive_players_queen2__]
-        queen3_moves = move_dict[self.__inactive_players_queen3__]
+        queen1_moves = move_dict[queens[0]]
+        queen2_moves = move_dict[queens[1]]
+        queen3_moves = move_dict[queens[2]]
         all_moves = set()
         for queen1_move in queen1_moves:
             for queen2_move in queen2_moves:
                 for queen3_move in queen3_moves:
                     move_tuple = queen1_move,queen2_move,queen3_move
-                    if self.is_valid_move_tuple(queen1_move,queen2_move,queen3_move):
+                    if self.is_valid_move((queen1_move,queen2_move,queen3_move)):
                         all_moves.add((queen1_move,queen2_move,queen3_move))
         return list(all_moves)
 
-    def is_valid_move_tuple(self,q1_move,q2_move,q3_move):
+    def get_inactive_moves(self):
         """
-        Checks if a move tuple: (move1,move2,move3) is valid
+        Get all legal moves of inactive player on current board state as a list of possible moves.
         Parameters:
-            q1_move,q2_move,q3_move: (int,int),(int,int),(int,int) -> The 3 queen moves
+            None
         Returns:
-           bool: Whether the move is valid or not (i.e. it is legal and non-conflicting)
+           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
+            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+            move by 1st, 2nd, and 3rd queen respectively.
         """
-        if q1_move == q2_move or q2_move == q3_move or q3_move == q1_move:
-                return False
-        else:
-            return True
+        inactive_queens = self.get_inactive_players_queens()
+        move_dict = {inactive_queens[0] : self.__get_moves__(self.__last_queen_move__[inactive_queens[0]]), \
+                     inactive_queens[1] : self.__get_moves__(self.__last_queen_move__[inactive_queens[1]]), \
+                     inactive_queens[2] : self.__get_moves__(self.__last_queen_move__[inactive_queens[2]])}
+
+        all_moves = self.get_moves_from_dictionary(move_dict,inactive_queens)
+        return all_moves
 
     def get_active_moves(self):
         """
@@ -461,21 +372,13 @@ class Board:
             ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
-        q1_move = self.__last_queen_move__[self.get_queen_name(self.__active_players_queen1__)]
-        q2_move = self.__last_queen_move__[self.get_queen_name(self.__active_players_queen2__)] 
-        q3_move = self.__last_queen_move__[self.get_queen_name(self.__active_players_queen3__)]       
-        move_dict = {self.__active_players_queen1__:self.__get_moves__(q1_move) , self.__active_players_queen2__:self.__get_moves__(q2_move) , self.__active_players_queen3__:self.__get_moves__(q3_move)}
-        queen1_moves = move_dict[self.__active_players_queen1__]
-        queen2_moves = move_dict[self.__active_players_queen2__]
-        queen3_moves = move_dict[self.__active_players_queen3__]
-        all_moves = set()
-        for queen1_move in queen1_moves:
-            for queen2_move in queen2_moves:
-                for queen3_move in queen3_moves:
-                    move_tuple = queen1_move,queen2_move,queen3_move
-                    if self.is_valid_move_tuple(queen1_move,queen2_move,queen3_move):
-                        all_moves.add((queen1_move,queen2_move,queen3_move))
-        return list(all_moves)
+        active_queens = self.get_active_players_queens()
+        move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]), \
+                     active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]), \
+                     active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
+
+        all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
+        return all_moves
 
     def get_player_moves(self, my_player=None):
         """
@@ -484,24 +387,14 @@ class Board:
             my_player (Player), Player to get moves for
             If calling from within a player class, my_player = self can be passed.
         returns
-            [(int, int)]: List of all legal moves. Each move takes the form of
-            (row, column).
+            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
+            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+            move by 1st, 2nd, and 3rd queen respectively.
 
         """
-        #print(my_player)
-        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
-            #print("A1")
-            #print(self.__active_player__.get_name())
-            #print(self.get_active_moves())
+        if my_player == self.__active_player__:
             return self.get_active_moves()
-        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
-            #print("I1")
-            return self.get_inactive_moves()
-        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
-            #print("A2")
-            return self.get_active_moves()
-        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
-            #print("I2")
+        elif my_player == self.__inactive_player__:
             return self.get_inactive_moves()
         else:
             raise ValueError("No value for my_player!")
@@ -514,17 +407,14 @@ class Board:
             my_player (Player), The player facing the opponent in question
             If calling from within a player class, my_player = self can be passed.
         returns
-            [(int, int)]: List of all opponent's moves. Each move takes the form of
-            (row, column).
+            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
+            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+            move by 1st, 2nd, and 3rd queen respectively.
 
         """
-        if (my_player == self.__player_1__ and self.__active_player__ == self.__player_1__):
+        if my_player == self.__active_player__:
             return self.get_inactive_moves()
-        if (my_player == self.__player_1__ and self.__active_player__ != self.__player_1__):
-            return self.get_active_moves()
-        elif (my_player == self.__player_2__ and self.__active_player__ == self.__player_2__):
-            return self.get_inactive_moves()
-        elif (my_player == self.__player_2__ and self.__active_player__ != self.__player_2__):
+        elif my_player == self.__inactive_player__:
             return self.get_active_moves()
         else:
             raise ValueError("No value for my_player!")
@@ -537,8 +427,7 @@ class Board:
             move: (int, int), Last move made by player in question (where they currently are).
             Takes the form of (row, column).
         Returns:
-           [(int, int)]: List of all legal moves. Each move takes the form of
-            (row, column).
+           [((int, int),(int, int),(int, int))]: List of (row,col) 3-tuples of legal moves
         """
 
         if move == self.NOT_MOVED:
@@ -564,13 +453,13 @@ class Board:
         return moves
 
     def get_legal_moves_of_queen1(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen1__)])
+        return self.__get_moves__(self.__last_queen_move__[self.__active_players_queen1__])
 
     def get_legal_moves_of_queen2(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen2__)])
+        return self.__get_moves__(self.__last_queen_move__[self.__active_players_queen2__])
 
     def get_legal_moves_of_queen3(self):
-        return self.__get_moves__(self.__last_queen_move__[self.get_queen_name(self.__active_players_queen3__)])
+        return self.__get_moves__(self.__last_queen_move__[self.__active_players_queen3__])
 
     def get_first_moves(self):
         """
@@ -578,8 +467,7 @@ class Board:
         Parameters:
             None
         Returns:
-           [(int, int)]: List of all legal moves. Each move takes the form of
-            (row, column).
+           [((int, int),(int, int),(int, int))]: List of (row,col) 3-tuples of legal moves
         """
         return [(i, j) for i in range(0, self.height)
                 for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
@@ -615,9 +503,7 @@ class Board:
         Returns:
             bool: Whether the [row,col] position is currently occupied by a player's queen
         """
-        q1 = self.__queen_symbols__[self.__active_players_queen__]
-        q2 = self.__queen_symbols__[self.__inactive_players_queen__]
-        return self.__board_state__[row][col] == q1 or self.__board_state__[row][col] == q2
+        return self.__board_state__[row][col] in self.__queen_symbols__.values()
 
 
     def space_is_open(self, row, col):
@@ -716,44 +602,15 @@ class Board:
 
             if print_moves:
                 print("\n", self.__active_player_name__, " Turn")
-            
-            # Counting number of legal moves for calculating branching factor of game
-            self.bf_count += len(self.get_active_moves())
-            #print(len(self.get_active_moves()))
-            #if len(self.get_active_moves()) < 50:
-                #print(self.get_active_moves())
-                #exit(1)
-            #exit(1)
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
-            # Check for a null move
-            if curr_move_queen1 is None or curr_move_queen2 is None or curr_move_queen3 is None:
-                """
-                if print_moves:
-                    print('Winner: ' + str(self.__inactive_player_name__))
-                queen1_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen1__)]
-                queen2_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen2__)]
-                queen3_moves = self.get_player_moves(self.__active_player__)[self.get_queen_name(self.__active_players_queen3__)]
-                unmovable_queens = []
-                if not queen1_moves:
-                    unmovable_queens.append("Queen 1")
-                if not queen2_moves:
-                    unmovable_queens.append("Queen 2")
-                if not queen3_moves:
-                    unmovable_queens.append("Queen 3")
-                """
-                return str(self.__inactive_player_name__), move_history, str(self.__active_player_name__) + " could not move " + ", " #.join(unmovable_queens)
 
-            # Check if one of the Queens move to the same square
-            if curr_move_queen1 == curr_move_queen2 or curr_move_queen2 == curr_move_queen3 or curr_move_queen1 == curr_move_queen3:
-                if print_moves:
-                    print('Winner: ' + str(self.__inactive_player__.get_name()))
-                return self.__inactive_player_name__, move_history, str(self.__active_player_name__) + " moved 2 or more queens to the same location!"
-            
+            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
+            move = curr_move_queen1, curr_move_queen2, curr_move_queen3
+
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
-                move_history.append([[curr_move_queen1,curr_move_queen2,curr_move_queen3]])
+                move_history.append([[move]])
             else:
-                move_history[-1].append([curr_move_queen1,curr_move_queen2,curr_move_queen3])
+                move_history[-1].append([move])
 
             # Handle Timeout
             if time_limit and time_left() <= 0:
@@ -762,23 +619,8 @@ class Board:
                 return self.__inactive_player_name__, move_history, \
                        (str(self.__active_player_name__) + " timed out.")
 
-            # Safety Check
-            legal_moves_queen1 = self.get_legal_moves_of_queen1()
-            legal_moves_queen2 = self.get_legal_moves_of_queen2()
-            legal_moves_queen3 = self.get_legal_moves_of_queen3()
-            if curr_move_queen1 not in legal_moves_queen1:
-                return self.__inactive_player_name__, move_history, \
-                       (self.__active_players_queen1__ + " made an illegal move.")
-            elif curr_move_queen2 not in legal_moves_queen2:
-                return self.__inactive_player_name__, move_history, \
-                       (self.__active_players_queen2__  + " made an illegal move.")
-            elif curr_move_queen3 not in legal_moves_queen3:
-                return self.__inactive_player_name__, move_history, \
-                       (self.__active_players_queen3__  + " made an illegal move.")
-
-
             # Apply move to game.
-            is_over, winner = self.__apply_move__(curr_move_queen1,curr_move_queen2,curr_move_queen3)
+            is_over, winner = self.__apply_move__((move))
 
             if print_moves:
                 print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
@@ -788,10 +630,13 @@ class Board:
                 if not self.get_active_moves():
                     return self.__inactive_player_name__, move_history, \
                            (str(self.__active_player_name__) + " has no legal moves left.")
+                elif not self.is_legal_move(move):
+                    return self.__inactive_player_name__, move_history, \
+                           (str(self.__active_player_name__) + " performed an illegal move.")
                 return self.__inactive_player_name__, move_history, \
                        (str(self.__active_player_name__) + " was forced off the grid.")
 
-    def __apply_move_write__(self, queen_1_move,queen_2_move,queen_3_move):
+    def __apply_move_write__(self, move):
         """
         Equivalent to __apply_move__, meant specifically for applying move history to a board
         for analyzing an already played game.
@@ -801,27 +646,17 @@ class Board:
         Returns:
             None
         """
+        queens = self.get_active_players_queens()
 
-        row, col = queen_1_move
-        if queen_1_move[0] is None or queen_1_move[1] is None:
-            return
-        
-        self.__last_queen_move__[self.__active_players_queen1__] = queen_1_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen1__]
-
-        row, col = queen_2_move
-        if queen_2_move[0] is None or queen_2_move[1] is None:
-            return
-        
-        self.__last_queen_move__[self.__active_players_queen2__] = queen_2_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen2__]
-
-        row, col = queen_3_move
-        if queen_3_move[0] is None or queen_3_move[1] is None:
-            return
-        
-        self.__last_queen_move__[self.__active_players_queen3__] = queen_3_move
-        self.__board_state__[row][col] = self.__queen_symbols__[self.__active_players_queen3__]
+        # apply the move, one queen at a time
+        for queen_num, queen in enumerate(queens):
+            row,col = move[queen_num]
+            
+            if move[queen_num][0] is None or move[queen_num][1] is None:
+                return
+            
+            self.__last_queen_move__[queen] = move[queen_num]
+            self.__board_state__[row][col] = self.__queen_symbols__[queen]
 
          # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
@@ -833,7 +668,6 @@ class Board:
         self.__active_players_queen3__ = self.__inactive_players_queen3__
 
         self.move_count = self.move_count + 1
-
 
 def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
     """
@@ -864,14 +698,14 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
         if p1_move != Board.NOT_MOVED and p1_move is not None:
             print("Player 1 Turn")
             ans.write(board.print_board())
-            board.__apply_move_write__(p1_move[0], p1_move[1], p1_move[2])
+            board.__apply_move_write__((p1_move[0], p1_move[1], p1_move[2]))
             ans.write("Queen1: (%d,%d) " % p1_move[0] + "Queen2: (%d,%d) " % p1_move[1] + "Queen3: (%d,%d)\r\n" % p1_move[2])
        
         if len(move) > 1 and move[1] != Board.NOT_MOVED and p1_move is not None:
             p2_move = move[1]
             print("Player 2 Turn")
             ans.write(board.print_board())
-            board.__apply_move_write__(p2_move[0], p2_move[1], p2_move[2])
+            board.__apply_move_write__((p2_move[0], p2_move[1], p2_move[2]))
             ans.write("Queen1: (%d,%d) " % p2_move[0] + "Queen2: (%d,%d) " % p2_move[1] + "Queen3: (%d,%d)\r\n" % p2_move[2])
 
 
@@ -879,29 +713,3 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
 
     ans.write("\n" + str(winner) + " has won. Reason: " + str(termination))
     return ans.getvalue()
-
-if __name__ == '__main__':
-    print("Starting game:")
-    wins = [0,0]
-    avg_moves = 0
-    avg_bf = 0
-    from test_players import RandomPlayer
-    from test_players import HumanPlayer
-    for x in range(1):
-        board = Board(RandomPlayer(name= "Player 1"), HumanPlayer(name="Player 2"))
-        winner, move_history, termination = board.play_isolation(time_limit=30000, print_moves=True)
-        print("Game %d Result: " % (x) + termination)
-        if winner == "Player 1":
-            wins[0] += 1
-        else:
-            wins[1] += 1
-        num_moves = len(move_history) * 2
-        avg_moves += num_moves
-        branching_factor = (board.bf_count - 110544 - 91080)/num_moves
-        #print(branching_factor)
-        avg_bf += branching_factor
-    print("Wins are",wins)
-    print("The average moves per game are: ",avg_moves/(x+1))
-    print("The average branching factor per game is: ",avg_bf/(x+1))
-    #board_copy = board.copy()
-    #print(game_as_text(winner, move_history, termination, board_copy))
