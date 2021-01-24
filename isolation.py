@@ -235,11 +235,11 @@ class Board:
 
     def get_active_players_queens(self):
         """
-        See which queens are inactive. Used mostly in play_isolation for display purposes.
+        See which queens are active. Used mostly in play_isolation for display purposes.
         Parameters:
             None
         Returns:
-            list[str] : List of the active player's queens
+            list[str] : List of Queen names of the player who's taking the current turn
         """
         return [self.__active_players_queen1__, self.__active_players_queen2__, self.__active_players_queen3__]
 
@@ -249,7 +249,7 @@ class Board:
         Parameters:
             None
         Returns:
-            list[str] : List of the inactive player's queens
+            list[str] : List of Queen names of the player who's waiting for opponent to take a turn
         """
         return [self.__inactive_players_queen1__, self.__inactive_players_queen2__, self.__inactive_players_queen3__]
 
@@ -625,12 +625,11 @@ class Board:
             if print_moves:
                 print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
                 print(self.copy().print_board())
-
             if is_over:
                 if not self.get_active_moves():
                     return self.__inactive_player_name__, move_history, \
                            self.__active_player_name__ + " has no legal moves left."
-                elif not self.is_legal_move(move):
+                elif not self.is_valid_move(move):
                     return self.__inactive_player_name__, move_history, \
                            self.__active_player_name__ + " performed an illegal move."
                 return self.__inactive_player_name__, move_history, \

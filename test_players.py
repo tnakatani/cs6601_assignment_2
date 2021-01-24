@@ -18,9 +18,7 @@ class RandomPlayer(Player):
         super().__init__(name)
 
     def move(self, game, time_left):
-        if not game.get_player_moves(self):
-            return None,None,None
-
+        
         move = random.choice(game.get_player_moves(self))
         return move
 
