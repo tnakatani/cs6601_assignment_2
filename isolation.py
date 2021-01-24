@@ -23,6 +23,9 @@ class Board:
     __active_player__ = None
     __inactive_player__ = None
 
+    __active_player_name__ = ""
+    __inactive_player_name__ = ""
+
     __active_players_queen1__= None
     __active_players_queen2__= None
     __active_players_queen3__= None
@@ -65,6 +68,9 @@ class Board:
 
         self.__active_player__ = player_1
         self.__inactive_player__ = player_2
+
+        self.__active_player_name__ = f"{player_1.__class__.__name__} - Q1"
+        self.__inactive_player_name__ = f"{player_2.__class__.__name__} - Q2"
 
         self.__active_players_queen1__= self.__queen_1_1__
         self.__active_players_queen2__= self.__queen_1_2__
@@ -116,8 +122,8 @@ class Board:
         self.__active_players_queen3__,self.__inactive_players_queen3__ = self.__inactive_players_queen3__,self.__active_players_queen3__
 
         # Count X's to get move count + 6 for initial moves
-        self.move_count = sum(row.count('X') + row.count('P1_Q1') + row.count('P1_Q2') + row.count('P1_Q3') + \
-                              row.count('P2_Q1') + row.count('P2_Q2') + row.count('P2_Q3') for row in board_state)
+        self.move_count = sum(row.count('X') + row.count('11') + row.count('12') + row.count('13') + \
+                              row.count('21') + row.count('22') + row.count('23') for row in board_state)
 
     def __apply_move__(self, move):
         '''
@@ -128,7 +134,7 @@ class Board:
             result: (bool, str), Game Over flag, winner
         '''
         if not self.is_valid_move(move):
-            return True, self.__inactive_player__.get_name()
+            return True, self.__inactive_player_name__
 
         queens = self.get_active_players_queens()
 
@@ -148,6 +154,7 @@ class Board:
 
         # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
+        self.__active_player_name__, self.__inactive_player_name__ = self.__inactive_player_name__, self.__active_player_name__
 
         # rotate the queens
         self.__active_players_queen1__,self.__inactive_players_queen1__ = self.__inactive_players_queen1__,self.__active_players_queen1__
@@ -156,7 +163,7 @@ class Board:
 
         # If opponent is isolated
         if not self.get_active_moves():
-            return True, self.__inactive_player__.get_name()
+            return True, self.__inactive_player_name__
 
         # increment move count
         self.move_count = self.move_count + 1
@@ -180,7 +187,9 @@ class Board:
 
         b.move_count = self.move_count
         b.__active_player__ = self.__active_player__
+        b.__active_player_name__ = self.__active_player_name__
         b.__inactive_player__ = self.__inactive_player__
+        b.__inactive_player_name__ = self.__inactive_player_name__
         b.__active_players_queen1__ = self.__active_players_queen1__
         b.__active_players_queen2__ = self.__active_players_queen2__
         b.__active_players_queen3__ = self.__active_players_queen3__
@@ -576,7 +585,6 @@ class Board:
             Each move in move history takes the form of (row, column).
         """
         move_history = []
-
         if platform.system() == 'Windows':
             def curr_time_millis():
                 return int(round(time.time() * 1000))
@@ -593,11 +601,11 @@ class Board:
                 return time_limit - (curr_time_millis() - move_start)
 
             if print_moves:
-                print("\n", self.__active_player__.get_name(), " Turn")
+                print("\n", self.__active_player_name__, " Turn")
 
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
             move = curr_move_queen1, curr_move_queen2, curr_move_queen3
-            
+
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
@@ -608,8 +616,8 @@ class Board:
             if time_limit and time_left() <= 0:
                 if print_moves:
                     print('Winner: ' + str(self.__inactive_player__))
-                return self.__inactive_player__, move_history, \
-                       (str(self.__active_player__.get_name()) + " timed out.")
+                return self.__inactive_player_name__, move_history, \
+                       (str(self.__active_player_name__) + " timed out.")
 
             # Apply move to game.
             is_over, winner = self.__apply_move__((move))
@@ -620,13 +628,13 @@ class Board:
 
             if is_over:
                 if not self.get_active_moves():
-                    return self.__inactive_player__, move_history, \
-                           (str(self.__active_player__.get_name()) + " has no legal moves left.")
+                    return self.__inactive_player_name__, move_history, \
+                           (str(self.__active_player_name__) + " has no legal moves left.")
                 elif not self.is_legal_move(move):
-                    return self.__inactive_player__, move_history, \
-                           (str(self.__active_player__.get_name()) + " performed an illegal move.")
-                return self.__inactive_player__, move_history, \
-                       (str(self.__active_player__.get_name()) + " was forced off the grid.")
+                    return self.__inactive_player_name__, move_history, \
+                           (str(self.__active_player_name__) + " performed an illegal move.")
+                return self.__inactive_player_name__, move_history, \
+                       (str(self.__active_player_name__) + " was forced off the grid.")
 
     def __apply_move_write__(self, move):
         """
@@ -652,6 +660,7 @@ class Board:
 
          # rotate the players
         self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
+        self.__active_player_name__, self.__inactive_player_name__ = self.__inactive_player_name__, self.__active_player_name__
 
         # rotate the queens
         self.__active_players_queen1__ = self.__inactive_players_queen1__
