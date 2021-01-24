@@ -105,7 +105,7 @@ class Board:
         '''
         self.__board_state__ = board_state
 
-        string_options = ["P1_Q1", "P1_Q2", "P1_Q3","P2_Q1","P2_Q2","P2_Q3"]
+        string_options = ["11", "12", "13", "21", "22", "23"]
         all_queens = [self.__queen_1_1__, self.__queen_1_2__, self.__queen_1_3__, self.__queen_2_1__, self.__queen_2_2__, self.__queen_2_3__]
 
         for queen,string_opt in zip(all_queens,string_options):
@@ -373,8 +373,8 @@ class Board:
             move by 1st, 2nd, and 3rd queen respectively.
         """
         active_queens = self.get_active_players_queens()
-        move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]), \
-                     active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]), \
+        move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]),
+                     active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
                      active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
 
         all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
@@ -615,9 +615,9 @@ class Board:
             # Handle Timeout
             if time_limit and time_left() <= 0:
                 if print_moves:
-                    print('Winner: ' + str(self.__inactive_player__))
+                    print('Winner: ' + self.__inactive_player_name__)
                 return self.__inactive_player_name__, move_history, \
-                       (str(self.__active_player_name__) + " timed out.")
+                       self.__active_player_name__ + " timed out."
 
             # Apply move to game.
             is_over, winner = self.__apply_move__((move))
@@ -629,12 +629,12 @@ class Board:
             if is_over:
                 if not self.get_active_moves():
                     return self.__inactive_player_name__, move_history, \
-                           (str(self.__active_player_name__) + " has no legal moves left.")
+                           self.__active_player_name__ + " has no legal moves left."
                 elif not self.is_legal_move(move):
                     return self.__inactive_player_name__, move_history, \
-                           (str(self.__active_player_name__) + " performed an illegal move.")
+                           self.__active_player_name__ + " performed an illegal move."
                 return self.__inactive_player_name__, move_history, \
-                       (str(self.__active_player_name__) + " was forced off the grid.")
+                       self.__active_player_name__ + " was forced off the grid."
 
     def __apply_move_write__(self, move):
         """
