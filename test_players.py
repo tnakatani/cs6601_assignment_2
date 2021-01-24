@@ -44,11 +44,7 @@ class HumanPlayer(Player):
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
-<<<<<<< HEAD
             print('\t'.join(['[%d] %s' % (counter, move)]))
-=======
-            print('\t'.join(['[%d] (%s)' % (counter, move)]))
->>>>>>> 0e1f175... Changed visualization and terminal game play code
             counter += 1
 
         print("-------------------------")
