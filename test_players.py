@@ -54,7 +54,7 @@ class HumanPlayer(Player):
         print("-------------------------")
         print(game.print_board(legal_moves))
         print("-------------------------")
-        print(">< - impossible, o - valid move")
+        print(">< - impossible")
         print("-------------------------")
 
         valid_choice = False
