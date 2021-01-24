@@ -98,7 +98,7 @@ def minimaxTest(yourAgent, minimax_fn):
             print(score)
             if exp_score != score:
                 print("Minimax failed for depth: ", depth)
-                test_pass = True
+                test_pass = False
             else:
                 print("Minimax passed for depth: ", depth)
 
