@@ -21,12 +21,8 @@ class RandomPlayer(Player):
         if not game.get_player_moves(self):
             return None,None,None
 
-        moves = game.get_player_moves(self)
-        if moves:
-            move = random.choice(moves)
-            return move
-        else:
-            return None,None,None
+        move = random.choice(game.get_player_moves(self))
+        return move
 
     def get_name(self):
         return self.name
