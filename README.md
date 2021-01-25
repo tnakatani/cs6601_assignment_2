@@ -1,6 +1,6 @@
 **The assignment is not yet released for the Spring 2021 and might be subject to change.**
 
-# Assignment 1 - Forcefield Isolation
+# Assignment 1 - 3 Snails Isolation
 
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
