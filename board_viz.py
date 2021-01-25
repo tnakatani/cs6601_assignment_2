@@ -21,9 +21,9 @@ if platform.system() != 'Windows':
 
 
 def get_details(name):
-    if name == 'Q1':
+    if name in {'11','12','13'}:
         color = 'SpringGreen'
-    elif name == 'Q2':
+    elif name in {'21','22','23'}:
         color = 'tomato'
     elif name == 'q1':
         color = '#bdffbd'
