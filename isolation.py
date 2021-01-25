@@ -9,6 +9,7 @@ if platform.system() != 'Windows':
 import sys
 import os
 import itertools
+import numpy as np
 
 sys.path[0] = os.getcwd()
 
@@ -378,9 +379,47 @@ class Board:
         move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]),
                      active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
                      active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
+        
+        #all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
+        
+        #print(all_moves)
+        #print("-----")
 
-        all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
-        return all_moves
+        queen1_moves = np.empty(len(move_dict[active_queens[0]]),dtype =object)
+        queen1_moves[:] = move_dict[active_queens[0]]
+
+        #print(queen1_moves)
+        #print(queen1_moves.shape)
+        #print("-----")
+        queen2_moves = np.empty(len(move_dict[active_queens[1]]),dtype =object)
+        queen2_moves[:] = move_dict[active_queens[1]]
+
+        #print(queen2_moves)
+        #print("-----")
+        queen3_moves = np.empty(len(move_dict[active_queens[2]]),dtype =object)
+        queen3_moves[:] = move_dict[active_queens[2]]
+
+        #print(queen3_moves)
+        #print("-----")
+        
+        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
+        np.set_printoptions(threshold=sys.maxsize)
+        #print(moves)
+        #print(moves.shape)
+
+        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
+        #print (valid_moves)
+        #print(valid_moves.shape)
+
+        num_moves = valid_moves.shape[0]
+
+        #if len(all_moves) != num_moves:
+            #print("Not same length of moves. %d vs. %d" % (len(all_moves),num_moves))
+        valid_moves = list(map(tuple,valid_moves))
+        #valid_moves = valid_moves.flatten()
+        #print(valid_moves)
+        
+        return valid_moves
 
     def get_player_moves(self, my_player=None):
         """
@@ -437,20 +476,16 @@ class Board:
 
         r, c = move
 
-        directions = [(-1, -1), (-1, 0), (-1, 1),
-                      (0, -1), (0, 1),
-                      (1, -1), (1, 0), (1, 1)]
+        directions = [(-1, 0),(0, -1), (0, 1), (1, 0)]
 
         moves = []
-
+        dist = 1
         for direction in directions:
-            for dist in range(1, max(self.height, self.width)):
-                row = direction[0] * dist + r
-                col = direction[1] * dist + c
-                if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col) not in moves:
-                    moves.append((row, col))
-                else:
-                    break
+            #for dist in range(1, max(self.height, self.width)):
+            row = direction[0] * dist + r
+            col = direction[1] * dist + c
+            if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col) not in moves:
+                moves.append((row, col))
 
         return moves
 
@@ -605,6 +640,7 @@ class Board:
             if print_moves:
                 print("\n", self.__active_player_name__, " Turn")
 
+            
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
             move = curr_move_queen1, curr_move_queen2, curr_move_queen3
 
