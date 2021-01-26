@@ -610,7 +610,7 @@ class Board:
 
         return out
 
-    def play_isolation(self, time_limit=10000, print_moves=False):
+    def play_isolation(self, time_limit=6000, print_moves=False):
         """
         Method to play out a game of isolation with the agents passed into the Board class.
         Initializes and updates move_history variable, enforces timeouts, and prints the game.
