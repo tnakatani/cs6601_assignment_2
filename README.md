@@ -5,14 +5,14 @@ This assignment will cover some of the concepts discussed in the Adversarial Sea
 We are also implementing this through Jupyter Notebook, so you all may find it useful to spend some time getting familiar with this software. During the first week of classes, there was an assignment [Assignment 0](https://github.gatech.edu/omscs6601/assignment_0/) that spends some time going through Python and Jupyter. If you are unfamiliar with either Python or Jupyter, please go through that assignment first!
 
 ### Table of Contents
-- [Get repository](#repo)
+- [Git repository](#repo)
 - [Setup](#setup)
 - [Jupyter](#jupyter)
 - [Jupyter Tips](#jupyter-tips)
 - [IDE](#IDE)
 
 <a name="repo"/></a>
-## Get repository
+## Git repository
 
 Pull this repository to your local machine:
 
