@@ -62,7 +62,7 @@ def beatRandom(yourAgent):
 
 def algorithmTest(yourAgent, algorithm, algorithm_name):
     """Example test to make sure
-        your minimax works, using the
+        your algorithm works, using the
         OpenMoveEvalFunction evaluation function.
         This can be used for debugging your code
         with different model Board states.
@@ -70,7 +70,7 @@ def algorithmTest(yourAgent, algorithm, algorithm_name):
         pruning"""
 
     # create dummy 5x5 board
-    print(f"{algorithm_name}ning the Minimax test.")
+    print(f"Running the {algorithm_name} test")
     print()
     try:
         def time_left():  # For these testing purposes, let's ignore timeouts
