@@ -92,7 +92,7 @@ def algorithmTest(yourAgent, algorithm, algorithm_name):
 
         test_pass = True
 
-        expected_depth_scores = [(1, 9), (2, -1), (3, 1), (4, 0)]
+        expected_depth_scores = [(1, -16), (2, -16), (3, -7), (4, 1)]
 
         for depth, exp_score in expected_depth_scores:
             move, score = algorithm(player, sample_board, time_left, depth=depth, my_turn=True)

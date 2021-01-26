@@ -115,14 +115,16 @@ class Board:
             last_move = [(column, row.index(string_opt)) for column, row in enumerate(board_state) if string_opt in row]
             if (last_move != []):
                 self.__last_queen_move__[queen] = last_move[0]
-        
-        # rotate the players
-        self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
 
-        # rotate the queens
-        self.__active_players_queen1__,self.__inactive_players_queen1__ = self.__inactive_players_queen1__,self.__active_players_queen1__
-        self.__active_players_queen2__,self.__inactive_players_queen2__ = self.__inactive_players_queen2__,self.__active_players_queen2__
-        self.__active_players_queen3__,self.__inactive_players_queen3__ = self.__inactive_players_queen3__,self.__active_players_queen3__
+        if not p1_turn:
+            # rotate the players
+            self.__active_player__, self.__inactive_player__ = self.__inactive_player__, self.__active_player__
+            self.__active_player_name__, self.__inactive_player_name__ = self.__inactive_player_name__, self.__active_player_name__
+
+            # rotate the queens
+            self.__active_players_queen1__,self.__inactive_players_queen1__ = self.__inactive_players_queen1__,self.__active_players_queen1__
+            self.__active_players_queen2__,self.__inactive_players_queen2__ = self.__inactive_players_queen2__,self.__active_players_queen2__
+            self.__active_players_queen3__,self.__inactive_players_queen3__ = self.__inactive_players_queen3__,self.__active_players_queen3__
 
         # Count X's to get move count + 6 for initial moves
         self.move_count = sum(row.count('X') + row.count('11') + row.count('12') + row.count('13') + \
