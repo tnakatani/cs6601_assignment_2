@@ -21,7 +21,7 @@ def correctOpenEvalFn(yourOpenEvalFn):
             ["12", " ", " ", "21", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " "],
             [" ", " ", " ", " ", " ", " ", " "],
-            ["12", " ", " ", " ", " ", " ", "23"]
+            ["13", " ", " ", " ", " ", " ", "23"]
         ]
         sample_board.set_state(board_state, True)
         #test = sample_board.get_legal_moves()
