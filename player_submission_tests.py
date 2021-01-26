@@ -181,7 +181,7 @@ def alphabeta_ID_test(yourAgent, algorithm, algorithm_name):
             print(score)
             if exp_score != score:
                 print(f"{algorithm_name} failed for depth: ", depth)
-                test_pass = True
+                test_pass = False
             else:
                 print(f"{algorithm_name} passed for depth: ", depth)
 
