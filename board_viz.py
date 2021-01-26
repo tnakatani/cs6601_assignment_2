@@ -79,8 +79,8 @@ def create_board_gridbox(game, show_legal_moves, click_callback=None):
 
 class InteractiveGame():
     """This class is used to play the game interactively (only works in jupyter)"""
-    def __init__(self, opponent=None, show_legal_moves=False):
-        self.game = Board(Player, opponent)
+    def __init__(self, opponent=Player("Player2"), show_legal_moves=False):
+        self.game = Board(Player("Player1"), opponent)
         self.width = self.game.width
         self.height = self.game.height
         self.show_legal_moves = show_legal_moves
@@ -140,8 +140,8 @@ class InteractiveGame():
             # there is only one move in swap isolation game
             self.__move = legal_moves[0]
         ### swap move workaround end ###
-        self.game_is_over, winner = self.game.__apply_move__(*self.__move)
-        if (not self.game_is_over) and (self.opponent is not None):
+        self.game_is_over, winner = self.game.__apply_move__(self.__move)
+        if (not self.game_is_over) and (type(self.opponent) != Player):
             opponents_legal_moves = self.game.get_active_moves()
             opponent_move = self.opponent.move(self.game, time_left=time_left)
             assert opponent_move in opponents_legal_moves, \
@@ -196,7 +196,7 @@ class ReplayGame():
     def generate_board_state_history(self,):        
         for move_pair in self.move_history:
             for move in move_pair:
-                self.new_board.__apply_move__(move[0],move[1],move[2])
+                self.new_board.__apply_move__(move[0])
                 board_vis_state = get_viz_board_state(self.new_board, self.show_legal_moves)
                 board_state = self.new_board.get_state()
                 self.board_history.append((copy.deepcopy(board_vis_state), copy.deepcopy(board_state)))
