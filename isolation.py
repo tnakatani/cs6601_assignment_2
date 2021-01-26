@@ -98,7 +98,7 @@ class Board:
         '''
         Function to immediately bring a board to a desired state. Useful for testing purposes; call board.play_isolation() afterwards to play.
         Note that error testing is minimal in this function. Please be sure to only pass a list of same size lists of strings. Each string
-        should be one of the following: BLANK, BLOCKED, "P1_Q1", "P1_Q2", "P1_Q3", "P2_Q1", "P2_Q2", "P2_Q3".
+        should be one of the following: BLANK, BLOCKED, "11", "12", "13", "21", "22", "23".
 
         Parameters:
             board_state: list[str], Desired state to set to board
@@ -322,31 +322,24 @@ class Board:
                 return False
         else:
             return True
-
+    
     def get_moves_from_dictionary(self,move_dict,queens):
-        """
-        Calculates a list of legal moves for the inactive or active player. 
-        Called in get_active_moves() and get_inactive_moves().
-        Parameters:
-            move_dict: dict, dictionary of (key -> queen, value -> queen_moves) for the 3 queens
-            queens: [tuple], a list of queens (either active or inactive)
-        Returns:
-           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
-            move by 1st, 2nd, and 3rd queen respectively.
-        """
-        queen1_moves = move_dict[queens[0]]
-        queen2_moves = move_dict[queens[1]]
-        queen3_moves = move_dict[queens[2]]
-        all_moves = set()
-        for queen1_move in queen1_moves:
-            for queen2_move in queen2_moves:
-                for queen3_move in queen3_moves:
-                    move_tuple = queen1_move,queen2_move,queen3_move
-                    if self.is_valid_move((queen1_move,queen2_move,queen3_move)):
-                        all_moves.add((queen1_move,queen2_move,queen3_move))
-        return list(all_moves)
+        
+        queen1_moves = np.empty(len(move_dict[queens[0]]),dtype =object)
+        queen1_moves[:] = move_dict[queens[0]]
 
+        queen2_moves = np.empty(len(move_dict[queens[1]]),dtype =object)
+        queen2_moves[:] = move_dict[queens[1]]
+
+        queen3_moves = np.empty(len(move_dict[queens[2]]),dtype =object)
+        queen3_moves[:] = move_dict[queens[2]]
+
+        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
+        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
+        valid_moves = list(map(tuple,valid_moves))
+        
+        return valid_moves
+    
     def get_inactive_moves(self):
         """
         Get all legal moves of inactive player on current board state as a list of possible moves.
@@ -379,47 +372,9 @@ class Board:
         move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]),
                      active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
                      active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
-        
-        #all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
-        
-        #print(all_moves)
-        #print("-----")
 
-        queen1_moves = np.empty(len(move_dict[active_queens[0]]),dtype =object)
-        queen1_moves[:] = move_dict[active_queens[0]]
-
-        #print(queen1_moves)
-        #print(queen1_moves.shape)
-        #print("-----")
-        queen2_moves = np.empty(len(move_dict[active_queens[1]]),dtype =object)
-        queen2_moves[:] = move_dict[active_queens[1]]
-
-        #print(queen2_moves)
-        #print("-----")
-        queen3_moves = np.empty(len(move_dict[active_queens[2]]),dtype =object)
-        queen3_moves[:] = move_dict[active_queens[2]]
-
-        #print(queen3_moves)
-        #print("-----")
-        
-        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
-        np.set_printoptions(threshold=sys.maxsize)
-        #print(moves)
-        #print(moves.shape)
-
-        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
-        #print (valid_moves)
-        #print(valid_moves.shape)
-
-        num_moves = valid_moves.shape[0]
-
-        #if len(all_moves) != num_moves:
-            #print("Not same length of moves. %d vs. %d" % (len(all_moves),num_moves))
-        valid_moves = list(map(tuple,valid_moves))
-        #valid_moves = valid_moves.flatten()
-        #print(valid_moves)
-        
-        return valid_moves
+        all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
+        return all_moves
 
     def get_player_moves(self, my_player=None):
         """
