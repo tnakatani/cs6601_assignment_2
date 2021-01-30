@@ -138,9 +138,6 @@ class Board:
         Returns:
             result: (bool, str), Game Over flag, winner
         '''
-        if not self.is_valid_move(move):
-            return True, self.__inactive_player_name__
-
         queens = self.get_active_players_queens()
 
         # apply the move, one queen at a time
@@ -311,19 +308,6 @@ class Board:
             return self.get_active_position()
         else:
             raise ValueError("No value for my_player!")
-
-    def is_valid_move(self,move):
-        """
-        Checks if a move tuple: (move1,move2,move3) is valid
-        Parameters:
-            move: ((int,int),(int,int),(int,int)), the move itself to check
-        Returns:
-           bool: Whether the move is valid or not (i.e. it is legal and non-conflicting)
-        """
-        if move[0] == move[1] or move[1] == move[2] or move[2] == move[0]:
-                return False
-        else:
-            return True
     
     def get_moves_from_dictionary(self,move_dict,queens):
         
@@ -377,36 +361,6 @@ class Board:
 
         all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
         return all_moves
-
-    def get_set_of_active_moves(self):
-        """
-        Get all legal moves of active player on current board state as a set of possible moves.
-        Parameters:
-            None
-        Returns:
-           {((int, int),(int, int), (int,int))}: set of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
-            move by 1st, 2nd, and 3rd queen respectively.
-        """
-        active_queens = self.get_active_players_queens()
-        move_dict = {active_queens[0] : self.__get_moves__(self.__last_queen_move__[active_queens[0]]),
-                     active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
-                     active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
-
-        queen1_moves = np.empty(len(move_dict[active_queens[0]]),dtype =object)
-        queen1_moves[:] = move_dict[active_queens[0]]
-
-        queen2_moves = np.empty(len(move_dict[active_queens[1]]),dtype =object)
-        queen2_moves[:] = move_dict[active_queens[1]]
-
-        queen3_moves = np.empty(len(move_dict[active_queens[2]]),dtype =object)
-        queen3_moves[:] = move_dict[active_queens[2]]
-
-        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
-        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
-        valid_moves = set(map(tuple,valid_moves))
-        
-        return valid_moves
 
     def get_player_moves(self, my_player=None):
         """
@@ -491,7 +445,7 @@ class Board:
         Parameters:
             None
         Returns:
-           [((int, int),(int, int),(int, int))]: List of (row,col) 3-tuples of legal moves
+           [(int, int)]: List of (row,col) tuples of legal moves
         """
         return [(i, j) for i in range(0, self.height)
                 for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
@@ -630,7 +584,7 @@ class Board:
             
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
             move = curr_move_queen1, curr_move_queen2, curr_move_queen3
-
+            print("Move attempted: ",move)
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
@@ -645,7 +599,7 @@ class Board:
                        self.__active_player_name__ + " timed out."
 
             # Safety Check
-            legal_moves = self.get_set_of_active_moves()
+            legal_moves = self.get_active_moves()
             if move not in legal_moves:
                 return self.__inactive_player_name__, move_history, \
                        (self.__active_player_name__+ " made an illegal move.")
@@ -657,14 +611,7 @@ class Board:
                 print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
                 print(self.copy().print_board())
             if is_over:
-                if not self.get_active_moves():
-                    return self.__inactive_player_name__, move_history, \
-                           self.__active_player_name__ + " has no legal moves left."
-                elif not self.is_valid_move(move):
-                    return self.__inactive_player_name__, move_history, \
-                           self.__active_player_name__ + " performed an illegal move."
-                return self.__inactive_player_name__, move_history, \
-                       self.__active_player_name__ + " was forced off the grid."
+                return self.__inactive_player_name__, move_history, self.__active_player_name__ + " has no legal moves left."
 
     def __apply_move_write__(self, move):
         """
@@ -737,7 +684,6 @@ def game_as_text(winner, move_history, termination="", board=Board(1, 2)):
             ans.write(board.print_board())
             board.__apply_move_write__((p2_move[0], p2_move[1], p2_move[2]))
             ans.write("Queen1: (%d,%d) " % p2_move[0] + "Queen2: (%d,%d) " % p2_move[1] + "Queen3: (%d,%d)\r\n" % p2_move[2])
-
 
         last_move = move
 
