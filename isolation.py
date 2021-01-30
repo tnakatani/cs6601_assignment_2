@@ -584,7 +584,6 @@ class Board:
             
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
             move = curr_move_queen1, curr_move_queen2, curr_move_queen3
-            print("Move attempted: ",move)
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
