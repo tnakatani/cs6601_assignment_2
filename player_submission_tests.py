@@ -3,6 +3,7 @@ import traceback
 from isolation import Board, game_as_text
 from test_players import RandomPlayer, HumanPlayer, Player
 import platform
+import random
 
 if platform.system() != 'Windows':
     import resource
@@ -47,7 +48,13 @@ def beatRandom(yourAgent):
         p = yourAgent()
         game = Board(r, p, 7, 7)
         output_b = game.copy()
-        winner, move_history, termination = game.play_isolation(time_limit=1000, print_moves=True)
+        # assign a random move to each player before playing
+        for idx in range(2):
+            moves = game.get_active_moves()
+            random.shuffle(moves)
+            move = moves[0]
+            game, _, _ = game.forecast_move(move)
+        winner, move_history, termination = game.play_isolation(time_limit=6000, print_moves=True)
         print("\n", winner, " has won. Reason: ", termination)
         # Uncomment to see game
         # print game_as_text(winner, move_history, termination, output_b)
