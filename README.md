@@ -1,7 +1,5 @@
 # Assignment 2 - 3 Snails Isolation
 
-**The assignment is not yet released for the Summer 2021 and might be subject to change.**
-
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
 We are also implementing this through Jupyter Notebook, so you all may find it useful to spend some time getting familiar with this software. During the first week of classes, there was an assignment [Assignment 0](https://github.gatech.edu/omscs6601/assignment_0/) that spends some time going through Python and Jupyter. If you are unfamiliar with either Python or Jupyter, please go through that assignment first!
