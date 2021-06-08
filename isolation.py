@@ -42,6 +42,7 @@ class Board:
     def __init__(self, player_1, player_2, width=7, height=7):
         self.width = width
         self.height = height
+        self.center = (self.width // 2, self.height // 2)
 
         self.__player_1__ = player_1
         self.__player_2__ = player_2
@@ -56,6 +57,7 @@ class Board:
 
         self.__board_state__ = [
             [Board.BLANK for i in range(0, width)] for j in range(0, height)]
+        self.__board_state__[self.center[0]][self.center[1]] = Board.BLOCKED
 
         self.__last_queen_move__ = {
             self.__queen_1_1__: Board.NOT_MOVED, self.__queen_2_1__: Board.NOT_MOVED, \
@@ -401,6 +403,21 @@ class Board:
         else:
             raise ValueError("No value for my_player!")
 
+    def __generate_moves__(self, move):
+        r, c = move
+        directions = [(-1, 0),(0, -1), (0, 1), (1, 0), (1, 1), (1, -1), (-1, 1), (-1, -1)]
+
+        moves = []
+        for direction in directions:
+            for dist in range(1, max(self.height, self.width)):
+                row = direction[0] * dist + r
+                col = direction[1] * dist + c
+                if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col) not in moves:
+                    moves.append((row, col))
+                else:
+                    break
+        return moves
+
     def __get_moves__(self, move):
         """
         Get all legal moves of a player on current board state as a list of possible moves. Not meant to be directly called,
@@ -413,22 +430,8 @@ class Board:
         """
 
         if move == self.NOT_MOVED:
-            return self.get_first_moves()
-
-        r, c = move
-
-        directions = [(-1, 0),(0, -1), (0, 1), (1, 0)]
-
-        moves = []
-        dist = 1
-        for direction in directions:
-            #for dist in range(1, max(self.height, self.width)):
-            row = direction[0] * dist + r
-            col = direction[1] * dist + c
-            if self.move_is_in_board(row, col) and self.is_spot_open(row, col) and (row, col) not in moves:
-                moves.append((row, col))
-
-        return moves
+            return self.__generate_moves__(self.center)
+        return self.__generate_moves__(move)
 
     def get_legal_moves_of_queen1(self):
         return self.__get_moves__(self.__last_queen_move__[self.__active_players_queen1__])
@@ -438,17 +441,6 @@ class Board:
 
     def get_legal_moves_of_queen3(self):
         return self.__get_moves__(self.__last_queen_move__[self.__active_players_queen3__])
-
-    def get_first_moves(self):
-        """
-        Return all moves for first turn in game (i.e. every board position)
-        Parameters:
-            None
-        Returns:
-           [(int, int)]: List of (row,col) tuples of legal moves
-        """
-        return [(i, j) for i in range(0, self.height)
-                for j in range(0, self.width) if self.__board_state__[i][j] == Board.BLANK]
 
     def move_is_in_board(self, row, col):
         """
