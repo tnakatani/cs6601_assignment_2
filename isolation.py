@@ -317,7 +317,7 @@ class Board:
             move_dict: Dictionary from piece name to list of valid moves.
             pieces: Names of the pieces to use as keys to the move dictionary.
         returns
-            [((int, int), ...)]: 
+            [[(int, int), ...]]: 
         """
 
         # get every piece's moves as a list of numpy arrays of tuples
@@ -337,8 +337,7 @@ class Board:
             for j in range(i + 1, len(pieces)):
                 valid_move_mask = valid_move_mask * (moves[:, i] != moves[:, j])
         valid_moves = moves[valid_move_mask]
-        valid_moves = list(map(tuple, valid_moves))
-
+        valid_moves = valid_moves.tolist()
         return valid_moves
     
     def get_inactive_moves(self):
@@ -347,8 +346,8 @@ class Board:
         Parameters:
             move1,move2,move3
         Returns:
-           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
         inactive_queens = self.get_inactive_players_queens()
@@ -365,8 +364,8 @@ class Board:
         Parameters:
             None
         Returns:
-           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
         active_queens = self.get_active_players_queens()
@@ -374,7 +373,7 @@ class Board:
                      active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
                      active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
 
-        all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
+        all_moves = self.get_moves_from_dictionary(move_dict, active_queens)
         return all_moves
 
     def get_player_moves(self, my_player=None):
@@ -384,10 +383,9 @@ class Board:
             my_player (Player), Player to get moves for
             If calling from within a player class, my_player = self can be passed.
         returns
-            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
-
         """
         if my_player == self.__active_player__:
             return self.get_active_moves()
@@ -404,10 +402,9 @@ class Board:
             my_player (Player), The player facing the opponent in question
             If calling from within a player class, my_player = self can be passed.
         returns
-            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
-
         """
         if my_player == self.__active_player__:
             return self.get_inactive_moves()
@@ -424,7 +421,7 @@ class Board:
             move: (int, int), Last move made by player in question (where they currently are).
             Takes the form of (row, column).
         Returns:
-           [((int, int),(int, int),(int, int))]: List of (row,col) 3-tuples of legal moves
+           [[(int, int),(int, int),(int, int)]]: List of (row,col) 3-lists of legal moves
         """
 
         if move == self.NOT_MOVED:
@@ -598,7 +595,7 @@ class Board:
 
             
             curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
-            move = curr_move_queen1, curr_move_queen2, curr_move_queen3
+            move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
