@@ -1,17 +1,23 @@
 from copy import deepcopy
-import time
-import platform
 from io import StringIO
+import os
+import platform
+import signal
+import sys
+import time
 
 if platform.system() != 'Windows':
     import resource
 
-import sys
-import os
-import itertools
 import numpy as np
 
 sys.path[0] = os.getcwd()
+
+
+# when player takes too long to make a move
+class TimeoutException(Exception):
+    pass
+
 
 class Board:
     BLANK = " "
@@ -563,18 +569,20 @@ class Board:
 
         return out
 
-    def play_isolation(self, time_limit=6000, print_moves=False):
+    def play_isolation(self, time_limit=6, print_moves=False):
         """
         Method to play out a game of isolation with the agents passed into the Board class.
         Initializes and updates move_history variable, enforces timeouts, and prints the game.
         Parameters:
-            time_limit: int, time limit in milliseconds that each player has before they time out.
+            time_limit: int, time limit in seconds that each player has before they time out.
             print_moves: bool, Should the method print details of the game in real time
         Returns:
             (str, [(int, int)], str): Queen of Winner, Move history, Reason for game over.
             Each move in move history takes the form of (row, column).
         """
-        move_history = []
+
+        def handler(signum, frame):
+            raise TimeoutException(f"Ran out of time ({time_limit} s) in play_isolation()")
         if platform.system() == 'Windows':
             def curr_time_millis():
                 return int(round(time.time() * 1000))
@@ -582,47 +590,54 @@ class Board:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
 
-        while True:
-            game_copy = self.copy()
-            move_start = curr_time_millis()
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(time_limit)
 
-            def time_left():
-                # print("Limit: "+str(time_limit) +" - "+str(curr_time_millis()-move_start))
-                return time_limit - (curr_time_millis() - move_start)
+        move_history = []
 
-            if print_moves:
-                print("\n", self.__active_player_name__, " Turn")
+        try:
+            while True:
+                game_copy = self.copy()
+                move_start = curr_time_millis()
 
-            
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
-            move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
-            # Append new move to game history
-            if self.__active_player__ == self.__player_1__:
-                move_history.append([[move]])
-            else:
-                move_history[-1].append([move])
+                def time_left():
+                    # print("Limit: "+str(time_limit * 1000) +" - "+str(curr_time_millis()-move_start))
+                    return time_limit * 1000 - (curr_time_millis() - move_start)
 
-            # Handle Timeout
-            if time_limit and time_left() <= 0:
                 if print_moves:
-                    print('Winner: ' + self.__inactive_player_name__)
-                return self.__inactive_player_name__, move_history, \
-                       self.__active_player_name__ + " timed out."
+                    print("\n", self.__active_player_name__, " Turn")
 
-            # Safety Check
-            legal_moves = self.get_active_moves()
-            if move not in legal_moves:
-                return self.__inactive_player_name__, move_history, \
-                       (self.__active_player_name__+ " made an illegal move.")
+                
+                curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
+                move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
+                # Append new move to game history
+                if self.__active_player__ == self.__player_1__:
+                    move_history.append([[move]])
+                else:
+                    move_history[-1].append([move])
 
-            # Apply move to game.
-            is_over, winner = self.__apply_move__((move))
+                # Safety Check
+                legal_moves = self.get_active_moves()
+                if move not in legal_moves:
+                    signal.alarm(0)
+                    return self.__inactive_player_name__, move_history, \
+                        (self.__active_player_name__+ " made an illegal move.")
 
+                # Apply move to game.
+                is_over, winner = self.__apply_move__((move))
+
+                if print_moves:
+                    print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
+                    print(self.copy().print_board())
+                if is_over:
+                    signal.alarm(0)
+                    return self.__inactive_player_name__, move_history, self.__active_player_name__ + " has no legal moves left."
+        except TimeoutException:
+            # Handle Timeout
             if print_moves:
-                print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
-                print(self.copy().print_board())
-            if is_over:
-                return self.__inactive_player_name__, move_history, self.__active_player_name__ + " has no legal moves left."
+                print('Winner: ' + self.__inactive_player_name__)
+            return self.__inactive_player_name__, move_history, self.__active_player_name__ + " timed out."
+        
 
     def __apply_move_write__(self, move):
         """
