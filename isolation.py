@@ -309,21 +309,36 @@ class Board:
         else:
             raise ValueError("No value for my_player!")
     
-    def get_moves_from_dictionary(self,move_dict,queens):
-        
-        queen1_moves = np.empty(len(move_dict[queens[0]]),dtype =object)
-        queen1_moves[:] = move_dict[queens[0]]
+    def get_moves_from_dictionary(self, move_dict, pieces):
+        """
+        Get the valid moves from a move dictionary and the list of pieces.
 
-        queen2_moves = np.empty(len(move_dict[queens[1]]),dtype =object)
-        queen2_moves[:] = move_dict[queens[1]]
+        Parameters:
+            move_dict: Dictionary from piece name to list of valid moves.
+            pieces: Names of the pieces to use as keys to the move dictionary.
+        returns
+            [((int, int), ...)]: 
+        """
 
-        queen3_moves = np.empty(len(move_dict[queens[2]]),dtype =object)
-        queen3_moves[:] = move_dict[queens[2]]
+        # get every piece's moves as a list of numpy arrays of tuples
+        pieces_moves = []
+        for piece_idx in range(len(pieces)):
+            # This has to be an object array of tuples for meshgrid to work as intended
+            piece_moves = np.empty(len(move_dict[pieces[piece_idx]]), dtype=object)
+            piece_moves[:] = move_dict[pieces[piece_idx]]
+            pieces_moves.append(piece_moves)
 
-        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
-        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
-        valid_moves = list(map(tuple,valid_moves))
-        
+        # meshgrid gives us permutations of all moves
+        moves = np.array(np.meshgrid(*pieces_moves)).T.reshape(-1, len(pieces))
+
+        # check all piece combinations for conflicts, returning only valid moves
+        valid_move_mask = np.ones(moves.shape[0]).astype(bool)
+        for i in range(len(pieces) - 1):
+            for j in range(i + 1, len(pieces)):
+                valid_move_mask = valid_move_mask * (moves[:, i] != moves[:, j])
+        valid_moves = moves[valid_move_mask]
+        valid_moves = list(map(tuple, valid_moves))
+
         return valid_moves
     
     def get_inactive_moves(self):
