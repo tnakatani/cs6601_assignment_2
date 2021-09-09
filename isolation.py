@@ -1,17 +1,23 @@
 from copy import deepcopy
-import time
-import platform
 from io import StringIO
+import os
+import platform
+import signal
+import sys
+import time
 
 if platform.system() != 'Windows':
     import resource
 
-import sys
-import os
-import itertools
 import numpy as np
 
 sys.path[0] = os.getcwd()
+
+
+# when player takes too long to make a move
+class TimeoutException(Exception):
+    pass
+
 
 class Board:
     BLANK = " "
@@ -309,21 +315,35 @@ class Board:
         else:
             raise ValueError("No value for my_player!")
     
-    def get_moves_from_dictionary(self,move_dict,queens):
-        
-        queen1_moves = np.empty(len(move_dict[queens[0]]),dtype =object)
-        queen1_moves[:] = move_dict[queens[0]]
+    def get_moves_from_dictionary(self, move_dict, pieces):
+        """
+        Get the valid moves from a move dictionary and the list of pieces.
 
-        queen2_moves = np.empty(len(move_dict[queens[1]]),dtype =object)
-        queen2_moves[:] = move_dict[queens[1]]
+        Parameters:
+            move_dict: Dictionary from piece name to list of valid moves.
+            pieces: Names of the pieces to use as keys to the move dictionary.
+        returns
+            [[(int, int), ...]]: 
+        """
 
-        queen3_moves = np.empty(len(move_dict[queens[2]]),dtype =object)
-        queen3_moves[:] = move_dict[queens[2]]
+        # get every piece's moves as a list of numpy arrays of tuples
+        pieces_moves = []
+        for piece_idx in range(len(pieces)):
+            # This has to be an object array of tuples for meshgrid to work as intended
+            piece_moves = np.empty(len(move_dict[pieces[piece_idx]]), dtype=object)
+            piece_moves[:] = move_dict[pieces[piece_idx]]
+            pieces_moves.append(piece_moves)
 
-        moves = np.array(np.meshgrid(queen1_moves,queen2_moves,queen3_moves)).T.reshape(-1,3)
-        valid_moves = moves[np.logical_not(np.logical_or(moves[:,0] == moves[:,1], np.logical_or(moves[:,0] == moves[:,2], moves[:,1] == moves[:,2])))]
-        valid_moves = list(map(tuple,valid_moves))
-        
+        # meshgrid gives us permutations of all moves
+        moves = np.array(np.meshgrid(*pieces_moves)).T.reshape(-1, len(pieces))
+
+        # check all piece combinations for conflicts, returning only valid moves
+        valid_move_mask = np.ones(moves.shape[0]).astype(bool)
+        for i in range(len(pieces) - 1):
+            for j in range(i + 1, len(pieces)):
+                valid_move_mask = valid_move_mask * (moves[:, i] != moves[:, j])
+        valid_moves = moves[valid_move_mask]
+        valid_moves = valid_moves.tolist()
         return valid_moves
     
     def get_inactive_moves(self):
@@ -332,8 +352,8 @@ class Board:
         Parameters:
             move1,move2,move3
         Returns:
-           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
         inactive_queens = self.get_inactive_players_queens()
@@ -350,8 +370,8 @@ class Board:
         Parameters:
             None
         Returns:
-           [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
         """
         active_queens = self.get_active_players_queens()
@@ -359,7 +379,7 @@ class Board:
                      active_queens[1] : self.__get_moves__(self.__last_queen_move__[active_queens[1]]),
                      active_queens[2] : self.__get_moves__(self.__last_queen_move__[active_queens[2]])}
 
-        all_moves = self.get_moves_from_dictionary(move_dict,active_queens)
+        all_moves = self.get_moves_from_dictionary(move_dict, active_queens)
         return all_moves
 
     def get_player_moves(self, my_player=None):
@@ -369,10 +389,9 @@ class Board:
             my_player (Player), Player to get moves for
             If calling from within a player class, my_player = self can be passed.
         returns
-            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
-
         """
         if my_player == self.__active_player__:
             return self.get_active_moves()
@@ -389,10 +408,9 @@ class Board:
             my_player (Player), The player facing the opponent in question
             If calling from within a player class, my_player = self can be passed.
         returns
-            [((int, int),(int, int), (int,int))]: List of all legal moves. Each move takes the form of
-            ((row, column), (row, column), (row, column)). Each tuple within the 3-tuple refers to the 
+           [[(int, int),(int, int), (int,int)]]: List of all legal moves. Each move takes the form of
+            [(row, column), (row, column), (row, column)]. Each tuple within the 3-list refers to the 
             move by 1st, 2nd, and 3rd queen respectively.
-
         """
         if my_player == self.__active_player__:
             return self.get_inactive_moves()
@@ -409,7 +427,7 @@ class Board:
             move: (int, int), Last move made by player in question (where they currently are).
             Takes the form of (row, column).
         Returns:
-           [((int, int),(int, int),(int, int))]: List of (row,col) 3-tuples of legal moves
+           [[(int, int),(int, int),(int, int)]]: List of (row,col) 3-lists of legal moves
         """
 
         if move == self.NOT_MOVED:
@@ -551,18 +569,20 @@ class Board:
 
         return out
 
-    def play_isolation(self, time_limit=6000, print_moves=False):
+    def play_isolation(self, time_limit=6, print_moves=False):
         """
         Method to play out a game of isolation with the agents passed into the Board class.
         Initializes and updates move_history variable, enforces timeouts, and prints the game.
         Parameters:
-            time_limit: int, time limit in milliseconds that each player has before they time out.
+            time_limit: int, time limit in seconds that each player has before they time out.
             print_moves: bool, Should the method print details of the game in real time
         Returns:
             (str, [(int, int)], str): Queen of Winner, Move history, Reason for game over.
             Each move in move history takes the form of (row, column).
         """
-        move_history = []
+
+        def handler(signum, frame):
+            raise TimeoutException(f"Ran out of time ({time_limit} s) in play_isolation()")
         if platform.system() == 'Windows':
             def curr_time_millis():
                 return int(round(time.time() * 1000))
@@ -570,47 +590,54 @@ class Board:
             def curr_time_millis():
                 return 1000 * resource.getrusage(resource.RUSAGE_SELF).ru_utime
 
-        while True:
-            game_copy = self.copy()
-            move_start = curr_time_millis()
+        signal.signal(signal.SIGALRM, handler)
+        signal.alarm(time_limit)
 
-            def time_left():
-                # print("Limit: "+str(time_limit) +" - "+str(curr_time_millis()-move_start))
-                return time_limit - (curr_time_millis() - move_start)
+        move_history = []
 
-            if print_moves:
-                print("\n", self.__active_player_name__, " Turn")
+        try:
+            while True:
+                game_copy = self.copy()
+                move_start = curr_time_millis()
 
-            
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
-            move = curr_move_queen1, curr_move_queen2, curr_move_queen3
-            # Append new move to game history
-            if self.__active_player__ == self.__player_1__:
-                move_history.append([[move]])
-            else:
-                move_history[-1].append([move])
+                def time_left():
+                    # print("Limit: "+str(time_limit * 1000) +" - "+str(curr_time_millis()-move_start))
+                    return time_limit * 1000 - (curr_time_millis() - move_start)
 
-            # Handle Timeout
-            if time_limit and time_left() <= 0:
                 if print_moves:
-                    print('Winner: ' + self.__inactive_player_name__)
-                return self.__inactive_player_name__, move_history, \
-                       self.__active_player_name__ + " timed out."
+                    print("\n", self.__active_player_name__, " Turn")
 
-            # Safety Check
-            legal_moves = self.get_active_moves()
-            if move not in legal_moves:
-                return self.__inactive_player_name__, move_history, \
-                       (self.__active_player_name__+ " made an illegal move.")
+                
+                curr_move_queen1, curr_move_queen2, curr_move_queen3 = self.__active_player__.move(game_copy, time_left)
+                move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
+                # Append new move to game history
+                if self.__active_player__ == self.__player_1__:
+                    move_history.append([[move]])
+                else:
+                    move_history[-1].append([move])
 
-            # Apply move to game.
-            is_over, winner = self.__apply_move__((move))
+                # Safety Check
+                legal_moves = self.get_active_moves()
+                if move not in legal_moves:
+                    signal.alarm(0)
+                    return self.__inactive_player_name__, move_history, \
+                        (self.__active_player_name__+ " made an illegal move.")
 
+                # Apply move to game.
+                is_over, winner = self.__apply_move__((move))
+
+                if print_moves:
+                    print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
+                    print(self.copy().print_board())
+                if is_over:
+                    signal.alarm(0)
+                    return self.__inactive_player_name__, move_history, self.__active_player_name__ + " has no legal moves left."
+        except TimeoutException:
+            # Handle Timeout
             if print_moves:
-                print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
-                print(self.copy().print_board())
-            if is_over:
-                return self.__inactive_player_name__, move_history, self.__active_player_name__ + " has no legal moves left."
+                print('Winner: ' + self.__inactive_player_name__)
+            return self.__inactive_player_name__, move_history, self.__active_player_name__ + " timed out."
+        
 
     def __apply_move_write__(self, move):
         """
