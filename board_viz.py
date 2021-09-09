@@ -1,11 +1,15 @@
 # Board visualization with ipywidgets
 import copy
-from time import sleep
 import ipywidgets as widgets
-from ipywidgets import interact, interactive, fixed, interact_manual
-from ipywidgets import VBox, HBox, Label, Button, GridspecLayout
-from ipywidgets import Button, GridBox, Layout, ButtonStyle
-from IPython.display import display, clear_output
+from ipywidgets import (
+    interactive,
+    Button,
+    ButtonStyle,
+    GridspecLayout,
+    Layout,
+    VBox,
+)
+from IPython.display import display
 
 from isolation import Board
 from test_players import Player
