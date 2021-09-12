@@ -13,6 +13,8 @@ def play(Q1, Q2, size=7, time_limit=6000, print_moves=True, seed=None):
     """
     import random
     from isolation import Board
+    import multiprocessing
+    lock = multiprocessing.Lock()
     
     if seed is not None:
         random.seed(seed)
@@ -27,4 +29,4 @@ def play(Q1, Q2, size=7, time_limit=6000, print_moves=True, seed=None):
     lock.acquire()
     print("\n", winner, " has won. Reason: ", termination)
     lock.release()
-    return winner, move_history, termination
+    return winner, move_history, terminationgi
