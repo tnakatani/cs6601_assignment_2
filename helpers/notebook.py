@@ -29,4 +29,4 @@ def play(Q1, Q2, size=7, time_limit=6000, print_moves=True, seed=None):
     lock.acquire()
     print("\n", winner, " has won. Reason: ", termination)
     lock.release()
-    return winner, move_history, terminationgi
+    return winner, move_history, termination
