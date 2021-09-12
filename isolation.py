@@ -430,7 +430,18 @@ class Board:
 
         r, c = move
 
-        directions = [(-1, 0),(0, -1), (0, 1), (1, 0)]
+        # # Snails
+        # directions = [(-1, 0),(0, -1), (0, 1), (1, 0)]
+
+        # Rooks
+        directions = []
+        for i in range(1, 3):
+            directions += [(-i, 0),(0, -i), (0, i), (i, 0)]
+
+        # # Queens
+        # directions = []
+        # for i in range(1, 3):
+        #     # directions += [(-i, 0), (-i, i), (0, i), (i, i), (i, 0), (i, -i), (0, -i), (-i, -i)]
 
         moves = []
         dist = 1
@@ -602,19 +613,19 @@ class Board:
                     moves.append(m)
             
             time_remaining = time_left()
-            moves = []
-            move_thread = threading.Thread(target=_make_move, args=(self.__active_player__, game_copy, time_remaining, moves))
+            move = []
+            move_thread = threading.Thread(target=_make_move, args=(self.__active_player__, game_copy, time_left, move))
             move_thread.start()
             move_thread.join(time_remaining / 1000)
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = tuple(moves)
 
             # check if we timed out
             if move_thread.is_alive():
                 if print_moves:
                     print('Winner: ' + self.__inactive_player_name__)
                 return self.__inactive_player_name__, move_history, self.__active_player_name__ + " timed out."
-            
-            move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
+
+            curr_move_queen1, curr_move_queen2, curr_move_queen3 = tuple(move)
+
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
