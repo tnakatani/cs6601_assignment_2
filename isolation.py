@@ -602,11 +602,10 @@ class Board:
                     moves.append(m)
             
             time_remaining = time_left()
-            moves = []
-            move_thread = threading.Thread(target=_make_move, args=(self.__active_player__, game_copy, time_remaining, moves))
+            move = []
+            move_thread = threading.Thread(target=_make_move, args=(self.__active_player__, game_copy, time_left, move))
             move_thread.start()
             move_thread.join(time_remaining / 1000)
-            curr_move_queen1, curr_move_queen2, curr_move_queen3 = tuple(moves)
 
             # check if we timed out
             if move_thread.is_alive():
@@ -614,7 +613,6 @@ class Board:
                     print('Winner: ' + self.__inactive_player_name__)
                 return self.__inactive_player_name__, move_history, self.__active_player_name__ + " timed out."
             
-            move = [curr_move_queen1, curr_move_queen2, curr_move_queen3]
             # Append new move to game history
             if self.__active_player__ == self.__player_1__:
                 move_history.append([[move]])
@@ -631,6 +629,7 @@ class Board:
             is_over, winner = self.__apply_move__((move))
 
             if print_moves:
+                curr_move_queen1, curr_move_queen2, curr_move_queen3 = tuple(move)
                 print("move chosen: Q1 to %s, Q2 to %s, and Q3 to %s" % (curr_move_queen1,curr_move_queen2,curr_move_queen3))
                 print(self.copy().print_board())
             if is_over:
