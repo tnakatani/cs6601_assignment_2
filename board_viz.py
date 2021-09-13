@@ -1,15 +1,11 @@
 # Board visualization with ipywidgets
 import copy
+from time import sleep
 import ipywidgets as widgets
-from ipywidgets import (
-    interactive,
-    Button,
-    ButtonStyle,
-    GridspecLayout,
-    Layout,
-    VBox,
-)
-from IPython.display import display
+from ipywidgets import interact, interactive, fixed, interact_manual
+from ipywidgets import VBox, HBox, Label, Button, GridspecLayout
+from ipywidgets import Button, GridBox, Layout, ButtonStyle
+from IPython.display import display, clear_output
 
 from isolation import Board
 from test_players import Player
@@ -29,11 +25,8 @@ def get_details(name):
         color = 'SpringGreen'
     elif name in {'21','22','23'}:
         color = 'tomato'
-    elif name == 'q-option':
+    elif name == 'q1':
         color = '#bdffbd'
-        name = ' '
-    elif name == 'q-selection':
-        color = 'SpringGreen'
         name = ' '
     elif name == 'q2':
         color = '#ffb6ae'
@@ -59,7 +52,7 @@ def create_cell(button_name='', grid_loc=None, click_callback=None):
 def get_viz_board_state(game, show_legal_moves):
     board_state = game.get_state()
     legal_moves = game.get_active_moves()
-    active_player = 'q-option' if game.__active_player__ is game.__player_1__ else 'q2'
+    active_player = 'q1' if game.__active_player__ is game.__player_1__ else 'q2'
     if show_legal_moves:
         for moves in legal_moves:
             for r,c in moves:
@@ -99,16 +92,11 @@ class InteractiveGame():
         self.visualized_state = None
         self.opponent = opponent
         self.output_section = widgets.Output(layout={'border': '1px solid black'})
-        self.output_section.append_stdout('Choose where to place 3 Queens in order\n')
         self.game_is_over = False
         display(self.gridb)
         display(self.output_section)
 
     def __reset_turn(self):
-        board_vis_state = get_viz_board_state(self.game, self.show_legal_moves)
-        for r,c in self.__move:
-            _, style = get_details(board_vis_state[r][c])
-            self.gridb[r,c].style = style
         self.__click_count = 0
         self.__move = []
         self.output_section.clear_output()
@@ -128,13 +116,8 @@ class InteractiveGame():
         
         self.__move.append((b.x, b.y))
         with self.output_section:
-            print(f"Queen {self.__click_count+1} Move: {(b.x, b.y)}")
-       
-        if self.gridb[b.x, b.y].style.button_color == get_details('q-option')[1].button_color:
-            _, new_style = get_details('q-selection')
-            self.gridb[b.x,b.y].style = new_style
-        
-        if self.__click_count < 2:            
+            print(f"Move {self.__click_count+1}: {(b.x, b.y)}")
+        if self.__click_count < 2:
             self.__click_count += 1
             return
         

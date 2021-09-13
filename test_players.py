@@ -34,50 +34,38 @@ class HumanPlayer(Player):
         super().__init__(name)
 
     def move(self, game, time_left):
-        player_moves = game.get_player_moves(self)
-        
-        print("-------------------------")
-        print(game.print_board(player_moves))
-        print("-------------------------")
-        print()
+        legal_moves = game.get_player_moves(self)
+        choice = {}
 
-        if not len(player_moves):
+        if not len(legal_moves):
             print("No more moves left.")
             return None, None, None
 
-        active_queens = game.get_active_players_queens()
-        choice = []
-        
-        disp_cols = 4
-        color_black, color_red = '\033[0m', '\033[91m'
-        
-        for queen in active_queens:
-            counter = 1
-            legal_moves = game.__get_moves__(game.__last_queen_move__[queen])
-            for move in legal_moves:
-                end = "\n" if counter % disp_cols == 0 else ""
-                color = color_black if move not in choice else color_red
-                print('\t'.join([color + '%d. %s \t' % (counter, move)]), end=end)                    
-                counter += 1        
-            
-            if end != '\n':
-                print()
-                
-            valid_choice = False
+        counter = 1
+        for move in legal_moves:
+            choice.update({counter: move})
+            print('\t'.join(['[%d] %s' % (counter, move)]))
+            counter += 1
 
-            while not valid_choice:
-                try:
-                    index = int(input(color_black + 'Select ' +  queen[-2:] + ' move: [1-' + str(len(legal_moves)) + ']:'))
-                    valid_choice = 1 <= index <= len(legal_moves)
-                    
-                    if not valid_choice:
-                        print('Illegal move of queen or invalid entry! Try again.')
-                except Exception:
-                    print('Invalid entry! Try again.')
-                    
-            choice.append(legal_moves[index - 1])
-            print()
-        return choice
-    
+        print("-------------------------")
+        print(game.print_board(legal_moves))
+        print("-------------------------")
+        print(">< - impossible")
+        print("-------------------------")
+
+        valid_choice = False
+
+        while not valid_choice:
+            try:
+                index = int(input('Select move index [1-' + str(len(legal_moves)) + ']:'))
+                valid_choice = 1 <= index <= len(legal_moves)
+
+                if not valid_choice:
+                    print('Illegal move of queen or invalid entry! Try again.')
+            except Exception:
+                print('Invalid entry! Try again.')
+
+        return choice[index]
+
     def get_name(self):
         return self.name
