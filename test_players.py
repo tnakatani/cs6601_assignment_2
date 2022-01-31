@@ -18,8 +18,10 @@ class RandomPlayer(Player):
         super().__init__(name)
 
     def move(self, game, time_left):
-        move = random.choice(game.get_player_moves(self))
-        return move
+        if not game.get_player_moves(self):
+            return None
+        else:
+            return random.choice(game.get_player_moves(self))
 
     def get_name(self):
         return self.name
@@ -39,18 +41,18 @@ class HumanPlayer(Player):
 
         if not len(legal_moves):
             print("No more moves left.")
-            return None, None, None
+            return None, None
 
         counter = 1
         for move in legal_moves:
             choice.update({counter: move})
-            print('\t'.join(['[%d] %s' % (counter, move)]))
+            print('\t'.join(['[%d] (%d,%d)' % (counter, move[0], move[1])]))
             counter += 1
 
         print("-------------------------")
         print(game.print_board(legal_moves))
         print("-------------------------")
-        print(">< - impossible")
+        print(">< - impossible, o - valid move")
         print("-------------------------")
 
         valid_choice = False
@@ -61,7 +63,7 @@ class HumanPlayer(Player):
                 valid_choice = 1 <= index <= len(legal_moves)
 
                 if not valid_choice:
-                    print('Illegal move of queen or invalid entry! Try again.')
+                    print('Illegal move of queen! Try again.')
             except Exception:
                 print('Invalid entry! Try again.')
 

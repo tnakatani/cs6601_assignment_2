@@ -4,7 +4,7 @@ from platform import python_version
 
 def check_python_version():
     print('Your python version is ', python_version())
-    assert python_version()[:3] == '3.7', 'Make sure you use python version >=3.7'
+    assert python_version()[:3] >= '3.7', 'Make sure you use python version >=3.7'
 
 def check_env_setup():
     dependencies = open("requirements.txt").readlines()

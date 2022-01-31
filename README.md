@@ -1,18 +1,18 @@
-# Assignment 2 - 3 Snails Isolation
+# Assignment 1 - Skid Isolation
 
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
 We are also implementing this through Jupyter Notebook, so you all may find it useful to spend some time getting familiar with this software. During the first week of classes, there was an assignment [Assignment 0](https://github.gatech.edu/omscs6601/assignment_0/) that spends some time going through Python and Jupyter. If you are unfamiliar with either Python or Jupyter, please go through that assignment first!
 
 ### Table of Contents
-- [Git repository](#repo)
+- [Get repository](#repo)
 - [Setup](#setup)
 - [Jupyter](#jupyter)
 - [Jupyter Tips](#jupyter-tips)
 - [IDE](#IDE)
 
 <a name="repo"/></a>
-## Git repository
+## Get repository
 
 Pull this repository to your local machine:
 
@@ -29,6 +29,12 @@ conda activate ai_env
 ```
 
 In case you used a different environment name, to list of all environments you have on your machine you can run `conda env list`.
+
+Install additional package that will be used to for visualising the game board.
+
+```
+pip install ipywidgets==7.5.0
+```
 
 <a name="jupyter"/></a>
 ## Jupyter

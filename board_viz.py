@@ -21,15 +21,15 @@ if platform.system() != 'Windows':
 
 
 def get_details(name):
-    if name in {'11','12','13'}:
+    if name == 'Q1':
         color = 'SpringGreen'
-    elif name in {'21','22','23'}:
+    elif name == 'Q2':
         color = 'tomato'
     elif name == 'q1':
-        color = '#bdffbd'
+        color = 'HoneyDew'
         name = ' '
     elif name == 'q2':
-        color = '#ffb6ae'
+        color = 'MistyRose'
         name = ' '
     elif name == 'X':
         color = 'black'
@@ -54,8 +54,8 @@ def get_viz_board_state(game, show_legal_moves):
     legal_moves = game.get_active_moves()
     active_player = 'q1' if game.__active_player__ is game.__player_1__ else 'q2'
     if show_legal_moves:
-        for moves in legal_moves:
-            for r,c in moves:
+        for r,c in legal_moves: 
+            if board_state[r][c][0] != 'Q':
                 board_state[r][c] = active_player
     return board_state
 
@@ -79,13 +79,11 @@ def create_board_gridbox(game, show_legal_moves, click_callback=None):
 
 class InteractiveGame():
     """This class is used to play the game interactively (only works in jupyter)"""
-    def __init__(self, opponent=Player("Player2"), show_legal_moves=False):
-        self.game = Board(Player("Player1"), opponent)
+    def __init__(self, opponent=None, show_legal_moves=False):
+        self.game = Board(Player, opponent)
         self.width = self.game.width
         self.height = self.game.height
         self.show_legal_moves = show_legal_moves
-        self.__click_count = 0
-        self.__move = []
         self.gridb = create_board_gridbox(self.game, 
                                           self.show_legal_moves, 
                                           click_callback=self.select_move)
@@ -94,12 +92,6 @@ class InteractiveGame():
         self.output_section = widgets.Output(layout={'border': '1px solid black'})
         self.game_is_over = False
         display(self.gridb)
-        display(self.output_section)
-
-    def __reset_turn(self):
-        self.__click_count = 0
-        self.__move = []
-        self.output_section.clear_output()
 
     def select_move(self, b):
         if platform.system() == 'Windows':
@@ -113,35 +105,22 @@ class InteractiveGame():
         def time_left(time_limit = 1000):
             # print("Limit: "+str(time_limit) +" - "+str(curr_time_millis()-move_start))
             return time_limit - (curr_time_millis() - move_start)
-        
-        self.__move.append((b.x, b.y))
-        with self.output_section:
-            print(f"Move {self.__click_count+1}: {(b.x, b.y)}")
-        if self.__click_count < 2:
-            self.__click_count += 1
-            return
-        
+
         if self.game_is_over:
-            with self.output_section:
-                print('The game is over!')
-            return
+            return print('The game is over!')
         ### swap move workaround ###
         # find if current location is in the legal moves
         # legal_moves is of length 1 if move exists, and len 0 if move is illegal
-        moves = self.game.get_active_moves()
-        legal_moves = [(x,y,z) for x,y,z in moves if [x,y,z] == self.__move]
+        legal_moves = [(x,y) for x,y in self.game.get_active_moves() if (x,y) == (b.x, b.y)]
         if not legal_moves:
-            output = f"move {self.__move} is illegal!"
-            self.__reset_turn()
-            with self.output_section:
-                print(output)
+            print(f"move {(b.x, b.y)} is illegal!")
             return
         else:
             # there is only one move in swap isolation game
-            self.__move = legal_moves[0]
+            move = legal_moves[0] 
         ### swap move workaround end ###
-        self.game_is_over, winner = self.game.__apply_move__(self.__move)
-        if (not self.game_is_over) and (type(self.opponent) != Player):
+        self.game_is_over, winner = self.game.__apply_move__(move)
+        if (not self.game_is_over) and (self.opponent is not None):
             opponents_legal_moves = self.game.get_active_moves()
             opponent_move = self.opponent.move(self.game, time_left=time_left)
             assert opponent_move in opponents_legal_moves, \
@@ -154,7 +133,6 @@ class InteractiveGame():
                 new_name, new_style = get_details(board_vis_state[r][c])
                 self.gridb[r,c].description = new_name
                 self.gridb[r,c].style = new_style
-        self.__reset_turn()
 
 class ReplayGame():
     """This class is used to replay games (only works in jupyter)"""
@@ -196,7 +174,7 @@ class ReplayGame():
     def generate_board_state_history(self,):        
         for move_pair in self.move_history:
             for move in move_pair:
-                self.new_board.__apply_move__(move[0])
+                self.new_board.__apply_move__(move)
                 board_vis_state = get_viz_board_state(self.new_board, self.show_legal_moves)
                 board_state = self.new_board.get_state()
                 self.board_history.append((copy.deepcopy(board_vis_state), copy.deepcopy(board_state)))
