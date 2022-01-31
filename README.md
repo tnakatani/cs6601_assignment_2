@@ -1,4 +1,4 @@
-# Assignment 1 - Skid Isolation
+# Assignment 2 - Skid Isolation
 
 This assignment will cover some of the concepts discussed in the Adversarial Search lectures. You will be implementing game playing agents for a variant of the game Isolation.
 
